@@ -1,0 +1,193 @@
+{
+ "enable_e10s": false, 
+ "is-sdk-bundled": true, 
+ "jetpackID": "jid0-SmvlvxGpvCyG252KbVMqIKR79Uc@jetpack", 
+ "loader": "addon-sdk/lib/sdk/loader/cuddlefish.js", 
+ "main": "main", 
+ "mainPath": "enhanced-steam/main", 
+ "manifest": {
+  "enhanced-steam/main": {
+   "docsSHA256": null, 
+   "jsSHA256": "b6c5ceadc021a78d159031d884bb49b1b80c4c12418ab9d6051ff08e26fb126d", 
+   "moduleName": "main", 
+   "packageName": "enhanced-steam", 
+   "requirements": {
+    "page-mod": "sdk/page-mod", 
+    "self": "sdk/self", 
+    "simple-prefs": "sdk/simple-prefs"
+   }, 
+   "sectionName": "lib"
+  }
+ }, 
+ "metadata": {
+  "addon-sdk": {
+   "description": "Add-on development made easy.", 
+   "keywords": [
+    "javascript", 
+    "engine", 
+    "addon", 
+    "extension", 
+    "xulrunner", 
+    "firefox", 
+    "browser"
+   ], 
+   "license": "MPL 2.0", 
+   "name": "addon-sdk"
+  }, 
+  "enhanced-steam": {
+   "author": "jshackles", 
+   "description": "Enhances the Steam experience!", 
+   "main": "main", 
+   "name": "enhanced-steam", 
+   "permissions": {
+    "cross-domain-content": [
+     "http://store.steampowered.com/", 
+     "https://store.steampowered.com/", 
+     "http://steamcommunity.com/", 
+     "http://api.steampowered.com/", 
+     "http://rate-exchange.appspot.com/"
+    ], 
+    "private-browsing": true
+   }, 
+   "version": "4.6.1"
+  }
+ }, 
+ "name": "enhanced-steam", 
+ "preferences": [
+  {
+   "name": "ownedColor", 
+   "title": "Highlight color for owned games", 
+   "type": "color", 
+   "value": "#5c7836"
+  }, 
+  {
+   "label": "Default", 
+   "name": "ownedColorDefault", 
+   "title": "", 
+   "type": "control"
+  }, 
+  {
+   "name": "wishlistColor", 
+   "title": "Highlight color for wishlist games", 
+   "type": "color", 
+   "value": "#496e93"
+  }, 
+  {
+   "label": "Default", 
+   "name": "wishlistColorDefault", 
+   "title": "", 
+   "type": "control"
+  }, 
+  {
+   "name": "showpricehistory", 
+   "title": "Show Price History Information", 
+   "type": "bool", 
+   "value": true
+  }, 
+  {
+   "name": "hideInstallSteam", 
+   "title": "Hide \"Install Steam\" Button", 
+   "type": "bool", 
+   "value": false
+  }, 
+  {
+   "name": "hideaboutmenu", 
+   "title": "Hide About Menu in Header", 
+   "type": "bool", 
+   "value": false
+  }, 
+  {
+   "name": "showDRM", 
+   "title": "Show 3rd Party DRM Warnings", 
+   "type": "bool", 
+   "value": true
+  }, 
+  {
+   "name": "showmcus", 
+   "title": "Show Metacritic User Scores", 
+   "type": "bool", 
+   "value": true
+  }, 
+  {
+   "name": "showdblinks", 
+   "title": "Show SteamDB Links", 
+   "type": "bool", 
+   "value": true
+  }, 
+  {
+   "name": "showwsgf", 
+   "title": "Show WSGF (Widescreen) Info", 
+   "type": "bool", 
+   "value": true
+  }, 
+  {
+   "name": "showhltb", 
+   "title": "Show HowLongToBeat.com Information", 
+   "type": "bool", 
+   "value": true
+  }, 
+  {
+   "name": "showpcgw", 
+   "title": "Show PCGamingWiki Links", 
+   "type": "bool", 
+   "value": true
+  }, 
+  {
+   "name": "contscroll", 
+   "title": "Enable Continuous Scrolling of Search Results", 
+   "type": "bool", 
+   "value": true
+  }, 
+  {
+   "name": "showappdesc", 
+   "title": "Show App Descriptions On Storefront Carousel", 
+   "type": "bool", 
+   "value": true
+  }, 
+  {
+   "name": "showtotal", 
+   "title": "Show \"Total Spent\" on Account Page", 
+   "type": "bool", 
+   "value": true
+  }, 
+  {
+   "name": "showcustombg", 
+   "title": "Set Custom Background on Edit Profile Screen", 
+   "type": "bool", 
+   "value": true
+  }, 
+  {
+   "name": "changegreenlightbanner", 
+   "title": "Replace Steam Greenlight Banner", 
+   "type": "bool", 
+   "value": true
+  }, 
+  {
+   "name": "showprofilelinks", 
+   "title": "Show External Profile Links", 
+   "type": "bool", 
+   "value": true
+  }, 
+  {
+   "name": "showmarkethistory", 
+   "title": "Show Transaction Summary on Market", 
+   "type": "bool", 
+   "value": true
+  }, 
+  {
+   "name": "showsteamchartinfo", 
+   "title": "Show SteamCharts.com Info", 
+   "type": "bool", 
+   "value": true
+  }, 
+  {
+   "name": "showregionalprice", 
+   "title": "Show Regional Price Comparison", 
+   "type": "bool", 
+   "value": true
+  }
+ ], 
+ "sdkVersion": "1.14", 
+ "staticArgs": {}, 
+ "verbose": false
+}

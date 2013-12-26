@@ -1,0 +1,464 @@
+.blotter_author_block :any(.es_highlight_owned, .es_highlight_wishlist, .es_highlight_coupon, .es_highlight_inv_gift, .es_highlight_inv_guestpass, .es_highlight_friends_want) {
+	border-width: 0 0.2em 0 0.2em;
+	border-style: solid;
+	border-radius: 0.5em;
+}
+
+.popup_menu .hr {
+	height: 1px;
+	background-color: #82807c;
+	width: 90%;
+	margin: auto;
+}
+
+span.platform_img {
+	display: inline-block;
+	width: 22px;
+	height: 22px;
+	background-repeat: no-repeat;
+}
+
+span.platform_img.steamplay {
+	width: 72px;
+	background-image: url( 'http://cdn3.store.steampowered.com/public/images/v5/platforms/platform_steamplay_only.png' );
+}
+
+span.platform_img.win {
+	background-image: url( 'http://cdn3.store.steampowered.com/public/images/v5/platforms/platform_win.png' );
+}
+
+span.platform_img.mac {
+	background-image: url( 'http://cdn3.store.steampowered.com/public/images/v5/platforms/platform_mac.png' );
+}
+
+span.platform_img.linux {
+	background-image: url( 'http://cdn3.store.steampowered.com/public/images/v5/platforms/platform_linux.png' );
+}
+
+img.platform_small, .platform_img {
+	vertical-align: middle;
+	margin-right: 1px;
+}
+
+#es_library_list, #es_library_search {
+	padding-left: 10px;
+	overflow: scroll;
+	overflow-y: scroll;
+	overflow-x: hidden;
+	position: absolute;
+	top: 105px;
+	bottom: 0px;
+	z-index: 4;
+	text-align: left;
+}
+
+#es_library_search {
+	top: 110px;
+	background: url('http://cdn3.store.steampowered.com/public/images/v5/store_header_search.png?v=2') no-repeat;
+	color: #a6a5a2;
+	width: 253px;
+	height: 35px;
+	margin-left: 20px;
+	overflow: hidden;
+}
+
+#es_library_search_input {
+	width: 100%;
+	border: none;
+	background-color: #82807c;
+	color: #cdcac1;
+	margin-top: 5px;
+	outline: none;
+	width: 206px;
+}
+
+#es_library_list {
+	top: 145px;
+	width: 280px;
+}
+
+#es_library_background {
+	margin-left: 150px;
+	position: absolute;
+	top: 105px;
+	bottom: 0px;
+	width: 70%;
+	z-index:1;	
+	opacity:.70;
+}
+
+#es_library_background_filter {
+	margin-left: 150px;
+	position: absolute;
+	top: 105px;
+	bottom: 0px;
+	width: 70%;
+	z-index:2;
+	background: -webkit-radial-gradient(center center, circle, rgba(52, 52, 52, 0) 0%, rgba(0, 0, 0, 1) 80%);
+}
+
+#es_library_right {
+	margin-left: 280px;
+	position: absolute;
+	width: 60%;
+	top: 105px;
+	bottom: 0px;
+}
+
+#es_library_title {
+	display: inline-block;
+	margin-left: 40px;
+	position: relative;
+	top: 40px;
+	padding: 8px 10px;
+	z-index: 3;
+	font-family: Tahoma, Geneva, sans-serif;
+	background-color: rgba(0,0,0,0.6);
+}
+
+#es_library_app_playnow {
+	display: inline-block;
+	margin-left: 40px;
+	position: relative;
+	top: 55px;
+	padding: 8px 10px;
+	z-index: 3;
+	font-family: Tahoma, Geneva, sans-serif;
+	background-color: rgba(0,0,0,0.4);
+}
+
+#es_library_app_playnow a:hover {
+	cursor:default;
+}
+
+#es_library_app_playnow #play_button {
+	vertical-align: middle;
+}
+
+#es_library_hub_link {
+    display: inline-block;
+    position: relative;
+    top: 55px;
+    left: 422px;
+    z-index: 3;
+    padding: 4px;
+}
+
+#es_library_hub_link a {
+	text-decoration: none;
+}
+
+.es_library_app {
+	display: block;
+	width: 275px;
+	height: 18px;
+	padding: 2px 0;
+}
+
+.es_library_selected {
+	background-color: rgba(49,65,89,1);
+}
+
+#es_library_list_loading {
+	position: absolute;
+	top: 20px;
+	left: 20px;
+	z-index: 99;
+	font-size: 20px;
+}
+
+#es_library_list_loading img {
+	margin-right: 10px;
+	vertical-align: middle;
+}
+
+#es_library_list::-webkit-scrollbar {
+	width: 12px;
+}
+
+#es_library_list::-webkit-scrollbar-track {
+	background: none;
+}
+
+#es_library_list::-webkit-scrollbar-thumb {
+	background: -webkit-linear-gradient(left, #547c90, #002640);
+	border: 1px solid #333333;
+	box-shadow: inset 1px 0 0 rgba(255, 255, 255, 0.4);
+}
+
+#es_library_list a:hover {
+	color: white;
+	text-decoration: none;
+	cursor:default;
+}
+
+#es_library_list a {
+	color: #d1cfcd;
+	text-decoration: none;
+}
+
+#es_library_private_profile {
+	font-size: 20px;
+	margin-left: 50px;
+	margin-top: 50px;
+}
+
+#es_library_private_profile a {
+	color: #b8b6b4;
+	text-decoration: none;
+}
+
+#es_library_app_left {
+	display: inline-block;
+	width: 740px;
+	position: relative;
+	left: 40px;
+	top: 80px;
+	z-index: 3;
+}
+
+#es_library_app_right {
+	display: inline-block;
+	width: 250px;
+	position: relative;
+	left: 40px;
+	top: 80px;
+	z-index: 3;
+	vertical-align: top;
+}
+
+.es_library_app_container {
+	position: relative;
+	margin-bottom: 10px;
+	background-color: rgba(0,0,0,0.6);
+	padding: 20px 20px;
+	opacity: 0.7;
+}
+
+#es_library_app_left .es_library_app_container {
+	width: 700px;
+}
+
+#es_library_app_right .es_library_app_container {
+	width: 200px;
+	margin-left: 10px;
+}
+
+.es_library_app_container h2 {
+	color: #5986B3;
+	text-transform: uppercase;
+	font-size: 16px;
+	padding-bottom: 5px;
+}
+
+#es_library_app_news h3 a {
+	font-size: 14px;
+	font-weight: bold;
+	color: #ffffff;
+}
+
+#es_library_app_news .es_library_app_news_post {
+	margin-bottom: 10px;
+}
+
+#es_library_app_links ul {
+	list-style-type: none;
+}
+
+#es_library_app_links li {
+	padding: 2px 0;
+}
+
+.es_badges { 
+	cursor: pointer; 
+}
+
+.es_badges > input { 
+	display: none; 
+}
+
+.es_badges > input:checked + span { 
+	text-decoration: underline !important; 
+}
+
+.es_sort { 
+	cursor: pointer;
+	padding-right: 5px;
+}
+
+.es_sort > input { 
+	display: none; 
+}
+
+.es_sort > input:checked + span > a  {
+	cursor: text;
+	text-decoration: none; 
+}
+
+.es_sort > input:checked + span > a:hover  {
+	color: #B0AEAC;
+}
+
+.tags span {
+	border-radius: 0.5em;
+}
+
+.blotter_single_item_detail .blotter_control_container, .blotter_single_item_detail .hr {
+	display: block !important;
+}
+
+#chart-heading img {
+	vertical-align: middle;
+}
+
+#chart-image {
+	float: left;
+	padding: 12px 0;
+}
+
+.chart-stat {
+	float: left;
+	text-align: center;
+	width: 120px;
+	margin-top: 25px;
+	padding-left: 15px;
+}
+.chart-stat span {
+	font-size: 2em;
+	font-weight: 300;
+}
+
+.chart-content {
+	background-color: #1a1a1a;
+	width: 592px;	
+	padding: 2px 12px;
+	margin-bottom: 20px;
+	overflow: hidden;
+}
+
+.chart-footer {
+	font-size: 11px;
+	float: right;
+	padding-top: 5px;
+}
+.apphub_HeaderTop.es_greenlight {
+	background-image: url('http://cdn.steamcommunity.com/public/images/sharedfiles/ig/gl_item_blue.jpg');
+	background-position: left center;
+}
+.apphub_HeaderTop.es_greenlight.es_greenlit {
+	background-image: url('http://cdn.steamcommunity.com/public/images/sharedfiles/ig/gl_item_green.jpg');
+}
+.apphub_HeaderTop.es_greenlight.es_released {
+	background-image: url('http://cdn.steamcommunity.com/public/images/sharedfiles/ig/gl_item_green_shiny.jpg');
+}
+#es_empty_wishlist,#es_empty_owned_wishlist {
+	width:auto;
+	display:inline-block;
+	padding:0 5px 0 5px;
+	border-color:#af1900;
+	color:#af1900;
+}
+#es_empty_owned_wishlist {
+	margin-left:6px;
+}
+#es_wishlist > span {
+	padding:0 5px;
+	font-size:12px;
+}
+#es_permalink_text {
+	color: #EBEBEB;
+	height:29px;
+	vertical-align:bottom;
+}
+#es_permalink {
+	margin:9px 0 0 5px;
+	direction:rtl;
+}
+.es_regional_container {
+    display: none;
+	z-index:99;	
+	position:absolute;
+	background: linear-gradient(to bottom, #33425A 5%,#282F3D 95%);
+	padding: 7px 8px;
+	box-shadow: 5px 5px 5px rgba(0,0,0,0.8);
+	border:1px solid black;
+	margin-top:-25px;
+}
+.es_regional_sale {
+	margin-top:-18px;
+}
+.es_regional_sub {
+	margin-top:-55px;
+}
+.es_regional_dailydeal {
+	margin-top:auto;
+}
+.es_regional_price {
+	margin-right:8px;
+	font-size:14px;
+}
+.es_regional_converted {
+	font-size:12px;
+}
+.es_percentage {
+	font-size:12px;
+	margin-left:3px;
+}
+.es_percentage_higher {
+	color:red;
+}
+.es_percentage_lower {
+	color:green;
+}
+.es_percentage_equal {
+	color:yellow;
+}
+.es_percentage_indicator {
+	width:7px;
+	height:4px;
+	display:inline-block;
+	margin-bottom:3px;
+	margin-right:2px;
+}
+.es_percentage_higher > .es_percentage_indicator {
+	background-position:0 -4px;
+}
+.es_percentage_equal > .es_percentage_indicator {
+	background-position:0 -8px;
+	margin-bottom:1px;
+}
+.es_regional_always {
+	display:inline-block;
+	position:relative;
+	float:right;
+	margin-bottom:5px;
+	margin-top:auto;
+}
+
+.es_regional_unavailable {
+	font-size:12px;
+}
+.es_flag {
+	margin-right:4px;
+}
+
+.es_each {
+    color: #626366;
+	font-size: 11px;
+	float:right;
+	margin-top:-2px;
+}
+.es_each_price {
+	color: #B0AEAC;
+	font-size: 13px;
+}
+.es_each_box {
+	font-family: tahoma, helvetica, arial, trebuchet ms, sans-serif;
+	background-color:black;
+	padding-right:10px;
+	padding-top:3px;
+	padding-left:10px;
+	height:31px;
+	float:left;
+	margin-left:3px;
+}
