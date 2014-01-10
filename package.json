@@ -1,8 +1,161 @@
 {
-    "name": "enhanced_steam", 
-    "version": "5.0", 
-    "main": "resources\\enhanced-steam\\lib\\main", 
-    "homepage": "www.EnhancedSteam.com", 
-    "id": "jid1-nIAMUHEuU7Ju4w", 
-    "description": "Enhances the Steam experience!"
+    "license": "",
+    "preferences": [
+        {
+            "type": "color",
+            "name": "ownedColor",
+            "value": "#5c7836",
+            "title": "Highlight color for owned games"
+        },
+        {
+            "title": "",
+            "type": "control",
+            "name": "ownedColorDefault",
+            "label": "Default"
+        },
+        {
+            "type": "color",
+            "name": "wishlistColor",
+            "value": "#496e93",
+            "title": "Highlight color for wishlist games"
+        },
+        {
+            "title": "",
+            "type": "control",
+            "name": "wishlistColorDefault",
+            "label": "Default"
+        },
+        {
+            "type": "bool",
+            "name": "showpricehistory",
+            "value": true,
+            "title": "Show Price History Information"
+        },
+        {
+            "type": "bool",
+            "name": "hideInstallSteam",
+            "value": false,
+            "title": "Hide \"Install Steam\" Button"
+        },
+        {
+            "type": "bool",
+            "name": "hideaboutmenu",
+            "value": false,
+            "title": "Hide About Menu in Header"
+        },
+        {
+            "type": "bool",
+            "name": "showDRM",
+            "value": true,
+            "title": "Show 3rd Party DRM Warnings"
+        },
+        {
+            "type": "bool",
+            "name": "showmcus",
+            "value": true,
+            "title": "Show Metacritic User Scores"
+        },
+        {
+            "type": "bool",
+            "name": "showdblinks",
+            "value": true,
+            "title": "Show SteamDB Links"
+        },
+        {
+            "type": "bool",
+            "name": "showwsgf",
+            "value": true,
+            "title": "Show WSGF (Widescreen) Info"
+        },
+        {
+            "type": "bool",
+            "name": "showhltb",
+            "value": true,
+            "title": "Show HowLongToBeat.com Information"
+        },
+        {
+            "type": "bool",
+            "name": "showpcgw",
+            "value": true,
+            "title": "Show PCGamingWiki Links"
+        },
+        {
+            "type": "bool",
+            "name": "contscroll",
+            "value": true,
+            "title": "Enable Continuous Scrolling of Search Results"
+        },
+        {
+            "type": "bool",
+            "name": "showappdesc",
+            "value": true,
+            "title": "Show App Descriptions On Storefront Carousel"
+        },
+        {
+            "type": "bool",
+            "name": "showtotal",
+            "value": true,
+            "title": "Show \"Total Spent\" on Account Page"
+        },
+        {
+            "type": "bool",
+            "name": "showcustombg",
+            "value": true,
+            "title": "Set Custom Background on Edit Profile Screen"
+        },
+        {
+            "type": "bool",
+            "name": "changegreenlightbanner",
+            "value": true,
+            "title": "Replace Steam Greenlight Banner"
+        },
+        {
+            "type": "bool",
+            "name": "showprofilelinks",
+            "value": true,
+            "title": "Show External Profile Links"
+        },
+        {
+            "type": "bool",
+            "name": "showmarkethistory",
+            "value": true,
+            "title": "Show Transaction Summary on Market"
+        },
+        {
+            "type": "bool",
+            "name": "showsteamchartinfo",
+            "value": true,
+            "title": "Show SteamCharts.com Info"
+        },
+        {
+            "type": "bool",
+            "name": "showregionalprice",
+            "value": true,
+            "title": "Show Regional Price Comparison"
+        }
+    ],
+    "contributors": [],
+    "author": "jshackles",
+    "url": "",
+    "description": "Enhances the Steam experience!",
+    "name": "enhanced-steam",
+    "dependencies": [
+        "api-utils",
+        "addon-kit"
+    ],
+    "version": "4.6.1",
+    "lib": "lib",
+    "fullName": "Enhanced Steam",
+    "main": "main",
+    "id": "jid0-SmvlvxGpvCyG252KbVMqIKR79Uc",
+    "permissions": {
+        "private-browsing": true,
+        "cross-domain-content": [
+            "http://store.steampowered.com/",
+            "https://store.steampowered.com/",
+            "http://steamcommunity.com/",
+            "http://api.steampowered.com/",
+            "http://rate-exchange.appspot.com/"
+        ]
+    }
 }
