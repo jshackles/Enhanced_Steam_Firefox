@@ -1,6 +1,6 @@
-var data = require("self").data;
-var pageMod = require("page-mod");
-var prefSet = require("simple-prefs");
+var data = require("sdk/self").data;
+var pageMod = require("sdk/page-mod");
+var prefSet = require("sdk/simple-prefs");
 
 prefSet.on("ownedColorDefault", function() {
     prefSet.prefs.ownedColor = "#5c7836";
@@ -15,7 +15,7 @@ exports.main = function() {
         include: ["*.steampowered.com", "*.steamcommunity.com"], 
         contentScriptWhen: 'end',
         contentStyleFile: [data.url("enhancedsteam.css"), data.url("es_flags.css")],
-        contentScriptFile: [data.url("jQuery.min.js"), data.url("localization.js"), data.url("contentScript.js")],
+        contentScriptFile: [data.url("jQuery.min.js"), data.url("localization.js"), data.url("enhancedsteam.js")],
             onAttach: function(worker) {
                 worker.port.emit('get-prefs', [ 
                     prefSet.prefs.ownedColor,

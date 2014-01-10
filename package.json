@@ -1,0 +1,8 @@
+{
+    "name": "enhanced_steam", 
+    "version": "5.0", 
+    "main": "resources\\enhanced-steam\\lib\\main", 
+    "homepage": "www.EnhancedSteam.com", 
+    "id": "jid1-nIAMUHEuU7Ju4w", 
+    "description": "Enhances the Steam experience!"
+}

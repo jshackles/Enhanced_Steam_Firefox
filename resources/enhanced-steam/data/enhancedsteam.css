@@ -136,12 +136,12 @@ img.platform_small, .platform_img {
 }
 
 #es_library_hub_link {
-    display: inline-block;
-    position: relative;
-    top: 55px;
-    left: 422px;
-    z-index: 3;
-    padding: 4px;
+	display: inline-block;
+	position: relative;
+	top: 55px;
+	left: 422px;
+	z-index: 3;
+	padding: 4px;
 }
 
 #es_library_hub_link a {
@@ -374,8 +374,24 @@ img.platform_small, .platform_img {
 	margin:9px 0 0 5px;
 	direction:rtl;
 }
+.search_result_row .tags a {
+	text-decoration: none;
+	color: #FFF;
+}
+.search_result_row .tags a:hover {
+	text-decoration: underline;
+}
+.profile_link_icon {
+	width:16px;
+	height:16px;
+	vertical-align:middle;
+}
+.profile_link_icon.profile_link_icon_background {
+	background:#EBEBEB;
+	border-radius:4px;
+}
 .es_regional_container {
-    display: none;
+	display: none;
 	z-index:99;	
 	position:absolute;
 	background: linear-gradient(to bottom, #33425A 5%,#282F3D 95%);
@@ -441,9 +457,8 @@ img.platform_small, .platform_img {
 .es_flag {
 	margin-right:4px;
 }
-
 .es_each {
-    color: #626366;
+	color: #626366;
 	font-size: 11px;
 	float:right;
 	margin-top:-2px;
@@ -461,4 +476,63 @@ img.platform_small, .platform_img {
 	height:31px;
 	float:left;
 	margin-left:3px;
+}
+
+.es_btn_systemreqs {
+	margin-bottom: 10px;
+}
+
+.es_overlay {
+	position: absolute;
+	z-index: 0;
+	left: 0px;
+}
+.es_card_search {
+	padding:0px 2px;
+	margin-top: 2px;
+	display:block;
+	width:220px;
+}
+.es_text_input {
+	background-color: #4d4b49;
+	border: 1px solid #82807c;
+	color: #ffffff;
+	height: 18px;
+	padding: 2px 4px 3px 4px;
+}
+input[type=checkbox].es_dlc_selection {
+	position: absolute; 
+	overflow: hidden; 
+	clip: rect(0 0 0 0); 
+	height:1px; 
+	width:1px; 
+	margin:-1px; 
+	padding:0;
+	border:0;
+}
+
+input[type=checkbox].es_dlc_selection + label {
+	padding-left:20px;
+	height:13px; 
+	display:inline-block;
+	line-height:13px;
+	background-repeat:no-repeat;
+	background-position: 0 0;
+	vertical-align:middle;
+	cursor:default;
+	z-index: 99;
+}
+
+input[type=checkbox].es_dlc_selection:checked + label {
+	background-position: 0 -13px;
+}
+
+.es_review_image {
+	vertical-align: middle;
+	border: 0px;
+}
+
+.es_review_text {
+	font-size: 14px;
+	font-weight: bold;
 }
