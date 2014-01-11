@@ -487,30 +487,34 @@ function pack_split(node, ways) {
 	var price = (Number(price_text.replace(/[^0-9\.]+/g,""))) / ways;
 	price = (Math.ceil(price * 100) / 100);
 	price_text = formatMoney(price, places, currency_symbol, ",", comma ? "," : ".", at_end);
-	$(node).find(".btn_addtocart").before(
-		"<div class='es_each_box'><div class='es_each_price'>" + price_text + "</div><div class='es_each'>" + localized_strings[language].each + "</div></div>"
+	$(node).find(".btn_addtocart").last().before(
+		"<div class='es_each_box'><div class='es_each_price'>" + escapeHTML(price_text) + "</div><div class='es_each'>" + localized_strings[language].each + "</div></div>"
 	);
 }
 
 function add_4pack_breakdown() {
 	$(".game_area_purchase_game_wrapper").each(function() {
-		if ($(this).find("h1").is(":contains('Two Pack')")) { pack_split(this, 2); }
-		if ($(this).find("h1").is(":contains('Two-pack')")) { pack_split(this, 2); }
-		if ($(this).find("h1").is(":contains('Tower Wars Friend Pack')")) { pack_split(this, 2); }
-		if ($(this).find("h1").is(":contains('2-Pack')")) { pack_split(this, 2); }
-		if ($(this).find("h1").is(":contains('3-Pack')")) { pack_split(this, 3); }
-		if ($(this).find("h1").is(":contains('3 pack')")) { pack_split(this, 3); }
-		if ($(this).find("h1").is(":contains('Tower Wars Team Pack')")) { pack_split(this, 3); }
-		if ($(this).find("h1").is(":contains('4-pack')")) { pack_split(this, 4); }
-		if ($(this).find("h1").is(":contains('4-Pack')")) { pack_split(this, 4); }
-		if ($(this).find("h1").is(":contains('4 Pack')")) { pack_split(this, 4); }
-		if ($(this).find("h1").is(":contains('Four Pack')")) { pack_split(this, 4); }
-		if ($(this).find("h1").is(":contains('Four pack')")) { pack_split(this, 4); }
-		if ($(this).find("h1").is(":contains('Four-Pack')")) { pack_split(this, 4); }
-		if ($(this).find("h1").is(":contains('Clan Pack')")) { pack_split(this, 4); }
-		if ($(this).find("h1").is(":contains('5 Pack')")) { pack_split(this, 5); }
-		if ($(this).find("h1").is(":contains('6-pack')")) { pack_split(this, 6); }
-		if ($(this).find("h1").is(":contains('6-Pack')")) { pack_split(this, 6); }
+		var title = $(this).find("h1").text().trim();
+		title = title.toLowerCase().replace(/-/g, ' ');
+		if (!title || !title.contains('pack')) return;
+
+		if (title.contains(' 2 pack')) { pack_split(this, 2); }
+		else if (title.contains(' two pack')) { pack_split(this, 2); }
+		else if (title.contains('tower wars friend pack')) { pack_split(this, 2); }
+
+		else if (title.contains(' 3 pack')) { pack_split(this, 3); }
+		else if (title.contains(' three pack')) { pack_split(this, 3); }
+		else if (title.contains('tower wars team pack')) { pack_split(this, 3); }
+
+		else if (title.contains(' 4 pack')) { pack_split(this, 4); }
+		else if (title.contains(' four pack')) { pack_split(this, 4); }
+		else if (title.contains(' clan pack')) { pack_split(this, 4); }
+
+		else if (title.contains(' 5 pack')) { pack_split(this, 5); }
+		else if (title.contains(' five pack')) { pack_split(this, 5); }
+
+		else if (title.contains(' 6 pack')) { pack_split(this, 6); }
+		else if (title.contains(' six pack')) { pack_split(this, 6); }
 	});
 }
 
@@ -1116,6 +1120,81 @@ function dlc_data_for_dlc_page() {
 			$(node).append(html);
     	});	
 	});
+}
+
+function add_app_badge_progress(appid) {
+	if ($(".icon").find('img[src$="/ico_cards.png"]').length > 0) {
+		$(".communitylink .block_content:last").append("<div class='rule'></div><div class='block_content_inner'><link rel='stylesheet' type='text/css' href='http://cdn.steamcommunity.com/public/css/skin_1/badges.css'><div class='es_badge_progress'></div><div class='es_foil_badge_progress'></div></div><div style=\"clear: both\"></div>");
+		$(".es_badge_progress").load("http://steamcommunity.com/my/gamecards/" + appid + "/ .badge_current", function(responseText) {
+			if ($(responseText).find(".friendPlayerLevelNum").length != 1) {
+				var card_num_owned = $(responseText).find(".badge_detail_tasks .owned").length;
+				var card_num_total = $(responseText).find(".badge_detail_tasks .badge_card_set_card").length;
+				var progress_text_length = $(responseText).find(".gamecard_badge_progress").text().trim().length;
+				var next_level_empty_badge = $(responseText).find(".gamecard_badge_progress .badge_info").length;
+				var show_card_num;
+				var badge_completed;
+				if(progress_text_length>0&&next_level_empty_badge==0){
+					badge_completed=true;
+				}
+				if((card_num_owned>0&&progress_text_length==0)||(card_num_owned>0&&!badge_completed)){
+					show_card_num=true;
+				}
+				if (badge_completed){
+					$(".es_badge_progress").after("<a class='linkbar' href='http://steamcommunity.com/my/gamecards/" + escapeHTML(appid) + "/'><div class='rightblock'><img src='http://cdn4.store.steampowered.com/public/images/ico/ico_cards.png' width=24 height=16 border=0 align=top></div>" + localized_strings[language].view_badge + "</a>");
+				} else {
+					$(".es_badge_progress").after("<a class='linkbar' href='http://steamcommunity.com/my/gamecards/" + escapeHTML(appid) + "/'><div class='rightblock'><img src='http://cdn4.store.steampowered.com/public/images/ico/ico_cards.png' width=24 height=16 border=0 align=top></div>" + localized_strings[language].badge_progress + "</a>");
+				}
+				if(show_card_num){
+					$(".es_badge_progress").after("<div style='padding-top: 2px; padding-bottom: 2px; color: #5491cf;'>" + localized_strings[language].cards_owned.replace("__owned__", card_num_owned).replace("__possible__", card_num_total) + "</div>");
+				}
+				$(".es_badge_progress").after("<div style='padding-top: 10px; padding-bottom: 2px; color: #5491cf;'>" + escapeHTML($(responseText).find(".progress_info_bold").text()) + "</div>");
+				$(".es_badge_progress").after("<div style=\"clear: both\"></div>");
+				$(".es_badge_progress .badge_info_description").css({"width":"275px"});
+				$(".es_badge_progress .badge_empty_circle").css({"margin":"0px 46px 14px 8px","border-radius":"46px"});
+				$(".es_badge_progress .badge_empty_right div:last-child").remove();
+				$(".es_badge_progress .badge_empty_right").append("<div class=\"badge_empty_name\">" + localized_strings[language].badge_not_unlocked + "</div>").append("<div style=\"clear: both\"></div>");
+			} else {
+				$(".es_badge_progress").remove();
+				$(".communitylink .rule:last").remove();
+			}
+		});
+		$(".es_foil_badge_progress").load("http://steamcommunity.com/my/gamecards/" + appid + "/?border=1 .badge_current", function(responseText) {
+			if ($(responseText).find(".friendPlayerLevelNum").length != 1) {
+				var card_num_owned = $(responseText).find(".badge_detail_tasks .owned").length;
+				var card_num_total = $(responseText).find(".badge_detail_tasks .badge_card_set_card").length;
+				var progress_text_length = $(responseText).find(".gamecard_badge_progress").text().trim().length;
+				var next_level_empty_badge = $(responseText).find(".gamecard_badge_progress .badge_info").length;
+				var show_card_num;
+				var badge_completed;
+				if(progress_text_length>0&&next_level_empty_badge==0){
+					badge_completed=true;
+				}
+				if((card_num_owned>0&&progress_text_length==0)||(card_num_owned>0&&!badge_completed)){
+					show_card_num=true;
+				}
+				if ($(responseText).find(".badge_empty_circle").length != 1||card_num_owned>0) {
+					$(".es_foil_badge_progress .badge_info_description").css({"width":"275px"});
+					$(".es_foil_badge_progress .badge_empty_circle").css({"margin":"0px 46px 14px 8px","border-radius":"46px"});
+					$(".es_foil_badge_progress .badge_empty_right div:last-child").remove();
+					$(".es_foil_badge_progress .badge_empty_right").append("<div class=\"badge_empty_name\">" + localized_strings[language].badge_not_unlocked + "</div>")
+					if (badge_completed){
+						$(".es_foil_badge_progress").after("<a class='linkbar' href='http://steamcommunity.com/my/gamecards/" + escapeHTML(appid) + "/?border=1'><div class='rightblock'><img src='http://cdn4.store.steampowered.com/public/images/ico/ico_cards.png' width=24 height=16 border=0 align=top></div>" + localized_strings[language].view_badge_foil + "</a>");
+					}
+					else {
+						$(".es_foil_badge_progress").after("<a class='linkbar' href='http://steamcommunity.com/my/gamecards/" + escapeHTML(appid) + "/?border=1'><div class='rightblock'><img src='http://cdn4.store.steampowered.com/public/images/ico/ico_cards.png' width=24 height=16 border=0 align=top></div>" + localized_strings[language].badge_foil_progress + "</a>");
+					}
+					if(show_card_num){
+						$(".es_foil_badge_progress").after("<div style='padding-top: 2px; padding-bottom: 2px; color: #5491cf;'>" + localized_strings[language].cards_owned.replace("__owned__", card_num_owned).replace("__possible__", card_num_total) + "</div>");
+					}
+					$(".es_foil_badge_progress").after("<div style=\"clear: both\"></div>");
+				} else {
+					$(".es_foil_badge_progress").remove();
+				}
+			} else {
+				$(".es_foil_badge_progress").remove();
+			}
+		});
+	}
 }
 
 // adds metacritic user score
@@ -3285,6 +3364,7 @@ $(document).ready(function(){
                         add_remove_from_wishlist_button(appid);
                         add_4pack_breakdown();
                         add_steamchart_info(appid);
+                        add_app_badge_progress(appid);
                         add_dlc_checkboxes();
 						fix_achievement_icon_size();
                         
