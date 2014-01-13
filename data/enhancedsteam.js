@@ -873,12 +873,12 @@ function show_pricing_history(appid, type) {
                     line2 = localized_strings[language].historical_low + ': ' + formatMoney(escapeHTML(data["lowest"]["price"].toString()), 2, currency_symbol, ",", comma ? "," : ".", at_end) + ' at ' + escapeHTML(data["lowest"]["store"].toString()) + ' on ' + recorded.toDateString() + ' (<a href="' + escapeHTML(data["urls"]["history"].toString()) + '" target="_blank">Info</a>)';
                 }
 
-                var html = "<div class='game_purchase_area_friends_want' style='padding-top: 5px; height: 35px; border-top: 1px solid #4d4b49; border-left: 1px solid #4d4b49; border-right: 1px solid #4d4b49;' id='enhancedsteam_lowest_price'><div class='gift_icon' style='margin-top: -9px;'><img src='http://www.enhancedsteam.com/firefox/line_chart.png'></div>";
+                var html = "<div class='game_purchase_area_friends_want' style='padding-top: 5px; height: 35px; border-top: 1px solid #4d4b49; border-left: 1px solid #4d4b49; border-right: 1px solid #4d4b49;' id='enhancedsteam_lowest_price'><div class='gift_icon' style='margin-top: -9px;'><img src='" + self.options.img_line_chart + "'></div>";
 
     			// "Number of times this game has been in a bundle"
 				if (data["bundles"]["count"] > 0) {
 					line3 = "<br>" + localized_strings[language].bundle.bundle_count + ": " + data["bundles"]["count"] + ' (<a href="' + escapeHTML(data["urls"]["bundle_history"].toString()) + '" target="_blank">Info</a>)';					
-					html = "<div class='game_purchase_area_friends_want' style='padding-top: 5px; height: 50px; border-top: 1px solid #4d4b49; border-left: 1px solid #4d4b49; border-right: 1px solid #4d4b49;' id='enhancedsteam_lowest_price'><div class='gift_icon' style='margin-top: -4px;'><img src='http://www.enhancedsteam.com/firefox/line_chart.png'></div>";
+					html = "<div class='game_purchase_area_friends_want' style='padding-top: 5px; height: 50px; border-top: 1px solid #4d4b49; border-left: 1px solid #4d4b49; border-right: 1px solid #4d4b49;' id='enhancedsteam_lowest_price'><div class='gift_icon' style='margin-top: -4px;'><img src='" + self.options.img_line_chart + "'></div>";
 				}
                 
                 if (line1 && line2) {
@@ -1210,7 +1210,7 @@ function add_metracritic_userscore() {
         	get_http("http://api.enhancedsteam.com/metacritic/?mcurl=" + meta_real_link, function (txt) {
         		metauserscore = escapeHTML(txt);
         		metauserscore = metauserscore.replace(".","");		
-        		var newmeta = '<div id="game_area_metascore" style="background-image: url(http://www.enhancedsteam.com/firefox/metacritic_user_bg.png);"><div id="metapage">' + escapeHTML(metauserscore) + '</div></div>';
+        		var newmeta = '<div id="game_area_metascore" style="background-image: url(' + self.options.img_metacrtic_bg + ');"><div id="metapage">' + escapeHTML(metauserscore) + '</div></div>';
         		$("#game_area_metascore").after(newmeta);
         	});
         }
@@ -1776,13 +1776,13 @@ function add_steamdb_links(appid, type) {
     			$(".apphub_OtherSiteInfo").append('<a href="http://steamdb.info/app/' + escapeHTML(appid) + '/" class="btn_darkblue_white_innerfade btn_medium" target="_blank"><span>Steam Database</span>');
     			break;
     		case "gamegroup":
-    			$('#rightActionBlock' ).append('<div class="actionItemIcon"><img src="http://www.enhancedsteam.com/firefox/steamdb.png" width="16" height="16" alt=""></div><a class="linkActionMinor" target="_blank" href="http://steamdb.info/app/' + escapeHTML(appid) + '/">View In Steam Database</a>');
+    			$('#rightActionBlock' ).append('<div class="actionItemIcon"><img src="' + self.options.img_steamdb + '" width="16" height="16" alt=""></div><a class="linkActionMinor" target="_blank" href="http://steamdb.info/app/' + escapeHTML(appid) + '/">' + localized_strings[language].view_in + ' Steam Database</a>');
     			break;
     		case "app":
-    			$('#demo_block').find('.block_content_inner').find('.share').before('<div class="demo_area_button"><a class="game_area_wishlist_btn" target="_blank" href="http://steamdb.info/app/' + escapeHTML(appid) + '/" style="background-image:url(http://www.enhancedsteam.com/firefox/steamdb_store.png)">View In Steam Database</a></div>');
+    			$('#demo_block').find('.block_content_inner').prepend('<div class="demo_area_button"><a class="game_area_wishlist_btn" target="_blank" href="http://steamdb.info/app/' + escapeHTML(appid) + '/" style="background-image:url(' + self.options.img_steamdb_store + ')">' + localized_strings[language].view_in + ' Steam Database</a></div>');
     			break;
     		case "sub":	
-    			$(".share").before('<a class="game_area_wishlist_btn" target="_blank" href="http://steamdb.info/sub/' + escapeHTML(appid) + '/" style="background-image:url(http://www.enhancedsteam.com/firefox/steamdb_store.png)">View In Steam Database</a>');
+    			$(".share").before('<a class="game_area_wishlist_btn" target="_blank" href="http://steamdb.info/sub/' + escapeHTML(appid) + '/" style="background-image:url(' + self.options.img_steamdb_store + ')">' + localized_strings[language].view_in + ' Steam Database</a>');
     			break;
     	}
     }
@@ -2526,7 +2526,7 @@ function show_regional_pricing() {
         var api_url = "http://store.steampowered.com/api/packagedetails/";
     	var countries = ["US","GB","EU1","EU2","BR","RU","AU"];
     	var pricing_div = "<div class='es_regional_container'></div>";
-    	var world = "http://www.enhancedsteam.com/firefox/img/flags/world.png";
+    	var world = self.options.img_world;
     	var currency_deferred = [];
     	var local_country;
     	var local_currency;
@@ -2587,7 +2587,7 @@ function show_regional_pricing() {
 		var subids_csv;
         
         function formatPriceData(sub_info,country,converted_price,local_currency) {
-			var flag_div = "<div class=\"es_flag\" style='background-image:url( http://www.enhancedsteam.com/firefox/img/flags/flags.png )'></div>";
+			var flag_div = "<div class=\"es_flag\" style='background-image:url( " + self.options.img_flags + " )'></div>";
 			if (sub_info["prices"][country]){
 				var price = sub_info["prices"][country]["final"]/100;
 				var local_price = sub_info["prices"][local_country]["final"]/100;
@@ -2631,7 +2631,7 @@ function show_regional_pricing() {
 						break;
 				}
 				percentage = (((converted_price/local_price)*100)-100).toFixed(2);
-				var arrows = "http://www.enhancedsteam.com/firefox/img/arrows.png";
+				var arrows = self.options.img_arrows;
 				var percentage_span="<span class=\"es_percentage\"><div class=\"es_percentage_indicator\" style='background-image:url(" + arrows + ")'></div></span>";
 				if (percentage<0) {
 					percentage = Math.abs(percentage);
