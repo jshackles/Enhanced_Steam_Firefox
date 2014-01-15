@@ -77,6 +77,8 @@ var localized_strings,
 			options_changelog: "Changelog:",
 			options_general: "General",
 			options_clear: "Are you sure you wish to reset all options? This cannot be undone.",
+			options_hide_owned: "Items you own in search results",
+			options_hide_owned_homepage: "Items you own on the homepage",
 			regional_price: "Regional Price Comparison",
 			regional_price_on: "Show regional price comparison",
 			regional_price_mouse: "on Price Mouseover",
@@ -220,6 +222,11 @@ var localized_strings,
 			wallet: {
 				custom_amount: "Add custom amount",
 				custom_amount_text: "Add any amount over __minamount__"
+			},
+			select: {
+				unowned_dlc: "Select Unowned DLC",
+				wishlisted_dlc: "Select Wishlisted DLC",
+				none: "Select None"
 			}
 		};
 
