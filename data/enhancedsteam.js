@@ -833,7 +833,7 @@ function show_pricing_history(appid, type) {
     		}
     	}
     			
-    	get_http("http://api.enhancedsteam.com/pricev2/?search=" + escapeHTML(type) + "/" + escapeHTML(appid) + "&stores=" + storestring + "&cc=" + cc, function (txt) {
+    	get_http("http://api.enhancedsteam.com/pricev2/?search=" + type + "/" + appid + "&stores=" + storestring + "&cc=" + cc, function (txt) {
             var data = JSON.parse(txt);
             if (data) {
                 var activates = "", line1 = "", line2 = "", line3 = "", html, recorded, currency_symbol, comma = false, at_end = false;
@@ -870,7 +870,7 @@ function show_pricing_history(appid, type) {
                 // "Historical Low"
 				if (data["lowest"]) {
                     recorded = new Date(data["lowest"]["recorded"]*1000);
-                    line2 = localized_strings[language].historical_low + ': ' + formatMoney(escapeHTML(data["lowest"]["price"].toString()), 2, currency_symbol, ",", comma ? "," : ".", at_end) + ' at ' + escapeHTML(data["lowest"]["store"].toString()) + ' on ' + recorded.toDateString() + ' (<a href="' + escapeHTML(data["urls"]["history"].toString()) + '" target="_blank">Info</a>)';
+                    line2 = localized_strings[language].historical_low + ': ' + formatMoney(escapeHTML(data["lowest"]["price"].toString()), 2, currency_symbol, ",", comma ? "," : ".", at_end) + ' at ' + escapeHTML(data["lowest"]["store"].toString()) + ' on ' + escapeHTML(recorded.toDateString()) + ' (<a href="' + escapeHTML(data["urls"]["history"].toString()) + '" target="_blank">Info</a>)';
                 }
 
                 var html = "<div class='game_purchase_area_friends_want' style='padding-top: 5px; height: 35px; border-top: 1px solid #4d4b49; border-left: 1px solid #4d4b49; border-right: 1px solid #4d4b49;' id='enhancedsteam_lowest_price'><div class='gift_icon' style='margin-top: -9px;'><img src='" + self.options.img_line_chart + "'></div>";
@@ -2295,7 +2295,7 @@ function add_es_background_selection() {
     		html += "<img id='es_profile_background_current_image' src=''>";
     		html += "</div><div class='profile_background_current_description'><div id='profile_background_current_name'><select name='es_background' id='es_background' class='gray_bevel dynInput' onchange=\"function image(obj){index=obj.selectedIndex; document.getElementById('es_profile_background_current_image').src=obj.options[index].id; } image(this);\"><option value='0' id='http://www.enhancedsteam.com/gamedata/icons/smallblacksquare.jpg'>None Selected / No Change</option>";
     
-    		get_http("http://api.enhancedsteam.com/profile-select/?steam64=" + escapeHTML(steam64), function (txt) {
+    		get_http("http://api.enhancedsteam.com/profile-select/?steam64=" + steam64, function (txt) {
     			var data = JSON.parse(txt);
     
     			var array = [];
