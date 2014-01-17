@@ -1686,12 +1686,20 @@ function load_inventory_market_prices(appid, item, item_name, global_id) {
 		var item_price = txt.match(/<span class="market_listing_price market_listing_price_with_fee">\r\n(.+)<\/span>/);
 		switch (item) {
 			case 0:
-				if (item_price) { $("#es_item0").html(localized_strings[language].lowest_price + " for " + item_name + ": " + item_price[1].trim() + "<br><a href='" + url + "' target='_blank' class='btn_grey_grey btn_medium'><span>" + localized_strings[language].view_marketplace + "</span></a>");
+				if (item_price) { $("#es_item0").html("<span class='es_market_price_text'>" + localized_strings[language].lowest_price + " for " + escapeHTML(item_name) + ": " + escapeHTML(item_price[1].trim()) + "</span><br><a href='" + escapeHTML(url) + "' target='_blank' class='btn_grey_grey btn_medium'><span>" + localized_strings[language].view_marketplace + "</span></a>");
 				} else { $("#es_item0").html(localized_strings[language].no_results_found); }
+				$("#es_item0").find(".es_market_price_text").text($("#es_item0").find(".es_market_price_text").text().replace("&#36;", "$"));
+				$("#es_item0").find(".es_market_price_text").text($("#es_item0").find(".es_market_price_text").text().replace("&#44;", ","));
+				$("#es_item0").find(".es_market_price_text").text($("#es_item0").find(".es_market_price_text").text().replace("&#163;", "£"));
+				$("#es_item0").find(".es_market_price_text").text($("#es_item0").find(".es_market_price_text").text().replace("&#8364;", "€"));
 				break;
 			case 1:
-				if (item_price) { $("#es_item1").html(localized_strings[language].lowest_price + " for " + item_name + ": " + item_price[1].trim() + "<br><a href='" + url + "' target='_blank' class='btn_grey_grey btn_medium'><span>" + localized_strings[language].view_marketplace + "</span></a>");
+				if (item_price) { $("#es_item1").html("<span class='es_market_price_text'>" + localized_strings[language].lowest_price + " for " + escapeHTML(item_name) + ": " + escapeHTML(item_price[1].trim()) + "</span><br><a href='" + escapeHTML(url) + "' target='_blank' class='btn_grey_grey btn_medium'><span>" + localized_strings[language].view_marketplace + "</span></a>");
 				} else { $("#es_item1").html(localized_strings[language].no_results_found); }
+				$("#es_item1").find(".es_market_price_text").text($("#es_item1").find(".es_market_price_text").text().replace("&#36;", "$"));
+				$("#es_item1").find(".es_market_price_text").text($("#es_item1").find(".es_market_price_text").text().replace("&#44;", ","));
+				$("#es_item1").find(".es_market_price_text").text($("#es_item1").find(".es_market_price_text").text().replace("&#163;", "£"));
+				$("#es_item1").find(".es_market_price_text").text($("#es_item1").find(".es_market_price_text").text().replace("&#8364;", "€"));
 				break;
 		}
 	});
