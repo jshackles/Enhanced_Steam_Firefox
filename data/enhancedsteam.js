@@ -643,14 +643,13 @@ function add_community_profile_links() {
         if (steamID === undefined) { var steamID = document.documentElement.outerHTML.match(/steamid"\:"(.+)","personaname/)[1]; }
     
     	var htmlstr = '';
-    	htmlstr += '<div class="profile_count_link"><a href="http://www.steamgifts.com/user/id/' + steamID + '" target="_blank"><span class="count_link_label">SteamGifts</span>&nbsp;<img src="http://www.enhancedsteam.com/firefox/ico/steamgifts.ico" width="24" height="24" border="0" /></a></div>';
-    	htmlstr += '<div class="profile_count_link"><a href="http://www.steamtrades.com/user/id/' + steamID + '" target="_blank"><span class="count_link_label">SteamTrades</span>&nbsp;<img src="http://www.enhancedsteam.com/firefox/ico/steamtrades.ico" width="24" height="24" border="0" /></a></div>';
-    	htmlstr += '<div class="profile_count_link"><a href="http://steamrep.com/profiles/' + steamID + '" target="_blank"><span class="count_link_label">SteamRep</span>&nbsp;<img src="http://www.enhancedsteam.com/firefox/ico/steamrep.ico" width="24" height="24" border="0" /></a></div>';
-    	htmlstr += '<div class="profile_count_link"><a href="http://wastedonsteam.com/id/' + steamID + '" target="_blank"><span class="count_link_label">Wasted On Steam</span>&nbsp;<img src="http://www.enhancedsteam.com/firefox/ico/wastedonsteam.ico" width="24" height="24" border="0" /></a></div>';
-    	htmlstr += '<div class="profile_count_link"><a href="http://sapi.techieanalyst.net/?page=profile&id=' + steamID + '" target="_blank"><span class="count_link_label">sAPI</span>&nbsp;<img src="http://www.enhancedsteam.com/firefox/ico/sapi.ico" width="24" height="24" border="0" /></a></div>';
-    	htmlstr += '<div class="profile_count_link"><a href="http://backpack.tf/profiles/' + steamID + '" target="_blank"><span class="count_link_label">backpack.tf</span>&nbsp;<img src="http://www.enhancedsteam.com/firefox/ico/backpacktf.ico" width="24" height="24" border="0" /></a></div>';
-    	htmlstr += '<div class="profile_count_link"><a href="http://www.achievementstats.com/index.php?action=profile&playerId=' + steamID + '" target="_blank"><span class="count_link_label">Achievement Stats</span>&nbsp;<img src="http://www.enhancedsteam.com/firefox/ico/achievementstats.ico" width="24" height="24" border="0" /></a></div>';
-    
+    	htmlstr += '<div class="profile_count_link"><a href="http://steamrep.com/profiles/' + escapeHTML(steamID) + '" target="_blank"><span class="count_link_label">SteamRep</span>&nbsp;<span class="profile_count_link_total"><img src="' + self.options.img_ico_steamrep + '" class="profile_link_icon">';
+    	htmlstr += '<div class="profile_count_link"><a href="http://steamdb.info/calculator/?player=' + escapeHTML(steamID) + '" target="_blank"><span class="count_link_label">SteamDB</span>&nbsp;<span class="profile_count_link_total"><img src="' + self.options.img_ico_steamdb + '" class="profile_link_icon">';
+    	htmlstr += '<div class="profile_count_link"><a href="http://www.steamtrades.com/user/id/' + escapeHTML(steamID) + '" target="_blank"><span class="count_link_label">SteamTrades</span>&nbsp;<span class="profile_count_link_total"><img src="' + self.options.img_ico_steamtrades + '" class="profile_link_icon">';
+    	htmlstr += '<div class="profile_count_link"><a href="http://www.steamgifts.com/user/id/' + escapeHTML(steamID) + '" target="_blank"><span class="count_link_label">SteamGifts</span>&nbsp;<span class="profile_count_link_total"><img src="' + self.options.img_ico_steamgifts + '" class="profile_link_icon">';
+    	htmlstr += '<div class="profile_count_link"><a href="http://www.achievementstats.com/index.php?action=profile&playerId=' + escapeHTML(steamID) + '" target="_blank"><span class="count_link_label">Achievement Stats</span>&nbsp;<span class="profile_count_link_total"><img src="' + self.options.img_ico_achievementstats + '" class="profile_link_icon">';
+    	htmlstr += '<div class="profile_count_link"><a href="http://backpack.tf/profiles/' + escapeHTML(steamID) + '" target="_blank"><span class="count_link_label">Backpack.tf</span>&nbsp;<span class="profile_count_link_total"><img src="' + self.options.img_ico_backpacktf + '" class="profile_link_icon">';
+    	
     	if (htmlstr != '') { $(".profile_item_links").append(htmlstr); }
     }
 }
@@ -2499,7 +2498,7 @@ function add_overlay() {
 			switch (true) {
 				case /^\/app\/.*/.test(window.location.pathname):
 					if ($(".early_access_header").length > 0) {
-						$(".game_header_image:first").after("<img class='es_overlay' style='left: " + $(".game_header_image:first").position().left + "px' src='http://www.enhancedsteam.com/firefox/img/overlay/ea_292x136.png'>");
+						$(".game_header_image:first").after("<img class='es_overlay' style='left: " + $(".game_header_image:first").position().left + "px' src='" + self.options.img_overlay_ea_292x136 + "'>");
 					}
 					$(".small_cap").each(function(index, value) { check_early_access($(this), "ea_184x69.png", $(this).position().left + 10); });
 					break;
@@ -2548,7 +2547,7 @@ function add_overlay() {
 					break;
 				case /^\/app\/.*/.test(window.location.pathname):
 					if ($(".apphub_EarlyAccess_Title").length > 0) {
-						$(".apphub_StoreAppLogo:first").after("<img class='es_overlay' style='left: " + $(".apphub_StoreAppLogo:first").position().left + "px' src='http://www.enhancedsteam.com/firefox/img/overlay/ea_292x136.png'>");
+						$(".apphub_StoreAppLogo:first").after("<img class='es_overlay' style='left: " + $(".apphub_StoreAppLogo:first").position().left + "px' src='" + self.options.img_overlay_ea_292x136 + "'>");
 					}
 			}
 	}
