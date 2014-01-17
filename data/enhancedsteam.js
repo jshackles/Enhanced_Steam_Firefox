@@ -612,7 +612,7 @@ function add_fake_country_code_warning() {
 	var fakeCC = getCookie("fakeCC");
 
 	if (fakeCC && LKGBillingCountry && LKGBillingCountry.length == 2 && LKGBillingCountry != fakeCC) {
-		$("#global_header").after('<div class=content style="background-image: url( http://www.enhancedsteam.com/firefox/img/red_banner.png ); height: 21px; text-align: center; padding-top: 8px;">' + localized_strings[language].using_store.replace("__current__", escapeHTML(fakeCC)) + '  <a href="#" id="reset_fake_country_code">' + localized_strings[language].using_store_return.replace("__base__", escapeHTML(LKGBillingCountry)) + '</a></div>');
+		$("#global_header").after('<div class=content style="background-image: url( ' + self.options.img_red_banner + ' ); height: 21px; text-align: center; padding-top: 8px;">' + localized_strings[language].using_store.replace("__current__", escapeHTML(fakeCC)) + '  <a href="#" id="reset_fake_country_code">' + localized_strings[language].using_store_return.replace("__base__", escapeHTML(LKGBillingCountry)) + '</a></div>');
 		$("#page_background_holder").css("top", "135px");
 		$("#reset_fake_country_code").click(function(e) {
 			e.preventDefault();
@@ -949,7 +949,7 @@ function add_pcgamingwiki_link(appid) {
     			var gamename = txt.match(/results":{"(.+)":{/)[1];
     			var data = JSON.parse(txt);
     			var url = escapeHTML(data["results"][gamename]["fullurl"]);
-    			$('#demo_block').find('.block_content_inner').prepend('<div class="demo_area_button"><a class="game_area_wishlist_btn" target="_blank" href="' + url + '" style="background-image:url( http://www.enhancedsteam.com/firefox/pcgw.png )">' + localized_strings[language].wiki_article.replace("__pcgw__","PC Gaming Wiki") + '</a></div>');
+    			$('#demo_block').find('.block_content_inner').prepend('<div class="demo_area_button"><a class="game_area_wishlist_btn" target="_blank" href="' + url + '" style="background-image:url( ' + self.options.img_pcgw + ' )">' + localized_strings[language].wiki_article.replace("__pcgw__","PC Gaming Wiki") + '</a></div>');
     		}
     	});
 	}
@@ -3083,7 +3083,7 @@ function add_cardexchange_links(game) {
 		var $node = $(node);
 		var gamecard = game || get_gamecard($node.find(".badge_row_overlay").attr('href'));
 		if(!gamecard) return;
-		$node.prepend('<div style="position: absolute; z-index: 3; top: 12px; right: 12px;" class="es_steamcardexchange_link"><a href="http://www.steamcardexchange.net/index.php?gamepage-appid-' + escapeHTML(gamecard) + '" target="_blank" alt="Steam Card Exchange" title="Steam Card Exchange"><img src="http://www.enhancedsteam.com/firefox/steamcardexchange.png" width="24" height="24" border="0" /></a></div>');
+		$node.prepend('<div style="position: absolute; z-index: 3; top: 12px; right: 12px;" class="es_steamcardexchange_link"><a href="http://www.steamcardexchange.net/index.php?gamepage-appid-' + escapeHTML(gamecard) + '" target="_blank" alt="Steam Card Exchange" title="Steam Card Exchange"><img src="' + self.options.img_steamcardexchange + '" width="24" height="24" border="0" /></a></div>');
 		$node.find(".badge_title_row").css("padding-right", "44px");
 	});
 }
