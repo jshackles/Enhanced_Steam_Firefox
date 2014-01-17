@@ -2461,7 +2461,32 @@ function check_early_access(node, image_name, image_left, selector_modifier) {
 				if (value.description == "Early Access") {
 					var selector = "img";
 					if (selector_modifier != undefined) selector += selector_modifier;
-					$(node).find(selector.trim()).after("<img class='es_overlay' style='left: " + image_left + "px' src='http://www.enhancedsteam.com/firefox/img/overlay/" + escapeHTML(image_name) + "'>");
+					var image;
+					switch (image_name) {
+						case "ea_sm_120.png":
+							image = self.options.img_overlay_ea_sm_120;
+							break;
+						case "ea_184x69.png":
+							image = self.options.img_overlay_ea_184x69;
+							break;
+						case "ea_231x87.png":
+							image = self.options.img_overlay_ea_231x87;
+							break;
+						case "ea_292x136.png":
+							image = self.options.img_overlay_ea_292x136;
+							break;
+						case "ea_467x181.png":
+							image = self.options.img_overlay_ea_467x181;
+							break;							
+					}
+					overlay_img = $("<img class='es_overlay' src='" + image + "'>");
+					if(node.hasClass("small_cap")) {
+						$(overlay_img).css({"left":"-" + node.width() + "px", "position":"relative"});
+					}
+					else {
+						$(overlay_img).css({"left":image_left + "px"});
+					}
+					$(node).find(selector.trim()).after(overlay_img);
 				}
 			});	
 		}
