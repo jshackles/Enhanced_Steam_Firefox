@@ -1858,42 +1858,42 @@ function drm_warnings() {
         if (document.body.innerHTML.indexOf("No 3rd Party DRM") > 0) { otherdrm = false; }
         
         if (gfwl) {            	
-        	$("#game_area_purchase").before($("<div>", { class: "game_area_already_owned", style: "background-image: url( http://www.enhancedsteam.com/firefox/game_area_warning.png );" }).append($("<span>").text("Warning: This title uses 3rd party DRM (Games for Windows Live)")));
+        	$("#game_area_purchase").before($("<div>", { class: "game_area_already_owned", style: "background-image: url( " + self.options.img_game_area_warning + " );" }).append($("<span>").text("Warning: This title uses 3rd party DRM (Games for Windows Live)")));
             otherdrm = false;
         }
         
         if (uplay) {
-            $("#game_area_purchase").before($("<div>", { class: "game_area_already_owned", style: "background-image: url( http://www.enhancedsteam.com/firefox/game_area_warning.png );" }).append($("<span>").text("Warning: This title uses 3rd party DRM (Ubisoft Uplay)")));
+            $("#game_area_purchase").before($("<div>", { class: "game_area_already_owned", style: "background-image: url( " + self.options.img_game_area_warning + " );" }).append($("<span>").text("Warning: This title uses 3rd party DRM (Ubisoft Uplay)")));
         	otherdrm = false;
         }
         
         if (securom) {            	
-        	$("#game_area_purchase").before($("<div>", { class: "game_area_already_owned", style: "background-image: url( http://www.enhancedsteam.com/firefox/game_area_warning.png );" }).append($("<span>").text("Warning: This title uses 3rd party DRM (SecuROM)")));
+        	$("#game_area_purchase").before($("<div>", { class: "game_area_already_owned", style: "background-image: url( " + self.options.img_game_area_warning + " );" }).append($("<span>").text("Warning: This title uses 3rd party DRM (SecuROM)")));
             otherdrm = false;
         }
         
         if (tages) {            	
-        	$("#game_area_purchase").before($("<div>", { class: "game_area_already_owned", style: "background-image: url( http://www.enhancedsteam.com/firefox/game_area_warning.png );" }).append($("<span>").text("Warning: This title uses 3rd party DRM (Tages)")));
+        	$("#game_area_purchase").before($("<div>", { class: "game_area_already_owned", style: "background-image: url( " + self.options.img_game_area_warning + " );" }).append($("<span>").text("Warning: This title uses 3rd party DRM (Tages)")));
             otherdrm = false;
         }
         
         if (stardock) {            	
-        	$("#game_area_purchase").before($("<div>", { class: "game_area_already_owned", style: "background-image: url( http://www.enhancedsteam.com/firefox/game_area_warning.png );" }).append($("<span>").text("Warning: This title uses 3rd party DRM (Stardock Account Required)")));
+        	$("#game_area_purchase").before($("<div>", { class: "game_area_already_owned", style: "background-image: url( " + self.options.img_game_area_warning + " );" }).append($("<span>").text("Warning: This title uses 3rd party DRM (Stardock Account Required)")));
             otherdrm = false;
         }
         
         if (rockstar) {            	
-        	$("#game_area_purchase").before($("<div>", { class: "game_area_already_owned", style: "background-image: url( http://www.enhancedsteam.com/firefox/game_area_warning.png );" }).append($("<span>").text("Warning: This title uses 3rd party DRM (Rockstar Social Club)")));
+        	$("#game_area_purchase").before($("<div>", { class: "game_area_already_owned", style: "background-image: url( " + self.options.img_game_area_warning + " );" }).append($("<span>").text("Warning: This title uses 3rd party DRM (Rockstar Social Club)")));
             otherdrm = false;
         }
         
         if (kalypso) {            	
-        	$("#game_area_purchase").before($("<div>", { class: "game_area_already_owned", style: "background-image: url( http://www.enhancedsteam.com/firefox/game_area_warning.png );" }).append($("<span>").text("Warning: This title uses 3rd party DRM (Kalypso Launcher)")));
+        	$("#game_area_purchase").before($("<div>", { class: "game_area_already_owned", style: "background-image: url( " + self.options.img_game_area_warning + " );" }).append($("<span>").text("Warning: This title uses 3rd party DRM (Kalypso Launcher)")));
             otherdrm = false;
         }
         
         if (otherdrm) {            	
-            $("#game_area_purchase").before($("<div>", { class: "game_area_already_owned", style: "background-image: url( http://www.enhancedsteam.com/firefox/game_area_warning.png );" }).append($("<span>").text("Warning: This title uses 3rd party DRM")));
+            $("#game_area_purchase").before($("<div>", { class: "game_area_already_owned", style: "background-image: url( " + self.options.img_game_area_warning + " );" }).append($("<span>").text("Warning: This title uses 3rd party DRM")));
         }
     }
 }
@@ -1937,13 +1937,13 @@ function add_affordable_button() {
     			if (index == 1) {
     				switch (currency_symbol) {
     					case "€":
-    						$(this).after("<a class='btn_browse' style='width: 308px; background-image: url( http://www.enhancedsteam.com/firefox/es_btn_browse.png );' href='" + escapeHTML(link) + "'><h3 style='width: 120px;'>" + escapeHTML(balance) + "<span class='currency'>" + escapeHTML(currency_symbol) + "</span></h3><h5><span id='es_results'></span> games under " + escapeHTML(balance_text) + "</h5></a>");
+    						$(this).after("<a class='btn_browse' style='width: 308px; background-image: url( " + self.options.img_es_btn_browse + " );' href='" + escapeHTML(link) + "'><h3 style='width: 120px;'>" + escapeHTML(balance) + "<span class='currency'>" + escapeHTML(currency_symbol) + "</span></h3><h5><span id='es_results'></span> games under " + escapeHTML(balance_text) + "</h5></a>");
     						break;
     					case "pуб":
-    						$(this).after("<a class='btn_browse' style='width: 308px; background-image: url( http://www.enhancedsteam.com/firefox/es_btn_browse.png );' href='" + escapeHTML(link) + "'><h3 style='width: 120px;'>" + escapeHTML(balance) + "</h3><h5><span id='es_results'></span> games under " + escapeHTML(balance_text) + "</h5></a>");
+    						$(this).after("<a class='btn_browse' style='width: 308px; background-image: url( " + self.options.img_es_btn_browse + " );' href='" + escapeHTML(link) + "'><h3 style='width: 120px;'>" + escapeHTML(balance) + "</h3><h5><span id='es_results'></span> games under " + escapeHTML(balance_text) + "</h5></a>");
     						break;
     					default:
-    						$(this).after("<a class='btn_browse' style='width: 308px; background-image: url( http://www.enhancedsteam.com/firefox/es_btn_browse.png );' href='" + escapeHTML(link) + "'><h3 style='width: 120px;'><span class='currency'>" + escapeHTML(currency_symbol) + "</span>" + escapeHTML(balance) + "</h3><h5><span id='es_results'></span> games under " + escapeHTML(balance_text) + "</h5></a>");
+    						$(this).after("<a class='btn_browse' style='width: 308px; background-image: url( " + self.options.img_es_btn_browse + " );' href='" + escapeHTML(link) + "'><h3 style='width: 120px;'><span class='currency'>" + escapeHTML(currency_symbol) + "</span>" + escapeHTML(balance) + "</h3><h5><span id='es_results'></span> games under " + escapeHTML(balance_text) + "</h5></a>");
     				}		
     				get_http(link, function(txt) {
     					var results = txt.match(/search_pagination_left(.+)\r\n(.+)/)[2];
@@ -2426,7 +2426,7 @@ function add_dlc_checkboxes() {
 	}
 	$("#es_selected_btn").before("<form name=\"add_selected_dlc_to_cart\" action=\"http://store.steampowered.com/cart/\" method=\"POST\" id=\"es_selected_cart\">");
 	$(".game_area_dlc_row").each(function() {
-		$(this).find(".game_area_dlc_name").prepend("<input type='checkbox' class='es_dlc_selection' style='cursor: default;' id='es_select_dlc_" + $(this).find("input").val() + "' value='" + $(this).find("input").val() + "'><label for='es_select_dlc_" + $(this).find("input").val() + "' style='background-image: url( http://www.enhancedsteam.com/firefox/img/check_sheet.png );'></label>");
+		$(this).find(".game_area_dlc_name").prepend("<input type='checkbox' class='es_dlc_selection' style='cursor: default;' id='es_select_dlc_" + $(this).find("input").val() + "' value='" + $(this).find("input").val() + "'><label for='es_select_dlc_" + $(this).find("input").val() + "' style='background-image: url( " + self.options.img_check_sheet + " );'></label>");
 	});
 	function add_dlc_to_list() {
 		$("#es_selected_cart").html("<input type=\"hidden\" name=\"action\" value=\"add_to_cart\">");
