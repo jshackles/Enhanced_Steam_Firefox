@@ -22,7 +22,8 @@ var ownedColor,
     contscroll,
     showsteamchartinfo,
     showregionalprice,
-    showprofilelinks_display;
+    showprofilelinks_display,
+    showallachievements;
     
 var search_threshhold = $(window).height() - 80;
 
@@ -55,6 +56,7 @@ self.port.on("get-prefs", function(data) {
     showsteamchartinfo = data[18];
     showregionalprice = data[19];
     showprofilelinks_display = data[20];
+    showallachievements = data[21];
 });
 
 // Session storage functions.
@@ -3080,29 +3082,31 @@ function add_gamelist_filter() {
 }
 
 function add_gamelist_achievements() {
-	if (window.location.href.match(/\/games\?tab=all/)) {
-		$(".gameListRow").each(function(index, value) {
-			var appid = get_appid_wishlist(value.id);
-			$(value).find(".bottom_controls").find("img").each(function () {
-				if ($(this).attr("src").indexOf("http://cdn.steamcommunity.com/public/images/skin_1/ico_stats.gif") == 0) {
-					if (!($(value).html().match(/<h5><\/h5>/))) {
-						$(value).find(".gameListRowItemName").append("<div class='recentAchievements' id='es_app_" + escapeHTML(appid) + "' style='padding-top: 14px; padding-right: 4px; width: 205px; float: right; font-size: 10px; font-weight: normal;'>");
-						$("#es_app_" + appid).html("Loading achievements...");
-						$("#es_app_" + appid).load($(".profile_small_header_texture a")[0].href + '/stats/' + appid + ' #topSummaryAchievements', function(response, status, xhr) {							
-                            var BarFull = $("#es_app_" + appid).html().match(/achieveBarFull\.gif" border="0" height="12" width="([0-9]|[1-9][0-9]|[1-9][0-9][0-9])"/)[1];
-							var BarEmpty = $("#es_app_" + appid).html().match(/achieveBarEmpty\.gif" border="0" height="12" width="([0-9]|[1-9][0-9]|[1-9][0-9][0-9])"/)[1];
-							BarFull = BarFull * .58;
-    						BarEmpty = BarEmpty * .58;
-							var html = $("#es_app_" + appid).html();
-							html = html.replace(/achieveBarFull\.gif" border="0" height="12" width="([0-9]|[1-9][0-9]|[1-9][0-9][0-9])"/, "achieveBarFull.gif\" border='0' height='12' width=\"" + escapeHTML(BarFull.toString()) + "\"");
-							html = html.replace(/achieveBarEmpty\.gif" border="0" height="12" width="([0-9]|[1-9][0-9]|[1-9][0-9][0-9])"/, "achieveBarEmpty.gif\" border='0' height='12' width=\"" + escapeHTML(BarEmpty.toString()) + "\"");
-							html = html.replace("::", ":");
-							$("#es_app_" + appid).html(html);
-						});
+	if (showallachievements) {
+		if (window.location.href.match(/\/games\?tab=all/)) {
+			$(".gameListRow").each(function(index, value) {
+				var appid = get_appid_wishlist(value.id);
+				$(value).find(".bottom_controls").find("img").each(function () {
+					if ($(this).attr("src").indexOf("http://cdn.steamcommunity.com/public/images/skin_1/ico_stats.gif") == 0) {
+						if (!($(value).html().match(/<h5><\/h5>/))) {
+							$(value).find(".gameListRowItemName").append("<div class='recentAchievements' id='es_app_" + escapeHTML(appid) + "' style='padding-top: 14px; padding-right: 4px; width: 205px; float: right; font-size: 10px; font-weight: normal;'>");
+							$("#es_app_" + appid).html("Loading achievements...");
+							$("#es_app_" + appid).load($(".profile_small_header_texture a")[0].href + '/stats/' + appid + ' #topSummaryAchievements', function(response, status, xhr) {							
+								var BarFull = $("#es_app_" + appid).html().match(/achieveBarFull\.gif" border="0" height="12" width="([0-9]|[1-9][0-9]|[1-9][0-9][0-9])"/)[1];
+								var BarEmpty = $("#es_app_" + appid).html().match(/achieveBarEmpty\.gif" border="0" height="12" width="([0-9]|[1-9][0-9]|[1-9][0-9][0-9])"/)[1];
+								BarFull = BarFull * .58;
+								BarEmpty = BarEmpty * .58;
+								var html = $("#es_app_" + appid).html();
+								html = html.replace(/achieveBarFull\.gif" border="0" height="12" width="([0-9]|[1-9][0-9]|[1-9][0-9][0-9])"/, "achieveBarFull.gif\" border='0' height='12' width=\"" + escapeHTML(BarFull.toString()) + "\"");
+								html = html.replace(/achieveBarEmpty\.gif" border="0" height="12" width="([0-9]|[1-9][0-9]|[1-9][0-9][0-9])"/, "achieveBarEmpty.gif\" border='0' height='12' width=\"" + escapeHTML(BarEmpty.toString()) + "\"");
+								html = html.replace("::", ":");
+								$("#es_app_" + appid).html(html);
+							});
+						}
 					}
-				}
+				});
 			});
-		});
+		}
 	}
 }
 

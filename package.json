@@ -143,6 +143,12 @@
         },
         {
             "type": "bool",
+            "name": "showallachievements",
+            "value": false,
+            "title": "Show achievement stats on \"All Games\" page"
+        },
+        {
+            "type": "bool",
             "name": "showsteamchartinfo",
             "value": true,
             "title": "Show SteamCharts.com Info"
