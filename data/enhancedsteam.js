@@ -1209,7 +1209,7 @@ function add_metracritic_userscore() {
         	get_http("http://api.enhancedsteam.com/metacritic/?mcurl=" + meta_real_link, function (txt) {
         		metauserscore = escapeHTML(txt);
         		metauserscore = metauserscore.replace(".","");		
-        		var newmeta = '<div id="game_area_metascore" style="background-image: url(' + self.options.img_metacrtic_bg + ');"><div id="metapage">' + escapeHTML(metauserscore) + '</div></div>';
+        		var newmeta = '<div id="game_area_metascore" style="background-image: url(' + self.options.img_metacritic_bg + ');"><div id="metapage">' + escapeHTML(metauserscore) + '</div></div>';
         		$("#game_area_metascore").after(newmeta);
         	});
         }
