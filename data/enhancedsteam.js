@@ -640,6 +640,11 @@ function remove_about_menu() {
     }
 }
 
+function add_empty_cart_button() {
+	addtext = "<a href='javascript:document.cookie=\"shoppingCartGID=0; path=/\";location.href=location.href;' class='btn_checkout_blue' style='float: left; margin-top: 14px;'><div class='leftcap'></div><div class='rightcap'></div>" + localized_strings[language].empty_cart + "</a>";
+	$(".checkout_content").prepend(addtext);
+}
+
 // User profile pages
 function add_community_profile_links() {
     if (showprofilelinks == true) {
@@ -3438,6 +3443,10 @@ $(document).ready(function(){
     	switch (window.location.host) {
     		case "store.steampowered.com":			
     			switch (true) {
+    				case /^\/cart\/.*/.test(window.location.pathname):
+						add_empty_cart_button();
+						break;
+
     				case /^\/app\/.*/.test(window.location.pathname):
     					var appid = get_appid(window.location.host + window.location.pathname);
                         load_inventory().done(function() {
