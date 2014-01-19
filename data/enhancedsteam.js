@@ -71,8 +71,8 @@ function getValue(key) {
 }
 
 // Helper prototypes
-String.prototype.startsWith = function(prefix) {
-	return this.indexOf(prefix) === 0;
+function startsWith(string, search) {
+	return string.indexOf(search) === 0;
 };
 
 function formatMoney(number, places, symbol, thousand, decimal, right) {
@@ -288,11 +288,11 @@ function load_inventory() {
 												setValue(app.id + "coupon_title", obj.name);
 												setValue(app.id + "coupon_discount", obj.name.match(/([1-9][0-9])%/)[1]);
 												for (var i = 0; i < obj.descriptions.length; i++) {
-													if (obj.descriptions[i].value.startsWith("Can't be applied with other discounts.")) {
+													if (startsWith(obj.descriptions[i].value, "Can't be applied with other discounts.")) {
 														setValue(app.id + "coupon_discount_note", obj.descriptions[i].value);
 														setValue(app.id + "coupon_discount_doesnt_stack", true);
 													}
-													else if (obj.descriptions[i].value.startsWith("(Valid")) {
+													else if (startsWith(obj.descriptions[i].value, "(Valid")) {
 														setValue(app.id + "coupon_valid", obj.descriptions[i].value);
 													}
 												};
@@ -343,7 +343,7 @@ function load_inventory() {
 function add_empty_wishlist_buttons() {
 	if(is_signed_in) {
 		var profile = $(".playerAvatar a")[0].href.replace("http://steamcommunity.com", "");
-		if (window.location.pathname.startsWith(profile)) {
+		if (startsWith(window.location.pathname, profile)) {
 			var empty_buttons = $("<div class='btn_save' id='es_empty_wishlist'>" + escapeHTML(localized_strings[language].empty_wishlist) + "</div><div class='btn_save' id='es_empty_owned_wishlist'>" + escapeHTML(localized_strings[language].remove_owned_wishlist) + "</div>");
 			$(".save_actions_enabled").filter(":last").after(empty_buttons);
 			$("#es_empty_wishlist").click({ empty_owned_only: false },empty_wishlist);
@@ -3399,10 +3399,10 @@ $(document).ready(function(){
     is_signed_in();
 
     localization_promise.done(function(){	
-    	if (window.location.pathname.startsWith("/api")) return;
-        if (window.location.pathname.startsWith("/login")) return;
-        if (window.location.pathname.startsWith("/checkout")) return;
-        if (window.location.pathname.startsWith("/join")) return;
+    	if (startsWith(window.location.pathname, "/api")) return;
+        if (startsWith(window.location.pathname, "/login")) return;
+        if (startsWith(window.location.pathname, "/checkout")) return;
+        if (startsWith(window.location.pathname, "/join")) return;
     	
         // On window load...
     	add_enhanced_steam_options();
