@@ -1399,7 +1399,7 @@ function add_market_total() {
         	$("#moreInfo").before('<div id="es_summary"><div class="market_search_sidebar_contents"><h2 class="market_section_title">Market Transactions</h2><div class="market_search_game_button_group" id="es_market_summary" style="width: 238px"><img src="http://cdn.steamcommunity.com/public/images/login/throbber.gif">Loading...</div></div></div>');
         	
         	// Get market transactions
-        	get_http("http://steamcommunity.com/market/myhistory/render/?query=&start=0&count=9999999999", function (txt) {
+        	get_http("http://steamcommunity.com/market/myhistory/render/?query=&start=0&count=999", function (txt) {
         		var data = JSON.parse(txt);
         		market = data['results_html'];		
         		var currency_symbol = "";
@@ -1422,7 +1422,7 @@ function add_market_total() {
         						return parseFloat(tempprice);
         					}
         				}
-        			}			
+        			}
         		};
         		
         		usd_totaler = function (p, i) {			
@@ -1551,92 +1551,94 @@ function add_market_total() {
         		jQuery.map(rub_prices, function (p, i) { rub_total += p; });
         		jQuery.map(brl_prices, function (p, i) { brl_total += p; });
         		
-        		switch (currency_symbol) {
-        			case "€":
-        				get_http("http://api.enhancedsteam.com/currency/?usd=" + usd_total + "&gbp=" + gbp_total + "&eur=" + eur_total + "&rub=" + rub_total + "$brl=" + brl_total + "&local=eur", function (txt) {
-        					txt = escapeHTML(txt);
-                            var net = txt - pur_total;
-        					
-        					var html = "Purchase total:<span style='float: right;'>" + formatMoney(parseFloat(pur_total), 2, currency_symbol, ".", ",", true) + "</span><br>";
-        					html += "Sales total:<span style='float: right;'>" + formatMoney(parseFloat(txt), 2, currency_symbol, ".", ",", true) + "</span><br>";
-        					if (net > 0) {
-        						html += "Net gain:<span style='float: right; color: green;'>" + formatMoney(parseFloat(net), 2, currency_symbol, ".", ",", true) + "</span>";
-        					} else {
-        						html += "Net spent:<span style='float: right; color: red;'>" + formatMoney(parseFloat(net), 2, currency_symbol, ".", ",", true) + "</span>";
-        					}
-        					
-        					$("#es_market_summary").html(html);
-        				});
-        				break;
-        
-        			case "pуб":
-        				get_http("http://api.enhancedsteam.com/currency/?usd=" + usd_total + "&gbp=" + gbp_total + "&eur=" + eur_total + "&rub=" + rub_total + "$brl=" + brl_total + "&local=rub", function (txt) {
-        					txt = escapeHTML(txt);
-        					var net = txt - pur_total;
-        					
-        					var html = "Purchase total:<span style='float: right;'>" + formatMoney(parseFloat(pur_total), 2, currency_symbol, ".", ",", true) + "</span><br>";
-        					html += "Sales total:<span style='float: right;'>" + formatMoney(parseFloat(txt), 2, currency_symbol, ".", ",", true) + "</span><br>";
-        					if (net > 0) {
-        						html += "Net gain:<span style='float: right; color: green;'>" + formatMoney(parseFloat(net), 2, currency_symbol, ".", ",", true) + "</span>";
-        					} else {
-        						html += "Net spent:<span style='float: right; color: red;'>" + formatMoney(parseFloat(net), 2, currency_symbol, ".", ",", true) + "</span>";
-        					}
-        					
-        					$("#es_market_summary").html(html);
-        				});
-        				break;
-        
-        			case "£":
-        				get_http("http://api.enhancedsteam.com/currency/?usd=" + usd_total + "&gbp=" + gbp_total + "&eur=" + eur_total + "&rub=" + rub_total + "$brl=" + brl_total + "&local=gbp", function (txt) {
-        					txt = escapeHTML(txt);
-        					var net = txt - pur_total;
-        					
-        					var html = "Purchase total:<span style='float: right;'>" + formatMoney(parseFloat(pur_total), 2, currency_symbol, ",", ".", false) + "</span><br>";
-        					html += "Sales total:<span style='float: right;'>" + formatMoney(parseFloat(txt), 2, currency_symbol, ",", ".", false) + "</span><br>";
-        					if (net > 0) {
-        						html += "Net gain:<span style='float: right; color: green;'>" + formatMoney(parseFloat(net), 2, currency_symbol, ",", ".", false) + "</span>";
-        					} else {
-        						html += "Net spent:<span style='float: right; color: red;'>" + formatMoney(parseFloat(net), 2, currency_symbol, ",", ".", false) + "</span>";
-        					}
-        					
-        					$("#es_market_summary").html(html);
-        				});
-        				break;				
-        
-        			case "R$":
-        				get_http("http://api.enhancedsteam.com/currency/?usd=" + usd_total + "&gbp=" + gbp_total + "&eur=" + eur_total + "&rub=" + rub_total + "$brl=" + brl_total + "&local=brl", function (txt) {
-        					txt = escapeHTML(txt);
-        					var net = txt - pur_total;
-        					
-        					var html = "Purchase total:<span style='float: right;'>" + formatMoney(parseFloat(pur_total), 2, currency_symbol, ",", ".", false) + "</span><br>";
-        					html += "Sales total:<span style='float: right;'>" + formatMoney(parseFloat(txt), 2, currency_symbol, ",", ".", false) + "</span><br>";
-        					if (net > 0) {
-        						html += "Net gain:<span style='float: right; color: green;'>" + formatMoney(parseFloat(net), 2, currency_symbol, ",", ".", false) + "</span>";
-        					} else {
-        						html += "Net spent:<span style='float: right; color: red;'>" + formatMoney(parseFloat(net), 2, currency_symbol, ",", ".", false) + "</span>";
-        					}
-        					
-        					$("#es_market_summary").html(html);
-        				});
-        				break;
-        				
-        			default:
-        				get_http("http://api.enhancedsteam.com/currency/?usd=" + usd_total + "&gbp=" + gbp_total + "&eur=" + eur_total + "&rub=" + rub_total + "$brl=" + brl_total + "&local=usd", function (txt) {
-        					txt = escapeHTML(txt);
-        					var net = txt - pur_total;
-        					
-        					var html = "Purchase total:<span style='float: right;'>" + formatMoney(parseFloat(pur_total), 2, currency_symbol, ",", ".", false) + "</span><br>";
-        					html += "Sales total:<span style='float: right;'>" + formatMoney(parseFloat(txt), 2, currency_symbol, ",", ".", false) + "</span><br>";
-        					if (net > 0) {
-        						html += "Net gain:<span style='float: right; color: green;'>" + formatMoney(parseFloat(net), 2, currency_symbol, ",", ".", false) + "</span>";
-        					} else {
-        						html += "Net spent:<span style='float: right; color: red;'>" + formatMoney(parseFloat(net), 2, currency_symbol, ",", ".", false) + "</span>";
-        					}
-        					
-        					$("#es_market_summary").html(html);
-        				});
-        				break;
-        		}
+        		if (data['total_count'] < 1000) {
+					switch (currency_symbol) {
+						case "€":
+							get_http("http://api.enhancedsteam.com/currency/?usd=" + usd_total + "&gbp=" + gbp_total + "&eur=" + eur_total + "&rub=" + rub_total + "$brl=" + brl_total + "&local=eur", function (txt) {
+								txt = escapeHTML(txt);
+								var net = txt - pur_total;
+								
+								var html = "Purchase total:<span style='float: right;'>" + formatMoney(parseFloat(pur_total), 2, currency_symbol, ".", ",", true) + "</span><br>";
+								html += "Sales total:<span style='float: right;'>" + formatMoney(parseFloat(txt), 2, currency_symbol, ".", ",", true) + "</span><br>";
+								if (net > 0) {
+									html += "Net gain:<span style='float: right; color: green;'>" + formatMoney(parseFloat(net), 2, currency_symbol, ".", ",", true) + "</span>";
+								} else {
+									html += "Net spent:<span style='float: right; color: red;'>" + formatMoney(parseFloat(net), 2, currency_symbol, ".", ",", true) + "</span>";
+								}
+								
+								$("#es_market_summary").html(html);
+							});
+							break;
+
+						case "pуб":
+							get_http("http://api.enhancedsteam.com/currency/?usd=" + usd_total + "&gbp=" + gbp_total + "&eur=" + eur_total + "&rub=" + rub_total + "$brl=" + brl_total + "&local=rub", function (txt) {
+								txt = escapeHTML(txt);
+								var net = txt - pur_total;
+								
+								var html = "Purchase total:<span style='float: right;'>" + formatMoney(parseFloat(pur_total), 2, currency_symbol, ".", ",", true) + "</span><br>";
+								html += "Sales total:<span style='float: right;'>" + formatMoney(parseFloat(txt), 2, currency_symbol, ".", ",", true) + "</span><br>";
+								if (net > 0) {
+									html += "Net gain:<span style='float: right; color: green;'>" + formatMoney(parseFloat(net), 2, currency_symbol, ".", ",", true) + "</span>";
+								} else {
+									html += "Net spent:<span style='float: right; color: red;'>" + formatMoney(parseFloat(net), 2, currency_symbol, ".", ",", true) + "</span>";
+								}
+								
+								$("#es_market_summary").html(html);
+							});
+							break;
+
+						case "£":
+							get_http("http://api.enhancedsteam.com/currency/?usd=" + usd_total + "&gbp=" + gbp_total + "&eur=" + eur_total + "&rub=" + rub_total + "$brl=" + brl_total + "&local=gbp", function (txt) {
+								txt = escapeHTML(txt);
+								var net = txt - pur_total;
+								
+								var html = "Purchase total:<span style='float: right;'>" + formatMoney(parseFloat(pur_total), 2, currency_symbol, ",", ".", false) + "</span><br>";
+								html += "Sales total:<span style='float: right;'>" + formatMoney(parseFloat(txt), 2, currency_symbol, ",", ".", false) + "</span><br>";
+								if (net > 0) {
+									html += "Net gain:<span style='float: right; color: green;'>" + formatMoney(parseFloat(net), 2, currency_symbol, ",", ".", false) + "</span>";
+								} else {
+									html += "Net spent:<span style='float: right; color: red;'>" + formatMoney(parseFloat(net), 2, currency_symbol, ",", ".", false) + "</span>";
+								}
+								
+								$("#es_market_summary").html(html);
+							});
+							break;
+
+						case "R$":
+							get_http("http://api.enhancedsteam.com/currency/?usd=" + usd_total + "&gbp=" + gbp_total + "&eur=" + eur_total + "&rub=" + rub_total + "$brl=" + brl_total + "&local=brl", function (txt) {
+								txt = escapeHTML(txt);
+								var net = txt - pur_total;
+								
+								var html = "Purchase total:<span style='float: right;'>" + formatMoney(parseFloat(pur_total), 2, currency_symbol, ",", ".", false) + "</span><br>";
+								html += "Sales total:<span style='float: right;'>" + formatMoney(parseFloat(txt), 2, currency_symbol, ",", ".", false) + "</span><br>";
+								if (net > 0) {
+									html += "Net gain:<span style='float: right; color: green;'>" + formatMoney(parseFloat(net), 2, currency_symbol, ",", ".", false) + "</span>";
+								} else {
+									html += "Net spent:<span style='float: right; color: red;'>" + formatMoney(parseFloat(net), 2, currency_symbol, ",", ".", false) + "</span>";
+								}
+								
+								$("#es_market_summary").html(html);
+							});
+							break;
+							
+						default:
+							get_http("http://api.enhancedsteam.com/currency/?usd=" + usd_total + "&gbp=" + gbp_total + "&eur=" + eur_total + "&rub=" + rub_total + "$brl=" + brl_total + "&local=usd", function (txt) {
+								txt = escapeHTML(txt);
+								var net = txt - pur_total;
+								
+								var html = "Purchase total:<span style='float: right;'>" + formatMoney(parseFloat(pur_total), 2, currency_symbol, ",", ".", false) + "</span><br>";
+								html += "Sales total:<span style='float: right;'>" + formatMoney(parseFloat(txt), 2, currency_symbol, ",", ".", false) + "</span><br>";
+								if (net > 0) {
+									html += "Net gain:<span style='float: right; color: green;'>" + formatMoney(parseFloat(net), 2, currency_symbol, ",", ".", false) + "</span>";
+								} else {
+									html += "Net spent:<span style='float: right; color: red;'>" + formatMoney(parseFloat(net), 2, currency_symbol, ",", ".", false) + "</span>";
+								}
+								
+								$("#es_market_summary").html(html);
+							});
+							break;
+					}
+					}
     	    });
         }
     }
