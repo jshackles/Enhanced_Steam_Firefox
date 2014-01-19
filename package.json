@@ -116,6 +116,26 @@
             "title": "Show External Profile Links"
         },
         {
+            "type": "menulist",
+            "name": "showprofilelinks_display",
+            "title": "Profile Link Images",
+            "value": 0,
+            "options": [
+                {
+                    "value": "0",
+                    "label": "Grayscale"
+                },
+                {
+                    "value": "1",
+                    "label": "Colored"
+                },
+                {
+                    "value": "2",
+                    "label": "None"
+                }
+            ]
+        },
+        {
             "type": "bool",
             "name": "showmarkethistory",
             "value": true,
