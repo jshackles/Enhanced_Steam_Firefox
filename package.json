@@ -75,6 +75,12 @@
         },
         {
             "type": "bool",
+            "name": "showsteamchartinfo",
+            "value": true,
+            "title": "Show SteamCharts.com Info"
+        },
+        {
+            "type": "bool",
             "name": "showpcgw",
             "value": true,
             "title": "Show PCGamingWiki Links"
@@ -146,12 +152,6 @@
             "name": "showallachievements",
             "value": false,
             "title": "Show achievement stats on \"All Games\" page"
-        },
-        {
-            "type": "bool",
-            "name": "showsteamchartinfo",
-            "value": true,
-            "title": "Show SteamCharts.com Info"
         },
         {
             "type": "bool",
