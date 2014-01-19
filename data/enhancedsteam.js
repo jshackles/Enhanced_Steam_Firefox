@@ -1881,93 +1881,88 @@ function drm_warnings() {
         var rockstar;
         var kalypso;
         var otherdrm;
+
+        var text = $("#game_area_description").html();
+			text += $("#game_area_sys_req").html();
+			text += $("#game_area_legal").html();
+			text += $(".game_details").html();
         
         // Games for Windows Live detection
-        if (document.body.innerHTML.indexOf("Games for Windows LIVE") > 0) { gfwl = true; }
-        if (document.body.innerHTML.indexOf("Games for Windows Live") > 0) { gfwl = true; }
-        if (document.body.innerHTML.indexOf("Games for Windows - Live") > 0) { gfwl = true; }
-        if (document.body.innerHTML.indexOf("Games For Windows - Live") > 0) { gfwl = true; }
-        if (document.body.innerHTML.indexOf("Games for Windows - LIVE") > 0) { gfwl = true; }
-        if (document.body.innerHTML.indexOf("Games For Windows - LIVE") > 0) { gfwl = true; }
-        if (document.body.innerHTML.indexOf("Online play requires log-in to Games For Windows") > 0) { gfwl = true; }
-        if (document.body.innerHTML.indexOf("INSTALLATION OF THE GAMES FOR WINDOWS LIVE SOFTWARE") > 0) { gfwl = true; }
-        if (document.body.innerHTML.indexOf("Multiplayer play and other LIVE features included at no charge") > 0) { gfwl = true; }
-        if (document.body.innerHTML.indexOf("www.gamesforwindows.com/live") > 0) { gfwl = true; }
-        if (document.body.innerHTML.indexOf("www.gamesforwindows.com/live") > 0) { gfwl = true; }
-        
-        // Ubisoft Uplay detection
-        if (document.body.innerHTML.indexOf("Uplay Account") > 0) { uplay = true; }
-        if (document.body.innerHTML.indexOf("UPLAY ACCOUNT") > 0) { uplay = true; }
-        if (document.body.innerHTML.indexOf("UPlay account") > 0) { uplay = true; }
-        if (document.body.innerHTML.indexOf("HIGH SPEED INTERNET CONNECTION AND CREATION OF A UBISOFT ACCOUNT ARE REQUIRED") > 0) { uplay = true; }
-        if (document.body.innerHTML.indexOf("HIGH SPEED INTERNET ACCESS AND CREATION OF A UBISOFT ACCOUNT ARE REQUIRED") > 0) { uplay = true; }
-        if (document.body.innerHTML.indexOf("CREATION OF A UBISOFT ACCOUNT") > 0) { uplay = true; }
-        
-        // Securom detection
-        if (document.body.innerHTML.indexOf("SecuROM") > 0) { securom = true; }
-        if (document.body.innerHTML.indexOf("SECUROM") > 0) { securom = true; }
-        
-        // Tages detection
-        if (document.body.innerHTML.indexOf("Tages") > 0) { tages = true; }
-		if (document.body.innerHTML.indexOf("Angebote des Tages") > 0) { tages = false; }
-		if (document.body.innerHTML.indexOf("Tagesangebote") > 0) { tages = false; }
-		if (document.body.innerHTML.indexOf("TAGES") > 0) { tages = true; }
-		if (document.body.innerHTML.indexOf("ANGEBOT DES TAGES") > 0) { tages = false; }
-		if (document.body.innerHTML.indexOf("SOLIDSHIELD") > 0) { tages = true; }
-		if (document.body.innerHTML.indexOf("Solidshield Tages") > 0) { tages = true; }
-		if (document.body.innerHTML.indexOf("Tages Solidshield") > 0) { tages = true; }
-        
-        // Stardock account detection
-        if (document.body.innerHTML.indexOf("Stardock account") > 0) { stardock = true; }
-        
-        // Rockstar social club detection
-        if (document.body.innerHTML.indexOf("Rockstar Social Club") > 0) { rockstar = true; }
-        if (document.body.innerHTML.indexOf("Rockstar Games Social Club") > 0) { rockstar = true; }
-        
-        // Kalypso Launcher detection
-        if (document.body.innerHTML.indexOf("Requires a Kalypso account") > 0) { kalypso = true; }
-        
-        // Detect other DRM
-        if (document.body.innerHTML.indexOf("3rd-party DRM") > 0) { otherdrm = true; }
-        if (document.body.innerHTML.indexOf("No 3rd Party DRM") > 0) { otherdrm = false; }
+        if (text.toUpperCase().indexOf("GAMES FOR WINDOWS LIVE") > 0) { gfwl = true; }
+		if (text.toUpperCase().indexOf("GAMES FOR WINDOWS - LIVE") > 0) { gfwl = true; }
+		if (text.indexOf("Online play requires log-in to Games For Windows") > 0) { gfwl = true; }
+		if (text.indexOf("INSTALLATION OF THE GAMES FOR WINDOWS LIVE SOFTWARE") > 0) { gfwl = true; }
+		if (text.indexOf("Multiplayer play and other LIVE features included at no charge") > 0) { gfwl = true; }
+		if (text.indexOf("www.gamesforwindows.com/live") > 0) { gfwl = true; }
+
+		// Ubisoft Uplay detection
+		if (text.toUpperCase().indexOf("CREATION OF A UBISOFT ACCOUNT") > 0) { uplay = true; }
+		if (text.toUpperCase().indexOf("UPLAY") > 0) { uplay = true; }
+
+		// Securom detection
+		if (text.toUpperCase().indexOf("SECUROM") > 0) { securom = true; }
+
+		// Tages detection
+		if (text.indexOf("Tages") > 0) { tages = true; }
+		if (text.indexOf("Angebote des Tages") > 0) { tages = false; }
+		if (text.indexOf("Tagesangebote") > 0) { tages = false; }
+		if (text.indexOf("TAGES") > 0) { tages = true; }
+		if (text.indexOf("ANGEBOT DES TAGES") > 0) { tages = false; }
+		if (text.indexOf("SOLIDSHIELD") > 0) { tages = true; }
+		if (text.indexOf("Solidshield Tages") > 0) { tages = true; }
+		if (text.indexOf("Tages Solidshield") > 0) { tages = true; }
+
+		// Stardock account detection
+		if (text.indexOf("Stardock account") > 0) { stardock = true; }
+
+		// Rockstar social club detection
+		if (text.indexOf("Rockstar Social Club") > 0) { rockstar = true; }
+		if (text.indexOf("Rockstar Games Social Club") > 0) { rockstar = true; }
+
+		// Kalypso Launcher detection
+		if (text.indexOf("Requires a Kalypso account") > 0) { kalypso = true; }
+
+		// Detect other DRM
+		if (text.indexOf("3rd-party DRM") > 0) { otherdrm = true; }
+		if (text.indexOf("No 3rd Party DRM") > 0) { otherdrm = false; }
         
         if (gfwl) {            	
-        	$("#game_area_purchase").before($("<div>", { class: "game_area_already_owned", style: "background-image: url( " + self.options.img_game_area_warning + " );" }).append($("<span>").text("Warning: This title uses 3rd party DRM (Games for Windows Live)")));
+        	$("#game_area_purchase").before($("<div>", { class: "game_area_already_owned", style: "background-image: url( " + self.options.img_game_area_warning + " );" }).append($("<span>").text(localized_strings[language].drm_third_party + " (Games for Windows Live)")));
             otherdrm = false;
         }
         
         if (uplay) {
-            $("#game_area_purchase").before($("<div>", { class: "game_area_already_owned", style: "background-image: url( " + self.options.img_game_area_warning + " );" }).append($("<span>").text("Warning: This title uses 3rd party DRM (Ubisoft Uplay)")));
+            $("#game_area_purchase").before($("<div>", { class: "game_area_already_owned", style: "background-image: url( " + self.options.img_game_area_warning + " );" }).append($("<span>").text(localized_strings[language].drm_third_party + " (Ubisoft Uplay)")));
         	otherdrm = false;
         }
         
         if (securom) {            	
-        	$("#game_area_purchase").before($("<div>", { class: "game_area_already_owned", style: "background-image: url( " + self.options.img_game_area_warning + " );" }).append($("<span>").text("Warning: This title uses 3rd party DRM (SecuROM)")));
+        	$("#game_area_purchase").before($("<div>", { class: "game_area_already_owned", style: "background-image: url( " + self.options.img_game_area_warning + " );" }).append($("<span>").text(localized_strings[language].drm_third_party + " (SecuROM)")));
             otherdrm = false;
         }
         
         if (tages) {            	
-        	$("#game_area_purchase").before($("<div>", { class: "game_area_already_owned", style: "background-image: url( " + self.options.img_game_area_warning + " );" }).append($("<span>").text("Warning: This title uses 3rd party DRM (Tages)")));
+        	$("#game_area_purchase").before($("<div>", { class: "game_area_already_owned", style: "background-image: url( " + self.options.img_game_area_warning + " );" }).append($("<span>").text(localized_strings[language].drm_third_party + " (Tages)")));
             otherdrm = false;
         }
         
         if (stardock) {            	
-        	$("#game_area_purchase").before($("<div>", { class: "game_area_already_owned", style: "background-image: url( " + self.options.img_game_area_warning + " );" }).append($("<span>").text("Warning: This title uses 3rd party DRM (Stardock Account Required)")));
+        	$("#game_area_purchase").before($("<div>", { class: "game_area_already_owned", style: "background-image: url( " + self.options.img_game_area_warning + " );" }).append($("<span>").text(localized_strings[language].drm_third_party + " (Stardock Account Required)")));
             otherdrm = false;
         }
         
         if (rockstar) {            	
-        	$("#game_area_purchase").before($("<div>", { class: "game_area_already_owned", style: "background-image: url( " + self.options.img_game_area_warning + " );" }).append($("<span>").text("Warning: This title uses 3rd party DRM (Rockstar Social Club)")));
+        	$("#game_area_purchase").before($("<div>", { class: "game_area_already_owned", style: "background-image: url( " + self.options.img_game_area_warning + " );" }).append($("<span>").text(localized_strings[language].drm_third_party + " (Rockstar Social Club)")));
             otherdrm = false;
         }
         
         if (kalypso) {            	
-        	$("#game_area_purchase").before($("<div>", { class: "game_area_already_owned", style: "background-image: url( " + self.options.img_game_area_warning + " );" }).append($("<span>").text("Warning: This title uses 3rd party DRM (Kalypso Launcher)")));
+        	$("#game_area_purchase").before($("<div>", { class: "game_area_already_owned", style: "background-image: url( " + self.options.img_game_area_warning + " );" }).append($("<span>").text(localized_strings[language].drm_third_party + " (Kalypso Launcher)")));
             otherdrm = false;
         }
         
         if (otherdrm) {            	
-            $("#game_area_purchase").before($("<div>", { class: "game_area_already_owned", style: "background-image: url( " + self.options.img_game_area_warning + " );" }).append($("<span>").text("Warning: This title uses 3rd party DRM")));
+            $("#game_area_purchase").before($("<div>", { class: "game_area_already_owned", style: "background-image: url( " + self.options.img_game_area_warning + " );" }).append($("<span>").text(localized_strings[language].drm_third_party)));
         }
     }
 }
