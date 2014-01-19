@@ -2782,7 +2782,7 @@ function show_regional_pricing() {
                                 convert_deferred.push($.ajax({
     								url:"http://rate-exchange.appspot.com/currency?from=" + local_currency + "&to=" + country_currency
 								}).done(function(conversion_json){
-									var converted_price = app_price / parseFloat(escapeHTML(conversion_json["rate"].toString()));
+									var converted_price = app_price / parseFloat(conversion_json["rate"]);
                                     var regional_price_array=[];
     								var regional_price = formatPriceData(subid,country,converted_price,local_currency);
 									regional_price_array[0]=country;
