@@ -945,6 +945,48 @@ function show_pricing_history(appid, type) {
     }
 }
 
+function add_steamreview_userscore(appid) {
+	if ($(".game_area_dlc_bubble").length == 0) {
+		var positive = 0;
+		var negative = 0;
+		$(".game_details").find(".details_block:first").before("<div id='es_review_score'><img src='http://cdn.steamcommunity.com/public/images/login/throbber.gif'>" + localized_strings[language].loading + "</div>");
+
+		get_http("http://steamcommunity.com/app/" + appid + "/homecontent/?userreviewsoffset=0&p=1&itemspage=10&appHubSubSection=10&browsefilter=toprated", function(p1) {
+			$(p1).find(".thumb").each(function() {
+				if ($(this).html().match(/icon_thumbsUp/)) { positive += 1; } else { negative += 1; }
+			});
+			get_http("http://steamcommunity.com/app/" + appid + "/homecontent/?userreviewsoffset=10&p=2&itemspage=10&appHubSubSection=10&browsefilter=toprated", function(p2) {
+				$(p2).find(".thumb").each(function() {
+					if ($(this).html().match(/icon_thumbsUp/)) { positive += 1; } else { negative += 1; }
+				});
+				get_http("http://steamcommunity.com/app/" + appid + "/homecontent/?userreviewsoffset=20&p=3&itemspage=10&appHubSubSection=10&browsefilter=toprated", function(p3) {
+					$(p3).find(".thumb").each(function() {
+						if ($(this).html().match(/icon_thumbsUp/)) { positive += 1; } else { negative += 1; }
+					});
+					get_http("http://steamcommunity.com/app/" + appid + "/homecontent/?userreviewsoffset=30&p=4&itemspage=10&appHubSubSection=10&browsefilter=toprated", function(p4) {
+						$(p4).find(".thumb").each(function() {
+							if ($(this).html().match(/icon_thumbsUp/)) { positive += 1; } else { negative += 1; }
+						});
+						get_http("http://steamcommunity.com/app/" + appid + "/homecontent/?userreviewsoffset=40&p=5&itemspage=10&appHubSubSection=10&browsefilter=toprated", function(p5) {
+							$(p5).find(".thumb").each(function() {
+								if ($(this).html().match(/icon_thumbsUp/)) { positive += 1; } else { negative += 1; }
+							});
+
+							var pos_percent = ((positive / (positive + negative)) * 100).toFixed(0);
+							var neg_percent = ((negative / (positive + negative)) * 100).toFixed(0);
+							if (isNaN(pos_percent) == false && isNaN(neg_percent) == false) {								
+								$("#es_review_score").html('<div style="display: inline-block; margin-right: 25px;"><img src="http://cdn.steamcommunity.com/public/shared/images/userreviews/icon_thumbsUp.png" width="24" height="24" class="es_review_image"><span class="es_review_text"> ' + escapeHTML(pos_percent) + '%</span></div><div style="display: inline-block;"><img src="http://cdn.steamcommunity.com/public/shared/images/userreviews/icon_thumbsDown.png" width="24" height="24" class="es_review_image"><span class="es_review_text"> ' + escapeHTML(neg_percent) + '%</span></div><div style="clear: both;"></div>');
+							} else {
+								$("#es_review_score").remove();
+							}
+						});
+					});
+				});
+			});
+		});
+	}
+}
+
 function add_hltb_info(appid) {
     if (showhltb == true) {
     	get_http("http://api.enhancedsteam.com/hltb/?appid=" + appid, function (txt) {
@@ -2294,12 +2336,6 @@ function get_sub_details(subid, node) {
 	});
 }
 
-function add_steamcards_link(appid) {
-    if ($(".icon").find('img[src$="/ico_cards.gif"]').length > 0) {
-		$('.communitylink .block_content_inner:first').append("<a class='linkbar' href='http://steamcommunity.com/my/gamecards/" + escapeHTML(appid) + "'><div class='rightblock'><img src='http://www.enhancedsteam.com/firefox/ico_cards.gif' width='16' height='16' border='0' align='top' /></div>Steam Trading Cards</a>");
-	}
-}
-
 function change_user_background() {
     var steamID;
 	if ($("#reportAbuseModal").length > 0) { steamID = document.getElementsByName("abuseID")[0].value; }
@@ -3412,6 +3448,7 @@ $(document).ready(function(){
     
     					drm_warnings();
     					add_metracritic_userscore();
+    					add_steamreview_userscore(appid);
                         display_purchase_date();
     
     					fix_community_hub_links();
@@ -3420,7 +3457,6 @@ $(document).ready(function(){
                         add_pcgamingwiki_link(appid);
     					add_app_page_highlights(appid);
     					add_steamdb_links(appid, "app");
-                        add_steamcards_link(appid);
         				add_feature_search_links();
     					add_dlc_page_link(appid);
                         add_remove_from_wishlist_button(appid);
