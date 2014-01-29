@@ -635,8 +635,12 @@ function remove_about_menu() {
 }
 
 function add_empty_cart_button() {
-	addtext = "<a href='javascript:document.cookie=\"shoppingCartGID=0; path=/\";location.href=location.href;' class='btn_checkout_blue' style='float: left; margin-top: 14px;'><div class='leftcap'></div><div class='rightcap'></div>" + escapeHTML(localized_strings[language].empty_cart) + "</a>";
+	addtext = "<a id='es_empty_cart' class='btn_checkout_blue' style='float: left; margin-top: 14px;'><div class='leftcap'></div><div class='rightcap'></div>" + escapeHTML(localized_strings[language].empty_cart) + "</a>";
 	$(".checkout_content").prepend(addtext);
+	$("#es_empty_cart").on("click", function() {
+		document.cookie="shoppingCartGID=0; path=";
+		location.href=location.href;
+	});
 }
 
 // User profile pages
