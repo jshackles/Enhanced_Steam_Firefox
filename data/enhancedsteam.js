@@ -162,11 +162,13 @@ function is_signed_in() {
 
 // colors the tile for owned games
 function highlight_owned(node) {
+	node.classList.add("es_highlight_owned");
     highlight_node(node, ownedColor);  
 }
 
 // colors the tile for wishlist games
 function highlight_wishlist(node) {
+	node.classList.add("es_highlight_wishlist");
 	highlight_node(node, wishlistColor);
 }
 
@@ -2557,6 +2559,45 @@ function add_dlc_checkboxes() {
 			$("#es_selected_btn").hide();
 		}
 	}
+
+	$(".game_area_dlc_section").find(".gradientbg").after("<div style='height: 28px; padding-left: 15px; display: none;' id='es_dlc_option_panel'></div>");
+
+	$("#es_dlc_option_panel").append("<div class='es_dlc_option' id='unowned_dlc_check'>" + escapeHTML(localized_strings[language].select.unowned_dlc) + "</div>");
+	$("#unowned_dlc_check").on("click", function() {		
+		$(".game_area_dlc_section").find(".game_area_dlc_row").each(function() {
+			if (!($(this).hasClass("es_highlight_owned"))) {
+				$(this).find("input").prop("checked", true).change();
+			}
+		});
+	});
+
+	$("#es_dlc_option_panel").append("<div class='es_dlc_option' id='wl_dlc_check'>" + escapeHTML(localized_strings[language].select.wishlisted_dlc) + "</div>");
+	$("#wl_dlc_check").on("click", function() {		
+		$(".game_area_dlc_section").find(".game_area_dlc_row").each(function() {
+			if ($(this).hasClass("es_highlight_wishlist")) {
+				$(this).find("input").prop("checked", true).change();
+			}	
+		});
+	});
+
+	$("#es_dlc_option_panel").append("<div class='es_dlc_option' id='no_dlc_check'>" + escapeHTML(localized_strings[language].select.none) + "</div>");
+	$("#no_dlc_check").on("click", function() {		
+		$(".game_area_dlc_section").find(".game_area_dlc_row").each(function() {
+			$(this).find("input").prop("checked", false).change();
+		});
+	});
+
+	$(".game_area_dlc_section").find(".gradientbg").append("<div id='es_dlc_option_button'>" + escapeHTML(localized_strings[language].options) + " ▾</div>");
+	
+	$("#es_dlc_option_button").on("click", function() {
+		$("#es_dlc_option_panel").toggle();
+		if ($("#es_dlc_option_button").text().match("▾")) {
+			$("#es_dlc_option_button").text(escapeHTML(localized_strings[language].options + " ▴"));
+		} else {
+			$("#es_dlc_option_button").text(escapeHTML(localized_strings[language].options + " ▾"));
+		}
+	});
+
 	$(document).on( "change", ".es_dlc_selection", add_dlc_to_list );
 }
 
