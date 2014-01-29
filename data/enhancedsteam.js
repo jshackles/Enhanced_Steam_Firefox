@@ -470,6 +470,35 @@ function add_wishlist_discount_sort() {
 	});
 }
 
+function add_wishlist_ajaxremove() {
+	$("a[onclick*=wishlist_remove]").each(function() {		
+		var appid = $(this).parent().parent()[0].id.replace("game_", "");
+		$(this).after("<span class='es_wishlist_remove' id='es_wishlist_remove_" + escapeHTML(appid) + "'>" + escapeHTML($(this).text()) + "</span>");
+		$(this).remove();
+
+		$("#es_wishlist_remove_" + appid).on("click", function() {
+			$.ajax({
+				type:"POST",
+				url: window.location,
+				data:{
+					action: "remove",
+					appid: appid
+				},
+				success: function( msg ) { 
+					var currentRank = parseFloat($("#game_" + appid + " .wishlist_rank")[0].value);
+					$("#game_" + appid).remove();
+					setValue(appid + "wishlisted", false);
+					for (var i = 0; i < $('.wishlistRow').length; i++) {
+						if ($('.wishlist_rank')[i].value > currentRank) {
+							$('.wishlist_rank')[i].value = $('.wishlist_rank')[i].value - 1;	
+						}
+					}
+				}
+			});
+		});
+	});
+}
+
 function pack_split(node, ways) {
     var price_text = $(node).find(".discount_final_price").html();
 	var at_end, comma, places = 2;
@@ -3507,6 +3536,7 @@ $(document).ready(function(){
     					add_empty_wishlist_buttons();                      
                         add_wishlist_filter();
     					add_wishlist_discount_sort();
+    					add_wishlist_ajaxremove();
                         
                         start_highlights_and_tags();
     					break;

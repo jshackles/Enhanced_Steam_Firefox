@@ -560,3 +560,49 @@ input[type=checkbox].es_dlc_selection:checked + label {
 	text-decoration: underline;
 	cursor: pointer;
 }
+
+#es_price_range {
+	-webkit-appearance:none; 
+	-moz-apperance:none; 
+	width:100%; 
+	height:4px;
+	margin-top: 10px;
+}
+
+.es_price_range_slider::-webkit-slider-thumb{
+	-webkit-appearance:none; -moz-apperance:none; width:10px; height:18px; 
+	background-image:-webkit-gradient(linear, left top, left bottom, color-stop(0, #fefefe), color-stop(0.49, #dddddd), color-stop(0.51, #d1d1d1), color-stop(1, #a1a1a1) );
+}
+#store_nav_search_term::-webkit-input-placeholder, #term::-webkit-input-placeholder {
+	font-style: italic;
+}
+.es_lowest_price {
+	padding: 5px 0 5px 46px;
+	height: auto !important;
+	border: 1px solid #4d4b49;
+	border-bottom: 0;
+	background-image: none;
+	padding-left: 46px;
+	position: relative;
+	font-size: 12px;
+	color: #626366;
+	background-color: #1d252e;
+}
+
+.es_lowest_price a {
+	color: #b0aeac;
+}
+
+.es_lowest_price .gift_icon {
+	left: 17px; 
+	position: absolute;
+}
+
+.es_wishlist_remove {
+	cursor: pointer;
+	color: #ebebeb;
+}
+
+.es_wishlist_remove:hover {
+	text-decoration: underline;
+}
