@@ -1019,11 +1019,15 @@ function show_pricing_history(appid, type) {
 					if (data["bundles"]["active"].length > 0) {
 						var length = data["bundles"]["active"].length;
 						for (var i = 0; i < length; i++) {
-							var enddate = new Date(data["bundles"]["active"][i]["expiry"]*1000);
+							var enddate;
+							if (data["bundles"]["active"][i]["expiry"]) {
+								enddate = new Date(data["bundles"]["active"][i]["expiry"]*1000);
+							}
 							var currentdate = new Date().getTime();
-							if (currentdate < enddate) {
-								purchase = '<div class="game_area_purchase_game_wrapper"><div class="game_area_purchase_game"><div class="game_area_purchase_platform"></div><h1>' + escapeHTML(localized_strings[language].buy) + ' ' + escapeHTML(data["bundles"]["active"][i]["page"]) + ' ' + escapeHTML(data["bundles"]["active"][i]["title"]) + '</h1>';
-								purchase += '<p class="game_purchase_discount_countdown">' + escapeHTML(localized_strings[language].bundle.offer_ends) + ' ' + escapeHTML(enddate) + '</p>';							
+							if (!enddate || currentdate < enddate) {
+								if (data["bundles"]["active"][i]["page"]) { purchase = '<div class="game_area_purchase_game_wrapper"><div class="game_area_purchase_game"><div class="game_area_purchase_platform"></div><h1>' + escapeHTML(localized_strings[language].buy) + ' ' + escapeHTML(data["bundles"]["active"][i]["page"]) + ' ' + escapeHTML(data["bundles"]["active"][i]["title"]) + '</h1>'; } 
+								else { purchase = '<div class="game_area_purchase_game_wrapper"><div class="game_area_purchase_game"><div class="game_area_purchase_platform"></div><h1>' + escapeHTML(localized_strings[language].buy) + ' ' + escapeHTML(data["bundles"]["active"][i]["title"]) + '</h1>'; }
+								if (enddate) purchase += '<p class="game_purchase_discount_countdown">' + escapeHTML(localized_strings[language].bundle.offer_ends) + ' ' + escapeHTML(enddate.toString()) + '</p>';
 								purchase += '<p class="package_contents"><b>' + escapeHTML(localized_strings[language].bundle.includes.replace("(__num__)", data["bundles"]["active"][i]["games"].length)) + ':</b> '
 								data["bundles"]["active"][i]["games"].forEach(function(entry) {
 									purchase += entry + ", ";
@@ -1032,17 +1036,18 @@ function show_pricing_history(appid, type) {
 								purchase += '</p><div class="game_purchase_action"><div class="game_purchase_action_bg"><div class="btn_addtocart btn_packageinfo"><div class="btn_addtocart_left"></div><a class="btn_addtocart_content" href="' + escapeHTML(data["bundles"]["active"][i]["details"]) + '" target="_blank">' + escapeHTML(localized_strings[language].bundle.info) + '</a><div class="btn_addtocart_right"></div></div></div><div class="game_purchase_action_bg">';
 								if (data["bundles"]["active"][i]["pwyw"] == 0) { if (data["bundles"]["active"][i]["price"] > 0) { purchase += '<div class="game_purchase_price price" itemprop="price">' + formatMoney(escapeHTML(data["bundles"]["active"][i]["price"].toString()), 2, currency_symbol, ",", comma ? "," : ".", at_end) + '</div>'; } }
 								purchase += '<div class="btn_addtocart"><div class="btn_addtocart_left"></div>';
-								purchase += '<a class="btn_addtocart_content" href="' + escapeHTML(data["bundles"]["active"][i]["url"]) + '" target="_blank">';
+								purchase += '<a class="btn_addtocart_content" href="' + data["bundles"]["active"][i]["url"] + '" target="_blank">';
 								if (data["bundles"]["active"][i]["pwyw"] == 1) {
 									purchase += escapeHTML(localized_strings[language].bundle.pwyw);
 								} else {
 									purchase += escapeHTML(localized_strings[language].buy);
-								}	
+								}
 								purchase += '</a><div class="btn_addtocart_right"></div></div></div></div></div></div>';
 								$("#game_area_purchase").after(purchase);
+								
+								$("#game_area_purchase").after("<h2 class='gradientbg'>" + escapeHTML(localized_strings[language].bundle.header) + " <img src='http://cdn3.store.steampowered.com/public/images/v5/ico_external_link.gif' border='0' align='bottom'></h2>");
 							}
 						}
-						$("#game_area_purchase").after("<h2 class='gradientbg'>" + escapeHTML(localized_strings[language].bundle.header) + " <img src='http://cdn3.store.steampowered.com/public/images/v5/ico_external_link.gif' border='0' align='bottom'></h2>");
 					}
 				}
 			});
