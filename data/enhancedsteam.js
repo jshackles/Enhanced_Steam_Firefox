@@ -3564,7 +3564,7 @@ function add_gamecard_market_links(game) {
 	get_http("http://store.steampowered.com/app/220/", function(txt) {
 		var currency_symbol = $(txt).find(".price, .discount_final_price").text().trim().match(/(?:R\$|\$|€|£|pуб)/)[0];
 
-		get_http("http://ehsankia.com/steam/api/?appid=" + game, function(txt) {
+		get_http("http://api.enhancedsteam.com/market_data/card_prices/?appid=" + game, function(txt) {
 			var data = JSON.parse(txt);
 			$(".badge_card_set_card").each(function() {
 				var node = $(this);
@@ -3576,28 +3576,27 @@ function add_gamecard_market_links(game) {
 
 				for (var i = 0; i < data.length; i++) {
 					if (data[i].name == newcardname) {
-						var url = escapeHTML(data[i].url);
-						var marketlink = "http://steamcommunity.com/market/listings/" + url;
+						var marketlink = "http://steamcommunity.com/market/listings/" + escapeHTML(data[1].url);
 						switch (currency_symbol) {
 							case "R$":
 								var card_price = formatMoney(data[i].price_brl, 2, currency_symbol + " ", ".", ",");
-								if ($(node).hasClass("unowned")) cost += data[i].price_brl;
+								if ($(node).hasClass("unowned")) cost += parseFloat(data[i].price_brl);
 								break;
 							case "€":
 								var card_price = formatMoney(data[i].price_eur, 2, currency_symbol, ".", ",", true); 
-								if ($(node).hasClass("unowned")) cost += data[i].price_eur;
+								if ($(node).hasClass("unowned")) cost += parseFloat(data[i].price_eur);
 								break;
 							case "pуб":
 								var card_price = formatMoney(data[i].price_rub, 2, " " + currency_symbol, ".", ",", true); 
-								if ($(node).hasClass("unowned")) cost += data[i].price_rub;
+								if ($(node).hasClass("unowned")) cost += parseFloat(data[i].price_rub);
 								break;
 							case "£":
 								var card_price = formatMoney(data[i].price_gbp, 2, currency_symbol); 
-								if ($(node).hasClass("unowned")) cost += data[i].price_gbp;
+								if ($(node).hasClass("unowned")) cost += parseFloat(data[i].price_gbp);
 								break;
 							default:
 								var card_price = formatMoney(data[i].price);						
-								if ($(node).hasClass("unowned")) cost += data[i].price;
+								if ($(node).hasClass("unowned")) cost += parseFloat(data[i].price);
 								break;
 						}
 					}
@@ -3607,27 +3606,27 @@ function add_gamecard_market_links(game) {
 					if (foil) { newcardname = newcardname.replace("(Foil)", "(Foil Trading Card)"); } else { newcardname += " (Trading Card)"; }
 					for (var i = 0; i < data.length; i++) {
 						if (data[i].name == newcardname) {
-							var marketlink = "http://steamcommunity.com/market/listings/" + data[i].url;
+							var marketlink = "http://steamcommunity.com/market/listings/" + escapeHTML(data[i].url);
 							switch (currency_symbol) {
 								case "R$":
 									var card_price = formatMoney(data[i].price_brl, 2, currency_symbol + " ", ".", ",");
-									if ($(node).hasClass("unowned")) cost += data[i].price_brl;
+									if ($(node).hasClass("unowned")) cost +=  parseFloat(data[i].price_brl);
 									break;
 								case "€":
 									var card_price = formatMoney(data[i].price_eur, 2, currency_symbol, ".", ",", true); 
-									if ($(node).hasClass("unowned")) cost += data[i].price_eur;
+									if ($(node).hasClass("unowned")) cost +=  parseFloat(data[i].price_eur);
 									break;
 								case "pуб":
 									var card_price = formatMoney(data[i].price_rub, 2, " " + currency_symbol, ".", ",", true); 
-									if ($(node).hasClass("unowned")) cost += data[i].price_rub;
+									if ($(node).hasClass("unowned")) cost +=  parseFloat(data[i].price_rub);
 									break;
 								case "£":
 									var card_price = formatMoney(data[i].price_gbp, 2, currency_symbol); 
-									if ($(node).hasClass("unowned")) cost += data[i].price_gbp;
+									if ($(node).hasClass("unowned")) cost +=  parseFloat(data[i].price_gbp);
 									break;
 								default:
 									var card_price = formatMoney(data[i].price);						
-									if ($(node).hasClass("unowned")) cost += data[i].price;
+									if ($(node).hasClass("unowned")) cost +=  parseFloat(data[i].price);
 									break;
 							}
 						}
@@ -3639,7 +3638,7 @@ function add_gamecard_market_links(game) {
 					$(this).children("div:contains('" + escapeHTML(cardname) + "')").parent().append(html);
 				}
 			});
-			if ($(".profile_small_header_name .whiteLink").attr("href") == $("#headerUserAvatarIcon").parent().attr("href")) {
+			if (cost > 0 && $(".profile_small_header_name .whiteLink").attr("href") == $("#headerUserAvatarIcon").parent().attr("href")) {
 				switch (currency_symbol) {
 					case "R$":
 						cost = formatMoney(cost, 2, currency_symbol + " ", ".", ",");
