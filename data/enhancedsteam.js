@@ -743,6 +743,21 @@ function fix_profile_image_not_found() {
 	}	
 }
 
+function add_wishlist_profile_link() {
+	if ($("#reportAbuseModal").length > 0) { var steamID = document.getElementsByName("abuseID")[0].value; }
+	if (steamID === undefined) { var steamID = document.documentElement.outerHTML.match(/steamid"\:"(.+)","personaname/)[1]; }
+
+	$(".profile_item_links").find(".profile_count_link:first").after("<div class='profile_count_link' id='es_wishlist_link'><a href='http://steamcommunity.com/profiles/" + escapeHTML(steamID) + "/wishlist'><span class='count_link_label'>Wishlist</span>&nbsp;<span class='profile_count_link_total' id='es_wishlist_count'></span></a></div>");
+
+	// Get count of wishlisted items
+	get_http("http://steamcommunity.com/profiles/" + steamID + "/wishlist", function(txt) {
+		var html = $.parseHTML(txt);
+		var count = ($(html).find(".wishlistRow").length);
+
+		if (count) { $("#es_wishlist_count").text(count); } else { $('#es_wishlist_link').remove(); }
+	});	
+}
+
 function appdata_on_wishlist() {
     xpath_each("//a[contains(@class,'btn_visit_store')]", function (node) {		
         var app = get_appid(node.href);		
@@ -2684,11 +2699,55 @@ function add_dlc_checkboxes() {
 	$(document).on( "change", ".es_dlc_selection", add_dlc_to_list );
 }
 
-function fix_achievement_icon_size() {
-	if ($(".rightblock").find("img[src$='ico_achievements.png']").length > 0) {
-		$(".rightblock").find("img[src$='ico_achievements.png']").attr("height", "24");
-		$(".rightblock").find("img[src$='ico_achievements.png']").css("margin-top", "-5px");
-	}
+function add_achievement_section(appid) {
+	var total_achievements;
+	var icon1, icon2, icon3, icon4;
+	var titl1 = "", titl2 = "", titl3 = "", titl4 = "";
+	var desc1 = "", desc2 = "", desc3 = "", desc4 = "";
+	var store_language = cookie.match(/language=([a-z]+)/i)[1];
+
+	get_http("http://api.enhancedsteam.com/steamapi/GetSchemaForGame/?appid=" + appid + "&language=" + store_language, function(txt) {
+		if (txt) {
+			var data = JSON.parse(txt);
+			if (data["game"]["availableGameStats"] && data["game"]["availableGameStats"]["achievements"]) {
+				total_achievements = data["game"]["availableGameStats"]["achievements"].length;
+				if (data["game"]["availableGameStats"]["achievements"][0]) { 
+					icon1 = data["game"]["availableGameStats"]["achievements"][0]["icon"]; 
+					titl1 = data["game"]["availableGameStats"]["achievements"][0]["displayName"];
+					if (data["game"]["availableGameStats"]["achievements"][0]["description"]) desc1 = data["game"]["availableGameStats"]["achievements"][0]["description"];
+				}
+				if (data["game"]["availableGameStats"]["achievements"][1]) {
+					icon2 = data["game"]["availableGameStats"]["achievements"][1]["icon"];
+					titl2 = data["game"]["availableGameStats"]["achievements"][1]["displayName"];
+					if (data["game"]["availableGameStats"]["achievements"][1]["description"]) desc2 = data["game"]["availableGameStats"]["achievements"][1]["description"];
+				}
+				if (data["game"]["availableGameStats"]["achievements"][2]) {
+					icon3 = data["game"]["availableGameStats"]["achievements"][2]["icon"];
+					titl3 = data["game"]["availableGameStats"]["achievements"][2]["displayName"];
+					if (data["game"]["availableGameStats"]["achievements"][2]["description"]) desc3 = data["game"]["availableGameStats"]["achievements"][2]["description"];
+				}
+				if (data["game"]["availableGameStats"]["achievements"][3]) {
+					icon4 = data["game"]["availableGameStats"]["achievements"][3]["icon"];
+					titl4 = data["game"]["availableGameStats"]["achievements"][3]["displayName"];
+					if (data["game"]["availableGameStats"]["achievements"][3]["description"]) desc4 = data["game"]["availableGameStats"]["achievements"][3]["description"];
+				}
+				html = "</div><div class='rule'></div><div class='block_content_inner'>" + localized_strings[language].achievements.includes.replace("__num__", total_achievements) + "<div class='es_communitylink_achievement_images' style='margin-bottom: 4px; margin-top: 4px;'>";
+				if (icon1) html += "<img src='" + icon1 + "' class='es_communitylink_achievement' title='" + titl1 + "&#13;" + desc1 + "'>";
+				if (icon2) html += "<img src='" + icon2 + "' class='es_communitylink_achievement' title='" + titl2 + "&#13;" + desc2 + "'>";
+				if (icon3) html += "<img src='" + icon3 + "' class='es_communitylink_achievement' title='" + titl3 + "&#13;" + desc3 + "'>";
+				if (icon4) html += "<img src='" + icon4 + "' class='es_communitylink_achievement' title='" + titl4 + "&#13;" + desc4 + "'>";
+
+				html += "</div><a class='linkbar' href='http://steamcommunity.com/my/stats/" + appid + "'><div class='rightblock'><img src='http://cdn4.store.steampowered.com/public/images/ico/ico_achievements.png' width='24' height='16' border='0' align='top'></div>" + localized_strings[language].achievements.view_all + "</a></div>";
+
+				if (is_signed_in == true) {
+					$(".friend_blocks_twoxtwo:last").parent().after(html);
+				} else {
+					$(".communitylink:first").find(".rule:first").after(html);
+					$(".communitylink:first").find(".rule:first").remove();
+				}
+			}
+		}
+	});
 }
 
 function check_early_access(node, image_name, image_left, selector_modifier) {	
@@ -3628,7 +3687,7 @@ $(document).ready(function(){
                         add_steamchart_info(appid);
                         add_app_badge_progress(appid);
                         add_dlc_checkboxes();
-						fix_achievement_icon_size();
+						add_achievement_section(appid);
                         
                         show_regional_pricing();
     					break;
@@ -3731,6 +3790,7 @@ $(document).ready(function(){
     
     				case /^\/(?:id|profiles)\/.+/.test(window.location.pathname):
     					add_community_profile_links();
+    					add_wishlist_profile_link();
     					change_user_background();
                         fix_profile_image_not_found();
     					break;
