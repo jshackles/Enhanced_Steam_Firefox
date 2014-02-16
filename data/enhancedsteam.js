@@ -2329,6 +2329,11 @@ function bind_ajax_content_highlighting() {
 					add_overlay();
 				}
 
+				if (node.classList && node.classList.contains("browse_tag_games")) {
+					start_highlights_and_tags();
+					add_overlay();
+				}
+
 				if (node.classList && node.classList.contains("match")) start_highlighting_node(node);
                 if (node.classList && node.classList.contains("search_result_row")) start_highlighting_node(node);
 				if (node.classList && node.classList.contains("market_listing_row_link")) highlight_market_items();
@@ -2365,7 +2370,8 @@ function start_highlights_and_tags(){
 		"div.sale_page_purchase_item", // Sale pages
 		"div.item",				// Sale page / featured page
 		"div.home_area_spotlight",	// midweek and weekend deals
-        "div.insert_season_here_sale_dailydeal_ctn"
+        "div.insert_season_here_sale_dailydeal_ctn",
+        "div.browse_tag_game"
 	];
 
 	// Get all appids and nodes from selectors.
@@ -2819,6 +2825,11 @@ function add_overlay() {
 					$(".recommendation_carousel_item").each(function(index, value) { check_early_access($(this), "ea_184x69.png", $(this).position().left + 8); });
 					$(".game_capsule_area").each(function(index, value) { check_early_access($(this), "ea_sm_120.png", $(this).position().left + 8); });
 					$(".game_capsule").each(function(index, value) { check_early_access($(this), "ea_sm_120.png", $(this).position().left); });
+					break;
+				case /^\/tag\/.*/.test(window.location.pathname):
+					$(".cluster_capsule").each(function(index, value) { check_early_access($(this), "ea_467x181.png", 0); });
+					$(".tab_row").each(function(index, value) { check_early_access($(this), "ea_184x69.png", 0); });
+					$(".browse_tag_game_cap").each(function(index, value) { check_early_access($(this), "ea_292x136.png", $(this).position().left); });
 					break;
 				case /^\/$/.test(window.location.pathname):					
 					$(".tab_row").each(function(index, value) { check_early_access($(this), "ea_sm_120.png", 0); });
