@@ -2928,7 +2928,7 @@ function show_regional_pricing() {
 		if (dailydeal) {
 			all_game_areas = $(".dailydeal_content").toArray();
 		} else if(sale) {
-			all_game_areas = $(".sale_page_purchase_app").toArray();
+			all_game_areas = $(".sale_page_purchase_item").toArray();
 		}
 		var subid_info = [];
 		var subid_array = [];
@@ -3086,7 +3086,7 @@ function show_regional_pricing() {
 								$(".dailydeal_content").eq(index).find(".game_purchase_action_bg").before(app_pricing_div);
 							}
 							else if (sale){
-								$(".sale_page_purchase_app").eq(index).find(".game_purchase_action_bg").before(app_pricing_div);
+								$(".sale_page_purchase_item").eq(index).find(".game_purchase_action_bg").before(app_pricing_div);
 							} else {
 								$(".game_area_purchase_game").eq(index).after(app_pricing_div);
 							}
@@ -3950,7 +3950,11 @@ $(document).ready(function(){
 						endless_scrolling();
 						remove_non_specials();
 						break;
-    
+    				
+    				case /^\/sale\/.*/.test(window.location.pathname):
+						show_regional_pricing();
+						break;
+
     				// Storefront-front only
     				case /^\/$/.test(window.location.pathname):
                         add_carousel_descriptions();
