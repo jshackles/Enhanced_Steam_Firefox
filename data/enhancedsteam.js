@@ -2731,15 +2731,15 @@ function add_achievement_section(appid) {
 					titl4 = data["game"]["availableGameStats"]["achievements"][3]["displayName"];
 					if (data["game"]["availableGameStats"]["achievements"][3]["description"]) desc4 = data["game"]["availableGameStats"]["achievements"][3]["description"];
 				}
-				html = "</div><div class='rule'></div><div class='block_content_inner'>" + localized_strings[language].achievements.includes.replace("__num__", total_achievements) + "<div class='es_communitylink_achievement_images' style='margin-bottom: 4px; margin-top: 4px;'>";
+				html = "</div><div class='rule'></div><div class='block_content_inner'>" + escapeHTML(localized_strings[language].achievements.includes.replace("__num__", total_achievements)) + "<div class='es_communitylink_achievement_images' style='margin-bottom: 4px; margin-top: 4px;'>";
 				if (icon1) html += "<img src='" + icon1 + "' class='es_communitylink_achievement' title='" + titl1 + "&#13;" + desc1 + "'>";
 				if (icon2) html += "<img src='" + icon2 + "' class='es_communitylink_achievement' title='" + titl2 + "&#13;" + desc2 + "'>";
 				if (icon3) html += "<img src='" + icon3 + "' class='es_communitylink_achievement' title='" + titl3 + "&#13;" + desc3 + "'>";
 				if (icon4) html += "<img src='" + icon4 + "' class='es_communitylink_achievement' title='" + titl4 + "&#13;" + desc4 + "'>";
 
-				html += "</div><a class='linkbar' href='http://steamcommunity.com/my/stats/" + appid + "'><div class='rightblock'><img src='http://cdn4.store.steampowered.com/public/images/ico/ico_achievements.png' width='24' height='16' border='0' align='top'></div>" + localized_strings[language].achievements.view_all + "</a></div>";
+				html += "</div><a class='linkbar' href='http://steamcommunity.com/my/stats/" + escapeHTML(appid) + "'><div class='rightblock'><img src='http://cdn4.store.steampowered.com/public/images/ico/ico_achievements.png' width='24' height='16' border='0' align='top'></div>" + escapeHTML(localized_strings[language].achievements.view_all) + "</a></div>";
 
-				if (is_signed_in == true) {
+				if (is_signed_in) {
 					$(".friend_blocks_twoxtwo:last").parent().after(html);
 				} else {
 					$(".communitylink:first").find(".rule:first").after(html);
@@ -2904,7 +2904,7 @@ function show_regional_pricing() {
 		if(getCookie("fakeCC")){
 			local_country = getCookie("fakeCC").toLowerCase();
 		} else {
-			if (is_signed_in() == true) {
+			if (is_signed_in) {
 				local_country = getCookie("LKGBillingCountry").toLowerCase();
 			} else {
 				local_country = "us";
@@ -3430,6 +3430,56 @@ function add_badge_filter() {
 	}	
 }
 
+function add_achievement_sort() {
+	if ($("#personalAchieve").length > 0 || $("#achievementsSelector").length > 0) {
+		$("#tabs").before("<div id='achievement_sort_options' class='sort_options'>" + escapeHTML(localized_strings[language].sort_by) + "<span id='achievement_sort_default'>" + escapeHTML(localized_strings[language].theworddefault) + "</span><span id='achievement_sort_date' class='es_achievement_sort_link'>" + escapeHTML(localized_strings[language].date_unlocked) + "</span></div>");
+		$("#personalAchieve, #achievementsSelector").clone().insertAfter("#personalAchieve, #achievementsSelector").attr("id", "personalAchieveSorted").css("padding-left", "16px").hide();	
+
+		var achRows = [];
+		$("#personalAchieveSorted").find(".achieveUnlockTime").each(function() {
+			var push = new Array();
+			push[0] = $(this).parent().parent().prev();
+			$(this).parent().parent().next().remove();
+			$(this).parent().parent().next().remove();
+			$(this).parent().parent().next().remove();
+			push[1] = $(this).parent().parent();
+			var unlocktime = $(this).text().replace("Unlocked: ", "").replace("Jan", "01").replace("Feb", "02").replace("Mar", "03").replace("Apr", "04").replace("May", "05").replace("Jun", "06").replace("Jul", "07").replace("Aug", "08").replace("Sep", "09").replace("Oct", "10").replace("Nov", "11").replace("Dec", "12");
+			var parts = unlocktime.match(/(\d{2}) (\d+), (\d{4}) (\d+):(\d{2})(am|pm)/);
+			if (parts[6] == "pm") parts[4] = (parseFloat(parts[4]) + 12).toString();		
+			push[2] = Date.UTC(+parts[3], parts[1]-1, +parts[2], +parts[4], +parts[5]) / 1000;
+			achRows.push(push);
+		});
+
+		achRows.sort();
+
+		$(achRows).each(function() {		
+			if ($(".smallForm").length > 0) {
+				$("#personalAchieveSorted").find("form").next().after("<br clear='left'><img src='http://cdn.steamcommunity.com/public/images/trans.gif' width='1' height='11' border='0'><br>");
+				$("#personalAchieveSorted").find("form").next().after(this[1]);
+				$("#personalAchieveSorted").find("form").next().after(this[0]);
+			} else {
+				$("#personalAchieveSorted").prepend("<br clear='left'><img src='http://cdn.steamcommunity.com/public/images/trans.gif' width='1' height='11' border='0'><br>");
+				$("#personalAchieveSorted").prepend(this[1]);
+				$("#personalAchieveSorted").prepend(this[0]);
+			}
+		});
+
+		$("#achievement_sort_default").on("click", function() {
+			$(this).removeClass('es_achievement_sort_link');
+			$("#achievement_sort_date").addClass("es_achievement_sort_link");
+			$("#personalAchieve, #achievementsSelector").show();
+			$("#personalAchieveSorted").hide();
+		});
+
+		$("#achievement_sort_date").on("click", function() {
+			$(this).removeClass('es_achievement_sort_link');
+			$("#achievement_sort_default").addClass("es_achievement_sort_link");
+			$("#personalAchieve, #achievementsSelector").hide();
+			$("#personalAchieveSorted").show();
+		});
+	}
+}
+
 function add_badge_view_options() {
     var html  = "<div style='text-align: right;'><span>" + escapeHTML(localized_strings[language].view) + ": </span>";
 		html += "<label class='badge_sort_option whiteLink es_badges' id='es_badge_view_default'><input type='radio' name='es_badge_view' checked><span>" + escapeHTML(localized_strings[language].theworddefault) + "</span></label>";
@@ -3780,6 +3830,10 @@ $(document).ready(function(){
 						add_badge_filter();
 						add_badge_view_options();
     					break;
+
+    				case /^\/(?:id|profiles)\/.+\/stats/.test(window.location.pathname):
+						add_achievement_sort();
+						break;
     
     				case /^\/(?:id|profiles)\/.+\/gamecard/.test(window.location.pathname):
     					var gamecard = get_gamecard(window.location.pathname);
