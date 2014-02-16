@@ -3430,6 +3430,84 @@ function add_badge_filter() {
 	}	
 }
 
+function add_badge_sort() {
+	if ($(".profile_badges_sortoptions").find("a[href$='sort=r']").length > 0) {
+		$(".profile_badges_sortoptions").find("a[href$='sort=r']").after("&nbsp;&nbsp;<a class='badge_sort_option whiteLink' id='es_badge_sort_drops'>" + escapeHTML(localized_strings[language].most_drops) + "</a>&nbsp;&nbsp;<a class='badge_sort_option whiteLink' id='es_badge_sort_value'>" + escapeHTML(localized_strings[language].drops_value) + "</a>");
+	}
+
+	$("#es_badge_sort_drops").on("click", function() {
+		var badgeRows = [];
+		$('.badge_row').each(function () {
+			var push = new Array();
+			if ($(this).html().match(/progress_info_bold".+\d/)) {
+				push[0] = this.outerHTML;
+				push[1] = $(this).find(".progress_info_bold").html().match(/\d+/)[0];
+			} else {
+				push[0] = this.outerHTML;
+				push[1] = "0";
+			}
+			badgeRows.push(push);
+			this.parentNode.removeChild(this);
+		});
+
+		badgeRows.sort(function(a,b) {
+			var dropsA = parseInt(a[1],10);
+			var dropsB = parseInt(b[1],10);
+
+			if (dropsA < dropsB) {
+				return 1;
+			} else {
+				return -1;
+			}	
+		});
+
+		$('.badge_row').each(function () { $(this).css("display", "none"); });
+
+		$(badgeRows).each(function() {
+			$(".badges_sheet:first").append(this[0]);
+		});
+
+		$(".active").removeClass("active");
+		$(this).addClass("active");
+	});
+
+	$("#es_badge_sort_value").on("click", function() {
+		var badgeRows = [];
+		$('.badge_row').each(function () {
+			var push = new Array();
+			if ($(this).find(".es_card_drop_worth").length > 0) {
+				push[0] = this.outerHTML;
+				push[1] = $(this).find(".es_card_drop_worth").html();
+			} else {
+				push[0] = this.outerHTML;
+				push[1] = localized_strings[language].drops_worth_avg;
+			}
+			badgeRows.push(push);
+			$(this).remove();
+		});
+
+		badgeRows.sort(function(a, b) {
+			var worthA = a[1];
+			var worthB = b[1];
+
+			if (worthA < worthB) {
+				return 1;
+			} else {
+				return -1;
+			}
+		});
+
+		$('.badge_row').each(function () { $(this).css("display", "none"); });
+
+		$(badgeRows).each(function() {
+			$(".badges_sheet:first").append(this[0]);
+		});
+
+		$(".active").removeClass("active");
+		$(this).addClass("active");
+	});	
+}
+
 function add_achievement_sort() {
 	if ($("#personalAchieve").length > 0 || $("#achievementsSelector").length > 0) {
 		$("#tabs").before("<div id='achievement_sort_options' class='sort_options'>" + escapeHTML(localized_strings[language].sort_by) + "<span id='achievement_sort_default'>" + escapeHTML(localized_strings[language].theworddefault) + "</span><span id='achievement_sort_date' class='es_achievement_sort_link'>" + escapeHTML(localized_strings[language].date_unlocked) + "</span></div>");
@@ -3920,6 +3998,7 @@ $(document).ready(function(){
         				add_total_drops_count();
     					add_cardexchange_links();
 						add_badge_filter();
+						add_badge_sort();
 						add_badge_view_options();
     					break;
 
