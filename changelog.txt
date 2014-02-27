@@ -1,3 +1,9 @@
+v5.9.1
+-----
+: Updated code according to Mozilla's requests
+- Removed header link insertion
+- Removed feature links as they were implemented by Valve
+
 v5.9
 -----
 + Added a link on user profiles to their wishlist
