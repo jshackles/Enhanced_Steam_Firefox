@@ -3551,7 +3551,7 @@ function add_gamecard_market_links(game) {
 
 				for (var i = 0; i < data.length; i++) {
 					if (data[i].name == newcardname) {
-						var marketlink = "http://steamcommunity.com/market/listings/" + escapeHTML(data[1].url);
+						var marketlink = "http://steamcommunity.com/market/listings/" + escapeHTML(data[i].url);
 						switch (currency_symbol) {
 							case "R$":
 								var card_price = formatMoney(data[i].price_brl, 2, currency_symbol + " ", ".", ",");
