@@ -660,7 +660,7 @@ function add_empty_cart_button() {
 	addtext = "<a id='es_empty_cart' class='btn_checkout_blue' style='float: left; margin-top: 14px;'><div class='leftcap'></div><div class='rightcap'></div>" + escapeHTML(localized_strings[language].empty_cart) + "</a>";
 	$(".checkout_content").prepend(addtext);
 	$("#es_empty_cart").on("click", function() {
-		document.cookie="shoppingCartGID=0; path=";
+		document.cookie = 'shoppingCartGID' + '=; expires=Thu, 01 Jan 1970 00:00:01 GMT; path=/';
 		location.href=location.href;
 	});
 }
