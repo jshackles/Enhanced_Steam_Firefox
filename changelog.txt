@@ -1,3 +1,7 @@
+v6.0
+-----
+
+
 v5.9.1
 -----
 : Updated code according to Mozilla's requests
