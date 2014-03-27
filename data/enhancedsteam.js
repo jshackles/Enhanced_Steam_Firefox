@@ -596,8 +596,6 @@ function add_fake_country_code_warning() {
 
 // Displays warning if browsing in a different language
 function add_language_warning() {
-	console.log (showlanguagewarninglanguage);
-
 	var currentLanguage = cookie.match(/language=([a-z]+)/i)[1];
 	currentLanguage = currentLanguage.charAt(0).toUpperCase() + currentLanguage.slice(1);
 
@@ -642,6 +640,42 @@ function remove_about_menu() {
     if (hideaboutmenu == true) {
         $('a[href$="http://store.steampowered.com/about/"]').replaceWith('');
     }
+}
+
+function add_custom_wallet_amount() {
+	var addfunds = $(".addfunds_area_purchase_game:first").clone();
+	$(addfunds).addClass("es_custom_funds");
+	$(addfunds).find(".btn_addtocart_content").addClass("es_custom_button");
+	$(addfunds).find("h1").text(localized_strings[language].wallet.custom_amount);
+	$(addfunds).find("p").text(localized_strings[language].wallet.custom_amount_text.replace("__minamount__", $(addfunds).find(".price").text().trim()));
+	var currency_symbol = $(addfunds).find(".price").text().trim().match(/(?:R\$|\$|€|£|pуб)/)[0];
+	var minimum = $(addfunds).find(".price").text().trim().replace(/(?:R\$|\$|€|£|pуб)/, "");
+	var formatted_minimum = minimum;
+	switch (currency_symbol) {
+		case "€":
+		case "pуб":
+			$(addfunds).find(".price").html("<input id='es_custom_funds_amount' class='es_text_input' style='margin-top: -3px;' size=4 value='" + escapeHTML(minimum) +"'> " + escapeHTML(currency_symbol));
+			break;
+		default:
+			$(addfunds).find(".price").html(currency_symbol + " <input id='es_custom_funds_amount' class='es_text_input' style='margin-top: -3px;' size=4 value='" + escapeHTML(minimum) +"'>");
+			break;
+	}
+	$("#game_area_purchase .addfunds_area_purchase_game:first").after(addfunds);
+	$("#es_custom_funds_amount").change(function() {
+		// Make sure two numbers are entered after the separator
+		if (!($("#es_custom_funds_amount").val().match(/(\.|\,)\d\d$/))) { $("#es_custom_funds_amount").val($("#es_custom_funds_amount").val().replace(/\D/g, "")); }
+
+		// Make sure the user entered decimals.  If not, add 00 to the end of the number to make the value correct
+		if (currency_symbol == "€" || currency_symbol == "pуб" || currency_symbol == "R$") {
+			if ($("#es_custom_funds_amount").val().indexOf(",") == -1) $("#es_custom_funds_amount").val($("#es_custom_funds_amount").val() + ",00");
+		} else {
+			if ($("#es_custom_funds_amount").val().indexOf(".") == -1) $("#es_custom_funds_amount").val($("#es_custom_funds_amount").val() + ".00");
+		}
+
+		var calculated_value = $("#es_custom_funds_amount").val().replace(/-/g, "0").replace(/\D/g, "").replace(/[^A-Za-z0-9]/g, '');
+		$("#es_custom_funds_amount").val($("#es_custom_funds_amount").val().replace(/[A-Za-z]/g, ''));
+		$(".es_custom_button").attr("href", "javascript:submitAddFunds( " + calculated_value + " );")
+	});
 }
 
 function add_empty_cart_button() {
@@ -3885,6 +3919,10 @@ $(document).ready(function(){
 
 						case /^\/account\/.*/.test(window.location.pathname):
 							account_total_spent();
+							break;
+
+						case /^\/steamaccount\/addfunds/.test(window.location.pathname):
+							add_custom_wallet_amount();
 							break;
 
 						case /^\/search\/.*/.test(window.location.pathname):
