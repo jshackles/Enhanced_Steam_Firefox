@@ -2728,14 +2728,14 @@ function add_dlc_checkboxes() {
 		});
 	});
 
-	$(".game_area_dlc_section").find(".gradientbg").append("<div id='es_dlc_option_button'>" + escapeHTML(localized_strings[language].options) + " ▾</div>");
+	$(".game_area_dlc_section").find(".gradientbg").append("<div id='es_dlc_option_button'>" + escapeHTML(localized_strings[language].thewordoptions) + " ▾</div>");
 	
 	$("#es_dlc_option_button").on("click", function() {
 		$("#es_dlc_option_panel").toggle();
 		if ($("#es_dlc_option_button").text().match("▾")) {
-			$("#es_dlc_option_button").text(localized_strings[language].options + " ▴");
+			$("#es_dlc_option_button").text(localized_strings[language].thewordoptions + " ▴");
 		} else {
-			$("#es_dlc_option_button").text(localized_strings[language].options + " ▾");
+			$("#es_dlc_option_button").text(localized_strings[language].thewordoptions + " ▾");
 		}
 	});
 
