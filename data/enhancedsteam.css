@@ -668,3 +668,8 @@ input[type=checkbox].es_dlc_selection:checked + label {
 	margin-right: 38px;
 	color: #fff;
 }
+.es_active_total {
+	float: right;
+	text-align: center;
+	padding-top: 6px;
+}
