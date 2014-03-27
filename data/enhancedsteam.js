@@ -42,8 +42,12 @@ function formatMoney(number, places, symbol, thousand, decimal, right) {
 	}
 };
 
-function escapeHTML(str) str.replace(/[&"<>]/g, function (m) escapeHTML.replacements[m]);
-escapeHTML.replacements = { "&": "&amp;", '"': "&quot;", "<": "&lt;", ">": "&gt;" };
+function escapeHTML(str) { 
+	str = str.toString();
+	var return_string = str.replace(/[&"<>]/g, function (m) escapeHTML.replacements[m]);
+	escapeHTML.replacements = { "&": "&amp;", '"': "&quot;", "<": "&lt;", ">": "&gt;" };
+	return return_string;
+}
 
 
 function getCookie(name) {
