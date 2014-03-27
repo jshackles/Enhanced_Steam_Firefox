@@ -1,5 +1,6 @@
 v6.0
 -----
++ Added warning if browsing in a language other than your preferred language (set in options)
 : Fixed a bug that caused emptying your shopping cart to break purchase process
 : Fixed a bug on badge pages that showed incorrect market links
 : Fixed a bug that caused the market page to format incorrectly

@@ -158,6 +158,118 @@
             "name": "showregionalprice",
             "value": true,
             "title": "Show Regional Price Comparison"
+        },
+        {
+            "type": "menulist",
+            "name": "showlanguagewarninglanguage",
+            "title": "Display a warning if browsing in a language other than ",
+            "value": "English",
+            "options": [
+                {
+                    "value": "English",
+                    "label": "English"
+                },
+                {
+                    "value": "Brazilian",
+                    "label": "Brazilian"
+                },
+                {
+                    "value": "Bulgarian",
+                    "label": "Bulgarian"
+                },
+                {
+                    "value": "Czech",
+                    "label": "Czech"
+                },
+                {
+                    "value": "Danish",
+                    "label": "Danish"
+                },
+                {
+                    "value": "Dutch",
+                    "label": "Dutch"
+                },
+                {
+                    "value": "Finnish",
+                    "label": "Finnish"
+                },
+                {
+                    "value": "French",
+                    "label": "French"
+                },
+                {
+                    "value": "Greek",
+                    "label": "Greek"
+                },
+                {
+                    "value": "German",
+                    "label": "German"
+                },
+                {
+                    "value": "Hungarian",
+                    "label": "Hungarian"
+                },
+                {
+                    "value": "Italian",
+                    "label": "Italian"
+                },
+                {
+                    "value": "Japanese",
+                    "label": "Japanese"
+                },
+                {
+                    "value": "Koreana",
+                    "label": "Korean"
+                },
+                {
+                    "value": "Norwegian",
+                    "label": "Norwegian"
+                },
+                {
+                    "value": "Polish",
+                    "label": "Polish"
+                },
+                {
+                    "value": "Portuguese",
+                    "label": "Portuguese"
+                },
+                {
+                    "value": "Russian",
+                    "label": "Russian"
+                },
+                {
+                    "value": "Romanian",
+                    "label": "Romanian"
+                },
+                {
+                    "value": "Schinese",
+                    "label": "Simplified Chinese"
+                },
+                {
+                    "value": "Spanish",
+                    "label": "Spanish"
+                },
+                {
+                    "value": "Swedish",
+                    "label": "Swedish"
+                },
+                {
+                    "value": "Tchinese",
+                    "label": "Traditional Chinese"
+                },
+                {
+                    "value": "Thai",
+                    "label": "Thai"
+                },
+                {
+                    "value": "Turkish",
+                    "label": "Turkish"
+                },
+                {
+                    "value": "Ukrainian",
+                    "label": "Ukrainian"
+                }
+            ]
         }
     ],
     "contributors": [],
