@@ -1,3 +1,7 @@
+v6.1
+-----
+
+
 v6.0
 -----
 + Added warning if browsing in a language other than your preferred language (set in options)
