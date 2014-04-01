@@ -4,6 +4,7 @@ v6.0
 + Added ability to add a custom amount to your Steam wallet
 : Fixed a bug that caused highlighting not to work correctly if DOM storage was disabled
 : Fixed a bug that caused emptying your shopping cart to break purchase process
+: Fixed a bug that caused you to not be able to have more than one item in your cart at once
 : Fixed a bug on badge pages that showed incorrect market links
 : Fixed a bug that caused the market page to format incorrectly
 : Fixed a bug in some languages where badge filtering didn't work properly
