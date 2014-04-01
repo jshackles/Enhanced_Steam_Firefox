@@ -6,6 +6,7 @@ v6.0
 : Fixed a bug that caused emptying your shopping cart to break purchase process
 : Fixed a bug on badge pages that showed incorrect market links
 : Fixed a bug that caused the market page to format incorrectly
+: Fixed a bug in some languages where badge filtering didn't work properly
 
 v5.9.1
 -----
