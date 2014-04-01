@@ -160,9 +160,15 @@
             "title": "Show Regional Price Comparison"
         },
         {
+            "type": "bool",
+            "name": "showlanguagewarning",
+            "value": false,
+            "title": "Display a warning if browsing in a language other than "
+        },
+        {
             "type": "menulist",
             "name": "showlanguagewarninglanguage",
-            "title": "Display a warning if browsing in a language other than ",
+            "title": "",
             "value": "English",
             "options": [
                 {

@@ -623,35 +623,37 @@ function add_fake_country_code_warning() {
 
 // Displays warning if browsing in a different language
 function add_language_warning() {
-	var currentLanguage = cookie.match(/language=([a-z]+)/i)[1];
-	currentLanguage = currentLanguage.charAt(0).toUpperCase() + currentLanguage.slice(1);
+	if (showlanguagewarning) {
+		var currentLanguage = cookie.match(/language=([a-z]+)/i)[1];
+		currentLanguage = currentLanguage.charAt(0).toUpperCase() + currentLanguage.slice(1);
 
-	function make_language_pretty(language_string) {
-		switch (language_string) {
-			case "Schinese": return "Simplified Chinese"; break;
-			case "Tchinese": return "Traditional Chinese"; break;
-			case "Koreana":	return "Korean"; break;
-			default: return language_string; break;
+		function make_language_pretty(language_string) {
+			switch (language_string) {
+				case "Schinese": return "Simplified Chinese"; break;
+				case "Tchinese": return "Traditional Chinese"; break;
+				case "Koreana":	return "Korean"; break;
+				default: return language_string; break;
+			}
 		}
-	}
 
-	var lang = showlanguagewarninglanguage.toLowerCase().slice(0,3);
+		var lang = showlanguagewarninglanguage.toLowerCase().slice(0,3);
 
-	currentLanguage = make_language_pretty(currentLanguage);
-	showlanguagewarninglanguage = make_language_pretty(showlanguagewarninglanguage);
+		currentLanguage = make_language_pretty(currentLanguage);
+		showlanguagewarninglanguage = make_language_pretty(showlanguagewarninglanguage);
 
-	if (showlanguagewarninglanguage != currentLanguage) {
-		if (localized_strings[lang] && localized_strings[lang].using_language && localized_strings[lang].using_language_return) {
-			$("#global_header").after('<div class=content style="background-image: url( ' + self.options.img_red_banner + '); color: #ffffff; font-size: 12px; height: 21px; text-align: center; padding-top: 8px;">' + localized_strings[lang].using_language.replace("__current__", currentLanguage) + '  <a href="#" id="reset_language_code">' + localized_strings[lang].using_language_return.replace("__base__", showlanguagewarninglanguage) + '</a></div>');
-		} else {
-			$("#global_header").after('<div class=content style="background-image: url( ' + self.options.img_red_banner + '); color: #ffffff; font-size: 12px; height: 21px; text-align: center; padding-top: 8px;">' + localized_strings["eng"].using_language.replace("__current__", currentLanguage) + '  <a href="#" id="reset_language_code">' + localized_strings["eng"].using_language_return.replace("__base__", showlanguagewarninglanguage) + '</a></div>');
+		if (showlanguagewarninglanguage != currentLanguage) {
+			if (localized_strings[lang] && localized_strings[lang].using_language && localized_strings[lang].using_language_return) {
+				$("#global_header").after('<div class=content style="background-image: url( ' + self.options.img_red_banner + '); color: #ffffff; font-size: 12px; height: 21px; text-align: center; padding-top: 8px;">' + localized_strings[lang].using_language.replace("__current__", currentLanguage) + '  <a href="#" id="reset_language_code">' + localized_strings[lang].using_language_return.replace("__base__", showlanguagewarninglanguage) + '</a></div>');
+			} else {
+				$("#global_header").after('<div class=content style="background-image: url( ' + self.options.img_red_banner + '); color: #ffffff; font-size: 12px; height: 21px; text-align: center; padding-top: 8px;">' + localized_strings["eng"].using_language.replace("__current__", currentLanguage) + '  <a href="#" id="reset_language_code">' + localized_strings["eng"].using_language_return.replace("__base__", showlanguagewarninglanguage) + '</a></div>');
+			}
+			$("#page_background_holder").css("top", "135px");
+			$("#reset_language_code").click(function(e) {
+				e.preventDefault();
+				document.cookie = 'Steam_Language=' + showlanguagewarninglanguage.toLowerCase() + ';path=/;';
+				window.location.replace(window.location.href.replace(/[?&]l=[a-z]+/, ""));
+			});
 		}
-		$("#page_background_holder").css("top", "135px");
-		$("#reset_language_code").click(function(e) {
-			e.preventDefault();
-			document.cookie = 'Steam_Language=' + showlanguagewarninglanguage.toLowerCase() + ';path=/;';
-			window.location.replace(window.location.href.replace(/[?&]l=[a-z]+/, ""));
-		});
 	}
 }
 
@@ -3862,7 +3864,8 @@ var ownedColor,
 	showregionalprice,
 	showprofilelinks_display,
 	showallachievements,
-	showlanguagewarninglanguage;
+	showlanguagewarninglanguage,
+	showlanguagewarning;
 
 $(document).ready(function(){
 	// get preference values here   
@@ -3890,6 +3893,7 @@ $(document).ready(function(){
 		showprofilelinks_display = data[20];
 		showallachievements = data[21];
 		showlanguagewarninglanguage = data[22];
+		showlanguagewarning = data[23];
 
 		is_signed_in();
 
