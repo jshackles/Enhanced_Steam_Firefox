@@ -1,6 +1,7 @@
 v6.1
 -----
-
++ Added profile links to private profiles
+: Fixed a bug that caused inventory pages to not always show price history
 
 v6.0
 -----

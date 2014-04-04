@@ -755,6 +755,12 @@ function add_community_profile_links() {
     	htmlstr += '<div class="profile_count_link"><a href="http://backpack.tf/profiles/' + escapeHTML(steamID) + '" target="_blank"><span class="count_link_label">Backpack.tf</span>&nbsp;<span class="profile_count_link_total">';
     	if (showprofilelinks_display != 2) { htmlstr += '<img src="' + escapeHTML(ico_backpacktf) + '" class="profile_link_icon">'; }
     	if (htmlstr != '') { $(".profile_item_links").append(htmlstr); }
+
+    	if ($(".profile_item_links").length == 0) {
+			$(".profile_rightcol").append("<div class='profile_item_links'>");
+			$(".profile_item_links").append(htmlstr);
+			$(".profile_rightcol").after("<div style='clear: both'></div>");
+		}
     }
 }
 
