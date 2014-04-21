@@ -643,9 +643,9 @@ function add_language_warning() {
 
 		if (showlanguagewarninglanguage != currentLanguage) {
 			if (localized_strings[lang] && localized_strings[lang].using_language && localized_strings[lang].using_language_return) {
-				$("#global_header").after('<div class=content style="background-image: url( ' + self.options.img_red_banner + '); color: #ffffff; font-size: 12px; height: 21px; text-align: center; padding-top: 8px;">' + localized_strings[lang].using_language.replace("__current__", currentLanguage) + '  <a href="#" id="reset_language_code">' + localized_strings[lang].using_language_return.replace("__base__", showlanguagewarninglanguage) + '</a></div>');
+				$("#global_header").after('<div class=content style="background-image: url( ' + self.options.img_red_banner + '); color: #ffffff; font-size: 12px; height: 21px; text-align: center; padding-top: 8px;">' + escapeHTML(localized_strings[lang].using_language.replace("__current__", currentLanguage)) + '  <a href="#" id="reset_language_code">' + escapeHTML(localized_strings[lang].using_language_return.replace("__base__", showlanguagewarninglanguage)) + '</a></div>');
 			} else {
-				$("#global_header").after('<div class=content style="background-image: url( ' + self.options.img_red_banner + '); color: #ffffff; font-size: 12px; height: 21px; text-align: center; padding-top: 8px;">' + localized_strings["eng"].using_language.replace("__current__", currentLanguage) + '  <a href="#" id="reset_language_code">' + localized_strings["eng"].using_language_return.replace("__base__", showlanguagewarninglanguage) + '</a></div>');
+				$("#global_header").after('<div class=content style="background-image: url( ' + self.options.img_red_banner + '); color: #ffffff; font-size: 12px; height: 21px; text-align: center; padding-top: 8px;">' + escapeHTML(localized_strings["eng"].using_language.replace("__current__", currentLanguage)) + '  <a href="#" id="reset_language_code">' + escapeHTML(localized_strings["eng"].using_language_return.replace("__base__", showlanguagewarninglanguage)) + '</a></div>');
 			}
 			$("#page_background_holder").css("top", "135px");
 			$("#reset_language_code").click(function(e) {
@@ -703,7 +703,7 @@ function add_custom_wallet_amount() {
 
 		var calculated_value = $("#es_custom_funds_amount").val().replace(/-/g, "0").replace(/\D/g, "").replace(/[^A-Za-z0-9]/g, '');
 		$("#es_custom_funds_amount").val($("#es_custom_funds_amount").val().replace(/[A-Za-z]/g, ''));
-		$(".es_custom_button").attr("href", "javascript:submitAddFunds( " + calculated_value + " );")
+		$(".es_custom_button").attr("href", "javascript:submitAddFunds( " + escapeHTML(calculated_value) + " );")
 	});
 }
 
@@ -3623,7 +3623,7 @@ function add_badge_view_options() {
 
 function add_gamecard_foil_link() {
     if ($(".progress_info_bold").length > 0) {
-		$(".gamecards_inventorylink").append("<a class='btn_grey_grey btn_small_thin' href='" + window.location + "?border=1'><span>View Foil Badge Progress</span></a>");
+		$(".gamecards_inventorylink").append("<a class='btn_grey_grey btn_small_thin' href='" + escapeHTML(window.location) + "?border=1'><span>View Foil Badge Progress</span></a>");
 	}	
 }
 
