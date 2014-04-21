@@ -56,13 +56,13 @@ function formatMoney(number, places, symbol, thousand, decimal, right) {
 	}
 };
 
+HTMLreplacements = { "&": "&amp;", '"': "&quot;", "<": "&lt;", ">": "&gt;" };
+
 function escapeHTML(str) { 
 	str = str.toString();
-	var return_string = str.replace(/[&"<>]/g, function (m) escapeHTML.replacements[m]);
-	escapeHTML.replacements = { "&": "&amp;", '"': "&quot;", "<": "&lt;", ">": "&gt;" };
+	var return_string = str.replace(/[&"<>]/g, function (m) HTMLreplacements[m]);
 	return return_string;
 }
-
 
 function getCookie(name) {
     return decodeURIComponent(document.cookie.replace(new RegExp("(?:(?:^|.*;)\\s*" + encodeURIComponent(name).replace(/[\-\.\+\*]/g, "\\$&") + "\\s*\\=\\s*([^;]*).*$)|^.*$"), "$1")) || null;
