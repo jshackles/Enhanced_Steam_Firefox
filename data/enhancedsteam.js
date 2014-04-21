@@ -1901,85 +1901,94 @@ function add_active_total() {
 }
 
 function account_total_spent() {
-    if (showtotal === true) {
-        if ($('.transactionRow').length !== 0) {
-    		var currency_symbol = $(".accountBalance").html();
-    		currency_symbol = currency_symbol.match(/(?:R\$|\$|€|£|pуб)/)[0];
-    
-    		totaler = function (p, i) {
-    			if (p.innerHTML.indexOf("class=\"transactionRowEvent walletcredit\">") < 0) {
-    				var priceContainer = $(p).find(".transactionRowPrice");
-    				if (priceContainer.length > 0) {
-    					var priceText = $(priceContainer).text();
-    					var regex = /(\d+[.,]\d\d+)/,
-    						price = regex.exec(priceText);
-    
-    					if (price !== null && price !== "Total") {
-    						var tempprice = price[0].toString();
-    						tempprice = tempprice.replace(",", ".");
-    						return parseFloat(tempprice);
-    					}
-    				}
-    			}
-    		};
-    
-    		game_prices = jQuery.map($('#store_transactions .transactionRow'), totaler);
-    		ingame_prices = jQuery.map($('#ingame_transactions .transactionRow'), totaler);
-    		market_prices = jQuery.map($('#market_transactions .transactionRow'), totaler);
-    
-    		var game_total = 0.0;
-    		var ingame_total = 0.0;
-    		var market_total = 0.0;
-    		jQuery.map(game_prices, function (p, i) { game_total += p; });
-    		jQuery.map(ingame_prices, function (p, i) { ingame_total += p; });
-    		jQuery.map(market_prices, function (p, i) { market_total += p; });
-    
-    		total_total = game_total + ingame_total + market_total;
-    
-    		if (currency_symbol) {
-    			switch (currency_symbol) {
-    				case "€":
-    					game_total = formatMoney(parseFloat(game_total), 2, currency_symbol, ",", ",", true)
-    					ingame_total = formatMoney(parseFloat(ingame_total), 2, currency_symbol, ",", ",", true)
-    					market_total = formatMoney(parseFloat(market_total), 2, currency_symbol, ",", ",", true)
-    					total_total = formatMoney(parseFloat(total_total), 2, currency_symbol, ",", ",", true)
-    					break;
-    
-    				case "pуб":
-    					currency_symbol = " " + currency_symbol;
-    					game_total = formatMoney(parseFloat(game_total), 2, currency_symbol, ",", ",", true)
-    					ingame_total = formatMoney(parseFloat(ingame_total), 2, currency_symbol, ",", ",", true)
-    					market_total = formatMoney(parseFloat(market_total), 2, currency_symbol, ",", ",", true)
-    					total_total = formatMoney(parseFloat(total_total), 2, currency_symbol, ",", ",", true)
-    					break;
-    
-    				default:
-    					game_total = formatMoney(parseFloat(game_total), 2, currency_symbol, ",", ".", false)
-    					ingame_total = formatMoney(parseFloat(ingame_total), 2, currency_symbol, ",", ".", false)
-    					market_total = formatMoney(parseFloat(market_total), 2, currency_symbol, ",", ".", false)
-    					total_total = formatMoney(parseFloat(total_total), 2, currency_symbol, ",", ".", false)
-    					break;
-    			}
-    
-    			var html = '<div class="accountRow accountBalance accountSpent">';
-    			html += '<div class="accountData price">' + escapeHTML(game_total) + '</div>';
-    			html += '<div class="accountLabel">Store Transactions:</div></div>';
-    			html += '<div class="accountRow accountBalance accountSpent">';
-    			html += '<div class="accountData price">' + escapeHTML(ingame_total) + '</div>';
-    			html += '<div class="accountLabel">Game Transactions:</div></div>';
-    			html += '<div class="accountRow accountBalance accountSpent">';
-    			html += '<div class="accountData price">' + escapeHTML(market_total) + '</div>';
-    			html += '<div class="accountLabel">Market Transactions:</div></div>';
-    			html += '<div class="inner_rule"></div>';
-    			html += '<div class="accountRow accountBalance accountSpent">';
-    			html += '<div class="accountData price">' + escapeHTML(total_total) + '</div>';
-    			html += '<div class="accountLabel">Total Spent:</div></div>';
-    			html += '<div class="inner_rule"></div>';
-    
-    			$('.accountInfoBlock .block_content_inner .accountBalance').before(html);
-    		}
-    	}
-    }
+	if (showtotal === true) {
+		if ($('.transactionRow').length !== 0) {
+			var currency_symbol = $(".accountBalance").html();
+			currency_symbol = currency_symbol.match(/(?:R\$|\$|€|£|pуб)/)[0];
+
+			totaler = function (p, i) {
+				if (p.innerHTML.indexOf("class=\"transactionRowEvent walletcredit\">") < 0) {
+					var priceContainer = $(p).find(".transactionRowPrice");
+					if (priceContainer.length > 0) {
+						var priceText = $(priceContainer).text();
+						var regex = /(\d+[.,]\d\d+)/,
+							price = regex.exec(priceText);
+
+						if (price !== null && price !== "Total") {
+							var tempprice = price[0].toString();
+							tempprice = tempprice.replace(",", ".");
+							return parseFloat(tempprice);
+						}
+					}
+				}
+			};
+
+			game_prices = jQuery.map($('#store_transactions .block:first .transactionRow'), totaler);
+			gift_prices = jQuery.map($('#store_transactions .block:last .transactionRow'), totaler);
+			ingame_prices = jQuery.map($('#ingame_transactions .transactionRow'), totaler);
+			market_prices = jQuery.map($('#market_transactions .transactionRow'), totaler);
+
+			var game_total = 0.0;
+			var gift_total = 0.0;
+			var ingame_total = 0.0;
+			var market_total = 0.0;
+			jQuery.map(game_prices, function (p, i) { game_total += p; });
+			jQuery.map(gift_prices, function (p, i) { gift_total += p; });
+			jQuery.map(ingame_prices, function (p, i) { ingame_total += p; });
+			jQuery.map(market_prices, function (p, i) { market_total += p; });
+
+			total_total = game_total + gift_total + ingame_total + market_total;
+
+			if (currency_symbol) {
+				switch (currency_symbol) {
+					case "€":
+						game_total = formatMoney(parseFloat(game_total), 2, currency_symbol, ",", ",", true);
+						gift_total = formatMoney(parseFloat(gift_total), 2, currency_symbol, ",", ",", true);
+						ingame_total = formatMoney(parseFloat(ingame_total), 2, currency_symbol, ",", ",", true);
+						market_total = formatMoney(parseFloat(market_total), 2, currency_symbol, ",", ",", true);
+						total_total = formatMoney(parseFloat(total_total), 2, currency_symbol, ",", ",", true);
+						break;
+
+					case "pуб":
+						currency_symbol = " " + currency_symbol;
+						game_total = formatMoney(parseFloat(game_total), 2, currency_symbol, ",", ",", true);
+						gift_total = formatMoney(parseFloat(gift_total), 2, currency_symbol, ",", ",", true);
+						ingame_total = formatMoney(parseFloat(ingame_total), 2, currency_symbol, ",", ",", true);
+						market_total = formatMoney(parseFloat(market_total), 2, currency_symbol, ",", ",", true);
+						total_total = formatMoney(parseFloat(total_total), 2, currency_symbol, ",", ",", true);
+						break;
+
+					default:
+						game_total = formatMoney(parseFloat(game_total), 2, currency_symbol, ",", ".", false);
+						gift_total = formatMoney(parseFloat(gift_total), 2, currency_symbol, ",", ".", false);
+						ingame_total = formatMoney(parseFloat(ingame_total), 2, currency_symbol, ",", ".", false);
+						market_total = formatMoney(parseFloat(market_total), 2, currency_symbol, ",", ".", false);
+						total_total = formatMoney(parseFloat(total_total), 2, currency_symbol, ",", ".", false);
+						break;
+				}
+
+				var html = '<div class="accountRow accountBalance accountSpent">';
+				html += '<div class="accountData price">' + escapeHTML(game_total) + '</div>';
+				html += '<div class="accountLabel">' + escapeHTML(localized_strings[language].store_transactions) + ':</div></div>';
+				html += '<div class="accountRow accountBalance accountSpent">';
+				html += '<div class="accountData price">' + escapeHTML(gift_total) + '</div>';
+				html += '<div class="accountLabel">' + escapeHTML(localized_strings[language].gift_transactions) + ':</div></div>';
+				html += '<div class="accountRow accountBalance accountSpent">';
+				html += '<div class="accountData price">' + escapeHTML(ingame_total) + '</div>';
+				html += '<div class="accountLabel">' + escapeHTML(localized_strings[language].game_transactions) + ':</div></div>';
+				html += '<div class="accountRow accountBalance accountSpent">';
+				html += '<div class="accountData price">' + escapeHTML(market_total) + '</div>';
+				html += '<div class="accountLabel">' + escapeHTML(localized_strings[language].market_transactions) + ':</div></div>';
+				html += '<div class="inner_rule"></div>';
+				html += '<div class="accountRow accountBalance accountSpent">';
+				html += '<div class="accountData price">' + escapeHTML(total_total) + '</div>';
+				html += '<div class="accountLabel">' + escapeHTML(localized_strings[language].total_spent) + ':</div></div>';
+				html += '<div class="inner_rule"></div>';
+
+				$('.accountInfoBlock .block_content_inner .accountBalance').before(html);
+			}
+		}
+	}
 }
 
 function load_inventory_market_prices(appid, item, item_name, global_id) {
