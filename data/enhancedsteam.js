@@ -2328,6 +2328,7 @@ function endless_scrolling() {
 		$(window).scroll(function() {
 			if ($(window).scrollTop() > search_threshhold) {
 				load_search_results();
+				search_in_names_only(true);
 			}
 		});
 	}
@@ -2481,6 +2482,7 @@ function bind_ajax_content_highlighting() {
 					start_highlights_and_tags();
 					remove_non_specials();
 					add_overlay();
+					search_in_names_only(true);
 				}
 
 				if ($(node).children('div')[0] && $(node).children('div')[0].classList.contains("blotter_day")) {
@@ -3934,6 +3936,52 @@ function add_total_drops_count() {
 	});
 }
 
+// Add a checkbox to Advanced Search Options to search in names of products only
+function search_in_names_only(calledbyajax) {
+	var searchterm = $(".search_controls #realterm").val().toLowerCase();
+	var itemtitle;
+	if(!$("#advanced_search_controls #names_only").length)
+	{
+		$("#advanced_search_controls").append('<div class="store_checkbox_button" style="margin-bottom: 8px;" id="names_only">' + localized_strings[language].search_names_only + '</div>');
+	}
+	if(calledbyajax)
+	{      
+		$(".search_result_row:hidden").show();
+		if($("#advanced_search_controls #names_only").hasClass("checked"))
+		{
+			$(".search_result_row .search_name h4").each(function() {
+				itemtitle = $(this).html().toLowerCase();
+				if(!$(this).html().toLowerCase().contains(searchterm))
+				{
+					$(this).parent().parent().hide();
+					search_threshhold = search_threshhold - 61;
+				}
+			});
+		}    
+	}
+	else
+	{
+		$("#advanced_search_controls #names_only").off('click').click(function(){
+			$(this).toggleClass("checked");
+			if($(this).hasClass("checked"))
+			{
+				$(".search_result_row .search_name h4").each(function() {
+					itemtitle = $(this).html().toLowerCase();
+					if(!$(this).html().toLowerCase().contains(searchterm))
+					{
+						$(this).parent().parent().hide();
+						search_threshhold = search_threshhold - 61;
+					}
+				});
+			}
+			else
+			{
+				$(".search_result_row:hidden").show();
+			}
+		});
+	}
+}
+
 var ownedColor,
 	wishlistColor,
 	hideInstallSteam,
@@ -4072,6 +4120,7 @@ $(document).ready(function(){
 							add_advanced_cancel();
 							endless_scrolling();
 							remove_non_specials();
+							search_in_names_only(false);
 							break;
 
 						case /^\/sale\/.*/.test(window.location.pathname):
