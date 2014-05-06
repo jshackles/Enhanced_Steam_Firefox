@@ -3940,42 +3940,32 @@ function add_total_drops_count() {
 function search_in_names_only(calledbyajax) {
 	var searchterm = $(".search_controls #realterm").val().toLowerCase();
 	var itemtitle;
-	if(!$("#advanced_search_controls #names_only").length)
-	{
+	if(!$("#advanced_search_controls #names_only").length) {
 		$("#advanced_search_controls").append('<div class="store_checkbox_button" style="margin-bottom: 8px;" id="names_only">' + localized_strings[language].search_names_only + '</div>');
 	}
-	if(calledbyajax)
-	{      
+	if(calledbyajax) {      
 		$(".search_result_row:hidden").show();
-		if($("#advanced_search_controls #names_only").hasClass("checked"))
-		{
+		if($("#advanced_search_controls #names_only").hasClass("checked")) {
 			$(".search_result_row .search_name h4").each(function() {
 				itemtitle = $(this).html().toLowerCase();
-				if(!$(this).html().toLowerCase().contains(searchterm))
-				{
+				if(!$(this).html().toLowerCase().contains(searchterm)) {
 					$(this).parent().parent().hide();
 					search_threshhold = search_threshhold - 61;
 				}
 			});
 		}    
-	}
-	else
-	{
+	} else {
 		$("#advanced_search_controls #names_only").off('click').click(function(){
 			$(this).toggleClass("checked");
-			if($(this).hasClass("checked"))
-			{
+			if($(this).hasClass("checked")) {
 				$(".search_result_row .search_name h4").each(function() {
 					itemtitle = $(this).html().toLowerCase();
-					if(!$(this).html().toLowerCase().contains(searchterm))
-					{
+					if(!$(this).html().toLowerCase().contains(searchterm)) {
 						$(this).parent().parent().hide();
 						search_threshhold = search_threshhold - 61;
 					}
 				});
-			}
-			else
-			{
+			} else {
 				$(".search_result_row:hidden").show();
 			}
 		});
