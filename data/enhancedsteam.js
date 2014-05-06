@@ -671,6 +671,25 @@ function remove_about_menu() {
     }
 }
 
+function add_header_links() {
+	var supernav_content = document.querySelectorAll("#supernav .supernav");
+	if ($("#supernav").length > 0) {
+		// add "Forums" after "Workshop"
+		var community = $("#supernav").find("a[href='http://steamcommunity.com/']").attr("data-tooltip-content");
+		var insertAt = community.match(/\/workshop\/">(.+)<\/a>/);
+		community = community.substr(0, (insertAt.index + insertAt[0].length)) + '<a class="submenuitem" href="http://forums.steampowered.com/forums/" target="_blank">' + localized_strings[language].forums + '</a>' + community.substr(insertAt.index + insertAt[0].length);
+		$("#supernav").find("a[href='http://steamcommunity.com/']").attr("data-tooltip-content", community);
+
+		if (is_signed_in()) {
+			var user = $("#supernav").find("a[href$='/home/']").attr("data-tooltip-content");
+			var insertAt = user.match(/\/home\/">(.+)<\/a>/);
+			user = user.substr(0, (insertAt.index + insertAt[0].length)) + '<a class="submenuitem" href="http://steamcommunity.com/my/games/">' + localized_strings[language].games + '</a>' + user.substr(insertAt.index + insertAt[0].length);
+			user = user + '<a class="submenuitem" href="http://steamcommunity.com/my/recommended/">' + localized_strings[language].reviews + '</a>';
+			$("#supernav").find("a[href$='/home/']").attr("data-tooltip-content", user);
+		}
+	}
+}
+
 function add_custom_wallet_amount() {
 	var addfunds = $(".addfunds_area_purchase_game:first").clone();
 	$(addfunds).addClass("es_custom_funds");
@@ -3984,6 +4003,7 @@ $(document).ready(function(){
 			add_language_warning();
 			remove_install_steam_button();
 			remove_about_menu();
+			add_header_links();
 			add_overlay();
 
 			switch (window.location.host) {
