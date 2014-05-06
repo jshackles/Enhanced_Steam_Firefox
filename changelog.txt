@@ -7,6 +7,7 @@ v6.1
 + Added inventory marketplace support for Battleblock Theater items
 + Added a loading dialog to custom profile background selection
 : Fixed a bug that caused price comparison overlays to be partially hidden in some circumstances
+: Fixed a bug that sometimes caused purchase date to be incorrect after buying the game as a gift
 : Fixed a bug which would cause CS:GO items not to get market data in non-English languages
 
 
