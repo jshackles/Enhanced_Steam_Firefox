@@ -11,7 +11,6 @@ v6.1
 : Fixed a bug that sometimes caused purchase date to be incorrect after buying the game as a gift
 : Fixed a bug which would cause CS:GO items not to get market data in non-English languages
 
-
 v6.0.1
 -----
 + Added profile links to private profiles
