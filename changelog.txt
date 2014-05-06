@@ -4,6 +4,8 @@ v6.1
 + Store pages now display a full size background
 + Added back links in the header (Forums, Games, Reviews)
 + Selecting booster packs in your inventory now shows the average price of three cards for that game
++ Added inventory marketplace support for Battleblock Theater items
++ Added a loading dialog to custom profile background selection
 : Fixed a bug which would cause CS:GO items not to get market data in non-English languages
 
 

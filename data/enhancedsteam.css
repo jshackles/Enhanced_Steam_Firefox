@@ -685,3 +685,6 @@ input[type=checkbox].es_dlc_selection:checked + label {
 	background: linear-gradient(rgba(0,0,0,0) 66%,rgba(0,0,0,1) 100%);
 	z-index: 999;
 }
+#es_background {
+	width: 463px;
+}
