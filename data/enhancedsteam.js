@@ -1658,7 +1658,7 @@ function add_market_total() {
         					
         					currency_symbol = priceText.match(/(?:R\$|\$|€|£|pуб)/)[0];
         					
-        					var regex = /(\d+[.,]\d\d+)/,
+        					var regex = /(\d+[.,]?\d+)/,
         						price = regex.exec(priceText);
         					
         					if (price !== null && price !== "Total") {
@@ -1940,7 +1940,7 @@ function account_total_spent() {
 					var priceContainer = $(p).find(".transactionRowPrice");
 					if (priceContainer.length > 0) {
 						var priceText = $(priceContainer).text();
-						var regex = /(\d+[.,]\d\d+)/,
+						var regex = /(\d+[.,]?\d+)/,
 							price = regex.exec(priceText);
 
 						if (price !== null && price !== "Total") {
