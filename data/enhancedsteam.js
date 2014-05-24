@@ -2903,6 +2903,13 @@ function add_dlc_checkboxes() {
 	$(document).on( "change", ".es_dlc_selection", add_dlc_to_list );
 }
 
+function fix_achievement_icon_size() {
+	if ($(".rightblock").find("img[src$='ico_achievements.png']").length > 0) {
+		$(".rightblock").find("img[src$='ico_achievements.png']").attr("height", "24");
+		$(".rightblock").find("img[src$='ico_achievements.png']").css("margin-top", "-5px");
+	}
+}
+
 function check_early_access(node, image_name, image_left, selector_modifier) {	
 	var href = ($(node).find("a").attr("href") || $(node).attr("href"));
 	var appid = get_appid(href);
@@ -4051,6 +4058,7 @@ $(document).ready(function(){
 							add_steamchart_info(appid);
 							add_app_badge_progress(appid);
 							add_dlc_checkboxes();
+							fix_achievement_icon_size();
 
 							show_regional_pricing();
 							break;
