@@ -1,5 +1,6 @@
 v6.2
 -----
++ Rewrote custom profile background selection dialog
 : Fixed a bug with account total not being correct for Russian currencies
 
 
