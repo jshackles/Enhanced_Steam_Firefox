@@ -87,6 +87,12 @@
         },
         {
             "type": "bool",
+            "name": "showastats",
+            "value": true,
+            "title": "Show AStats.nl Links"
+        },
+        {
+            "type": "bool",
             "name": "contscroll",
             "value": true,
             "title": "Enable Continuous Scrolling of Search Results"

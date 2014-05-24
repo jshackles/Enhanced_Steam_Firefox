@@ -2805,6 +2805,12 @@ function fix_achievement_icon_size() {
 	}
 }
 
+function add_astats_link(appid) {
+	if (showastats === true) {
+		$(".communitylink_achievement_inner a:last").after("<a class='linkbar' href='http://astats.astats.nl/astats/Steam_Game_Info.php?AppID=" + appid + "' target='_blank'><div class='rightblock'><img src='" + self.options.img_ico_astatsnl + "' style='margin-right: 11px;'></div>" + localized_strings[language].view_astats + "</a>")
+	}	
+}
+
 function check_early_access(node, image_name, image_left, selector_modifier) {	
 	var href = ($(node).find("a").attr("href") || $(node).attr("href"));
 	var appid = get_appid(href);
@@ -3873,7 +3879,8 @@ var ownedColor,
 	showprofilelinks_display,
 	showallachievements,
 	showlanguagewarninglanguage,
-	showlanguagewarning;
+	showlanguagewarning,
+	showastats;
 
 $(document).ready(function(){
 	// get preference values here   
@@ -3902,6 +3909,7 @@ $(document).ready(function(){
 		showallachievements = data[21];
 		showlanguagewarninglanguage = data[22];
 		showlanguagewarning = data[23];
+		showastats = data[24];
 
 		is_signed_in();
 
@@ -3954,6 +3962,7 @@ $(document).ready(function(){
 							add_app_badge_progress(appid);
 							add_dlc_checkboxes();
 							fix_achievement_icon_size();
+							add_astats_link(appid);
 
 							show_regional_pricing();
 							break;
