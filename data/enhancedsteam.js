@@ -740,7 +740,7 @@ function add_community_profile_links() {
     if (showprofilelinks == true) {
         if ($("#reportAbuseModal").length > 0) { var steamID = document.getElementsByName("abuseID")[0].value; }
         if (steamID === undefined) { var steamID = document.documentElement.outerHTML.match(/steamid"\:"(.+)","personaname/)[1]; }
-    	var ico_steamrep, ico_steamtrades, ico_steamgifts, ico_achievementstats, ico_backpacktf;
+    	var ico_steamrep, ico_steamtrades, ico_steamgifts, ico_achievementstats, ico_backpacktf, ico_astats;
     	var ico_steamdb = self.options.img_ico_steamdb;
 
     	switch (showprofilelinks_display) {
@@ -750,6 +750,7 @@ function add_community_profile_links() {
     			ico_steamgifts = self.options.img_ico_steamgifts;
     			ico_achievementstats = self.options.img_ico_achievementstats;
     			ico_backpacktf = self.options.img_ico_backpacktf;
+    			ico_astats = self.options.img_ico_astatsnl;
     			break;
     		case 1:
     			ico_steamrep = self.options.img_ico_steamrep_col;
@@ -757,6 +758,7 @@ function add_community_profile_links() {
     			ico_steamgifts = self.options.img_ico_steamgifts_col;
     			ico_achievementstats = self.options.img_ico_achievementstats_col;
     			ico_backpacktf = self.options.img_ico_backpacktf_col;
+    			ico_astats = self.options.img_ico_astatsnl_col;
     			break;
     	}
 
@@ -773,6 +775,8 @@ function add_community_profile_links() {
     	if (showprofilelinks_display != 2) { htmlstr += '<img src="' + escapeHTML(ico_achievementstats) + '" class="profile_link_icon">'; }
     	htmlstr += '<div class="profile_count_link"><a href="http://backpack.tf/profiles/' + escapeHTML(steamID) + '" target="_blank"><span class="count_link_label">Backpack.tf</span>&nbsp;<span class="profile_count_link_total">';
     	if (showprofilelinks_display != 2) { htmlstr += '<img src="' + escapeHTML(ico_backpacktf) + '" class="profile_link_icon">'; }
+    	htmlstr += '<div class="profile_count_link"><a href="http://astats.astats.nl/astats/User_Info.php?steamID64=' + escapeHTML(steamID) + '" target="_blank"><span class="count_link_label">AStats.nl</span>&nbsp;<span class="profile_count_link_total">';
+    	if (showprofilelinks_display != 2) { htmlstr += '<img src="' + escapeHTML(ico_astats) + '" class="profile_link_icon">'; }
     	if (htmlstr != '') { $(".profile_item_links").append(htmlstr); }
 
     	if ($(".profile_item_links").length == 0) {
