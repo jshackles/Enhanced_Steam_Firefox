@@ -1,6 +1,7 @@
 v6.2
 -----
 + Rewrote custom profile background selection dialog
++ Added support for Humble Widgets in price comparisons
 : Fixed a bug with account total not being correct for Russian currencies
 
 
