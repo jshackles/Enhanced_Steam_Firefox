@@ -8,7 +8,6 @@ v6.2
 - Removed market data on inventory items, as this feature was implemented by Valve
 - Removed achievement section on app pages, as this was re-implemented by Valve
 
-
 v6.1
 -----
 + Added a "Popular" tab on the homepage to browse the most-played games on Steam
