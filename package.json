@@ -293,7 +293,7 @@
         "api-utils",
         "addon-kit"
     ],
-    "version": "6.2",
+    "version": "6.3",
     "lib": "lib",
     "fullName": "Enhanced Steam",
     "main": "main",
