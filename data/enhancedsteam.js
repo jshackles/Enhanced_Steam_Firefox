@@ -56,6 +56,53 @@ function formatMoney(number, places, symbol, thousand, decimal, right) {
 	}
 };
 
+function formatCurrency(number, type) {
+	var places, symbol, thousand, decimal, right;
+
+	switch (type) {
+		case "BRL":
+			places = 2; symbol = "R$ "; thousand = "."; decimal = ","; right = false;
+			break;
+		case "EUR":
+			places = 2; symbol = "€"; thousand = ","; decimal = "."; right = true;
+			break;
+		case "GBP":
+			places = 2; symbol = "£"; thousand = ","; decimal = "."; right = false;
+			break;
+		case "RUB":
+			places = 0; symbol = " pуб."; thousand = "."; decimal = ","; right = true;
+			if (number % 1 != 0) { places = 2; }
+			break;
+		default:
+			places = 2; symbol = "$"; thousand = ","; decimal = "."; right = false;
+			break;
+	}
+
+	var negative = number < 0 ? "-" : "",
+		i = parseInt(number = Math.abs(+number || 0).toFixed(places), 10) + "",
+		j = (j = i.length) > 3 ? j % 3 : 0;
+	if (right) {
+		return negative + (j ? i.substr(0, j) + thousand : "") + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + thousand) + (places ? decimal + Math.abs(number - i).toFixed(places).slice(2) : "") + symbol;
+	} else {
+		return symbol + negative + (j ? i.substr(0, j) + thousand : "") + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + thousand) + (places ? decimal + Math.abs(number - i).toFixed(places).slice(2) : "");
+	}
+}
+
+function currency_symbol_to_type (currency_symbol) {
+	switch (currency_symbol) {
+		case "pуб":
+			return "RUB";
+		case "€":
+			return "EUR";
+		case "£":
+			return "GBP";
+		case "R$":
+			return "BRL";
+		default:
+			return "USD";
+	}
+}
+
 HTMLreplacements = { "&": "&amp;", '"': "&quot;", "<": "&lt;", ">": "&gt;" };
 
 function escapeHTML(str) { 
@@ -2020,6 +2067,69 @@ function account_total_spent() {
 
 				$('.accountInfoBlock .block_content_inner .accountBalance').before(html);
 			}
+		}
+	}
+}
+
+function inventory_market_prepare() {	
+	$("#es_market_helper").remove();
+	var es_market_helper = document.createElement("script");
+	es_market_helper.type = "text/javascript";
+	es_market_helper.id = "es_market_helper";
+	es_market_helper.textContent = 'jQuery("#inventories").on("click", ".itemHolder, .newitem", function() { window.postMessage({ type: "es_sendmessage", information: [iActiveSelectView,g_ActiveInventory.selectedItem.marketable,g_ActiveInventory.appid,g_ActiveInventory.selectedItem.market_hash_name,g_ActiveInventory.selectedItem.market_fee_app] }, "*"); });';
+	document.documentElement.appendChild(es_market_helper);
+
+	window.addEventListener("message", function(event) {		
+		if (event.data.type && (event.data.type == "es_sendmessage")) { inventory_market_helper(event.data.information); }
+	}, false);
+}
+
+function inventory_market_helper(response) {
+	var item = response[0];
+	var marketable = response[1];
+	var global_id = response[2];
+	var hash_name = response[3];
+	var appid = response[4];
+	var html;
+
+	if ($(".profile_small_header_name .whiteLink").attr("href") !== $(".playerAvatar").find("a").attr("href")) {
+		if ($('#es_item0').length == 0) { $("#iteminfo0_item_market_actions").after("<div class='item_market_actions es_item_action' id=es_item0></div>"); }
+		if ($('#es_item1').length == 0) { $("#iteminfo1_item_market_actions").after("<div class='item_market_actions es_item_action' id=es_item1></div>"); }
+		$('.es_item_action').html("");
+		
+		if (marketable == 0) { $('.es_item_action').remove(); return; }
+		$("#es_item" + item).html("<img src='http://cdn.steamcommunity.com/public/images/login/throbber.gif'><span>"+ localized_strings[language].loading+"</span>");
+		
+		var url = "http://steamcommunity.com/market/priceoverview/?appid=" + global_id + "&market_hash_name=" + hash_name;
+		get_http(url, function (txt) {
+			data = JSON.parse(txt);
+			$("#es_item" + item).html("");
+			if (data.success) {
+				html = "<div><div style='height: 24px;'><a href='http://steamcommunity.com/market/listings/" + global_id + "/" + hash_name + "'>" + localized_strings[language].view_in_market + "</a></div>";
+				html += "<div style='min-height: 3em; margin-left: 1em;'>" + localized_strings[language].starting_at + ": " + data.lowest_price;
+				if (data.volume) {
+					html += "<br>" + localized_strings[language].last_24.replace("__sold__", data.volume);
+				}
+
+				$("#es_item" + item).html(html);
+			} else {
+				$("#es_item" + item).remove();
+			}
+		});
+	} else {
+		if (hash_name && hash_name.match(/Booster Pack/g)) {
+			setTimeout(function() {
+				var currency_symbol = $("#iteminfo" + item + "_item_market_actions").text().match(/(?:R\$|\$|€|£|pуб)/)[0];
+				var currency_type = currency_symbol_to_type(currency_symbol);
+				var api_url = "http://api.enhancedsteam.com/market_data/average_card_price/?appid=" + appid + "&cur=" + currency_type.toLowerCase();
+
+				get_http(api_url, function(price_data) {				
+					var booster_price = parseFloat(price_data,10) * 3;					
+					html = localized_strings[language].avg_price_3cards + ": " + formatCurrency(booster_price, currency_type) + "<br>";
+					$("#iteminfo" + item + "_item_market_actions").find("div:last").css("margin-bottom", "8px");
+					$("#iteminfo" + item + "_item_market_actions").find("div:last").append(html);
+				});
+			}, 1000);
 		}
 	}
 }
@@ -4051,6 +4161,7 @@ $(document).ready(function(){
 
 					case /^\/(?:id|profiles)\/.+\/inventory/.test(window.location.pathname):
 						bind_ajax_content_highlighting();
+						inventory_market_prepare();
 						break;
 
 					case /^\/(?:id|profiles)\/(.+)\/games/.test(window.location.pathname):
