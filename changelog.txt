@@ -1,5 +1,6 @@
 v6.3
 -----
++ Added an information dialog to app pages that are excluded from Family Sharing
 + Steam user review scores are now loaded more quickly
 
 

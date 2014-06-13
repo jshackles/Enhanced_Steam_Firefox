@@ -2018,6 +2018,15 @@ function add_steamdb_links(appid, type) {
     }
 }
 
+function add_familysharing_warning(appid) {
+	get_http('http://api.enhancedsteam.com/exfgls/?appid=' + appid, function (txt) {
+		var data = JSON.parse(txt);
+		if (data["exfgls"]["excluded"]) {
+			$("#game_area_purchase").before('<div id="purchase_note"><div class="notice_box_top"></div><div class="notice_box_content">' + localized_strings[language].family_sharing_notice + '</div><div class="notice_box_bottom"></div></div>');
+		}
+	});
+}
+
 // Adds red warnings for 3rd party DRM
 function drm_warnings(type) {
     if (showDRM === true) {
@@ -3833,6 +3842,7 @@ $(document).ready(function(){
 							add_pcgamingwiki_link(appid);
 							add_app_page_highlights(appid);
 							add_steamdb_links(appid, "app");
+							add_familysharing_warning(appid);
 							add_dlc_page_link(appid);
 							add_remove_from_wishlist_button(appid);
 							add_4pack_breakdown();
