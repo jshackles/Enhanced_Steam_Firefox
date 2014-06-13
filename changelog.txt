@@ -1,5 +1,6 @@
 v6.3
 -----
++ Steam user review scores are now loaded more quickly
 
 
 v6.2.1
