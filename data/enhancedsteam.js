@@ -567,7 +567,7 @@ function add_steamchart_info(appid) {
 					var data = JSON.parse(txt);
 					if (data["chart"]) {
 						var html = '<div id="steam-charts" class="game_area_description"><h2>' + escapeHTML(localized_strings[language].charts.current) + '</h2>';
-						html += '<div id="chart-heading" class="chart-content"><div id="chart-image"><img src="http://cdn4.steampowered.com/v/gfx/apps/' + escapeHTML(appid) + '/capsule_184x69.jpg" width="184" height="69"></div><div class="chart-stat">';
+						html += '<div id="chart-heading" class="chart-content"><div id="chart-image"><img src="http://cdn.akamai.steamstatic.com/steam/apps/' + escapeHTML(appid) + '/capsule_184x69.jpg" width="184" height="69"></div><div class="chart-stat">';
 						html += '<span class="num">' + escapeHTML(data["chart"]["current"]) + '</span><br>' + escapeHTML(localized_strings[language].charts.playing_now) + '</div><div class="chart-stat">';
 						html += '<span class="num">' + escapeHTML(data["chart"]["peaktoday"]) + '</span><br>' + escapeHTML(localized_strings[language].charts.peaktoday) + '</div><div class="chart-stat">';
 						html += '<span class="num">' + escapeHTML(data["chart"]["peakall"]) + '</span><br>' + escapeHTML(localized_strings[language].charts.peakall) + '</div><span class="chart-footer">Powered by <a href="http://steamcharts.com/app/' + escapeHTML(appid) + '" target="_blank">SteamCharts.com</a></span></div></div>';
@@ -818,17 +818,17 @@ function add_community_profile_links() {
     }
 }
 
-// fixes "Image not found" in wishlist
+// Fix "No image available" in wishlist
 function fix_wishlist_image_not_found() {
-    var items = document.getElementById("wishlist_items");
-    if (items) {
-        imgs = items.getElementsByTagName("img");
-        for (var i = 0; i < imgs.length; i++)
-        if (imgs[i].src == "http://media.steampowered.com/steamcommunity/public/images/avatars/33/338200c5d6c4d9bdcf6632642a2aeb591fb8a5c2.gif") {
-            var gameurl = imgs[i].parentNode.href;
-            imgs[i].src = "http://cdn.steampowered.com/v/gfx/apps/" + gameurl.substring(gameurl.lastIndexOf("/") + 1) + "/header.jpg";
-        }
-    }
+	var items = document.getElementById("wishlist_items");
+	if (items) {
+		imgs = items.getElementsByTagName("img");
+		for (var i = 0; i < imgs.length; i++)
+		if (imgs[i].src == "http://cdn.akamai.steamstatic.com/steamcommunity/public/images/avatars/33/338200c5d6c4d9bdcf6632642a2aeb591fb8a5c2.gif") {
+			var gameurl = imgs[i].parentNode.href;
+			imgs[i].src = "http://cdn.akamai.steamstatic.com/steam/apps/" + gameurl.substring(gameurl.lastIndexOf("/") + 1) + "/header.jpg";
+		}
+	}
 }
 
 function fix_profile_image_not_found() {
@@ -2037,7 +2037,7 @@ function drm_warnings(type) {
         var stardock;
         var rockstar;
         var kalypso;
-        var otherdrm;
+        var drm;
 
         var text = $("#game_area_description").html();
 			text += $("#game_area_sys_req").html();
