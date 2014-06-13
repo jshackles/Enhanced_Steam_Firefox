@@ -2075,51 +2075,36 @@ function drm_warnings(type) {
 		if (text.indexOf("Requires a Kalypso account") > 0) { kalypso = true; }
 
 		// Detect other DRM
-		if (text.indexOf("3rd-party DRM") > 0) { otherdrm = true; }
-		if (text.indexOf("No 3rd Party DRM") > 0) { otherdrm = false; }
+		if (text.indexOf("3rd-party DRM") > 0) { drm = true; }
+		if (text.indexOf("No 3rd Party DRM") > 0) { drm = false; }
 
 		var string_type;
+		var drm_string = "(";
 		if (type == "app") { string_type = localized_strings[language].drm_third_party; } else { string_type = localized_strings[language].drm_third_party_sub; }
-        
-        if (gfwl) {            	
-        	$("#game_area_purchase").before('<div class="game_area_already_owned" style="background-image: url( ' + self.options.img_game_area_warning + ' );">' + string_type + ' (Games for Windows Live)</div>');
-            otherdrm = false;
-        }
-        
-        if (uplay) {
-            $("#game_area_purchase").before('<div class="game_area_already_owned" style="background-image: url( ' + self.options.img_game_area_warning + ' );">' + string_type + ' (Ubisoft Uplay)</div>');
-        	otherdrm = false;
-        }
-        
-        if (securom) {            	
-        	$("#game_area_purchase").before('<div class="game_area_already_owned" style="background-image: url( ' + self.options.img_game_area_warning + ' );">' + string_type + ' (SecuROM)</div>');
-            otherdrm = false;
-        }
-        
-        if (tages) {            	
-        	$("#game_area_purchase").before('<div class="game_area_already_owned" style="background-image: url( ' + self.options.img_game_area_warning + ' );">' + string_type + ' (Tages)</div>');
-            otherdrm = false;
-        }
-        
-        if (stardock) {            	
-        	$("#game_area_purchase").before('<div class="game_area_already_owned" style="background-image: url( ' + self.options.img_game_area_warning + ' );">' + string_type + ' (Stardock Account Required)</div>');
-            otherdrm = false;
-        }
-        
-        if (rockstar) {            	
-        	$("#game_area_purchase").before('<div class="game_area_already_owned" style="background-image: url( ' + self.options.img_game_area_warning + ' );">' + string_type + ' (Rockstar Social Club)</div>');
-            otherdrm = false;
-        }
-        
-        if (kalypso) {            	
-        	$("#game_area_purchase").before('<div class="game_area_already_owned" style="background-image: url( ' + self.options.img_game_area_warning + ' );">' + string_type + ' (Kalypso Launcher)</div>');
-            otherdrm = false;
-        }
-        
-        if (otherdrm) {            	
-            $("#game_area_purchase").before('<div class="game_area_already_owned" style="background-image: url( ' + self.options.img_game_area_warning + ' );">' + string_type + '</div>');
-        }
-    }
+
+		if (gfwl) { drm_string += 'Games for Windows Live, '; drm = true; }
+		if (uplay) { drm_string += 'Ubisoft Uplay, '; drm = true; }
+		if (securom) { drm_string += 'SecuROM, '; drm = true; }
+		if (tages) { drm_string += 'Tages, '; drm = true; }
+		if (stardock) { drm_string += 'Stardock Account Required, '; drm = true; }
+		if (rockstar) { drm_string += 'Rockstar Social Club, '; drm = true; }
+		if (kalypso) { drm_string += "Kalypso Launcher, "; drm = true; }
+
+		if (drm_string == "(") {
+			drm_string = "";
+		} else {
+			drm_string = drm_string.substring(0, drm_string.length - 2);
+			drm_string += ")";
+		}
+
+		if (drm) {
+			if ($("#game_area_purchase").find(".game_area_description_bodylabel").length > 0) {
+				$("#game_area_purchase").find(".game_area_description_bodylabel").after('<div class="game_area_already_owned es_drm_warning" style="background-image: url( ' + self.options.img_game_area_warning + ' );"><span>' + string_type + ' ' + drm_string + '</span></div>');
+			} else {
+				$("#game_area_purchase").prepend('<div class="game_area_already_owned es_drm_warning" style="background-image: url( ' + self.options.img_game_area_warning + ' );"><span>' + string_type + ' ' + drm_string + '</span></div>');
+			}
+		}
+	}
 }
 
 function add_carousel_descriptions() {
