@@ -3866,7 +3866,7 @@ $(document).ready(function(){
 							break;
 
 						case /^\/search\/.*/.test(window.location.pathname):
-							add_price_slider();
+							//add_price_slider();
 							add_advanced_cancel();
 							endless_scrolling();
 							remove_non_specials();
@@ -3882,7 +3882,7 @@ $(document).ready(function(){
 						case /^\/$/.test(window.location.pathname):
 							add_popular_tab();
 							add_carousel_descriptions();
-							add_affordable_button();
+							//add_affordable_button();
 							break;
 					}
 
