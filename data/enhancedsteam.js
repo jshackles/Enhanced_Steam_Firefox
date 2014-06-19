@@ -186,12 +186,13 @@ function highlight_node(node, color) {
 		$node = $(node).find(".large_cap_content");
 	}
 
-	if (node.classList.contains("insert_season_here_sale_dailydeal_ctn")) {
+	// Sale items
+	if (node.classList.contains("summersale_dailydeal_ctn")) {
 		$node = $(node).find(".dailydeal_footer");
 	}
-    
-    if (node.classList.contains("wintersale_dailydeal_ctn")) {
-    	$node = $(node).find(".dailydeal_footer");
+
+	if (node.classList.contains("vote_option_game")) {
+		$node = $(node).find(".vote_option_info");
 	}
     
     // App and community hub page headers
@@ -2409,8 +2410,10 @@ function start_highlights_and_tags(){
 		"div.sale_page_purchase_item", // Sale pages
 		"div.item",				// Sale page / featured page
 		"div.home_area_spotlight",	// midweek and weekend deals
-        "div.insert_season_here_sale_dailydeal_ctn",
-        "div.browse_tag_game"
+		"div.summersale_dailydeal_ctn",
+		"div.browse_tag_game",			// Tagged games
+		"div.similar_grid_item",			// Items on the "Similarly tagged" pages
+		"a.vote_option_game"
 	];
 
 	// Get all appids and nodes from selectors.
