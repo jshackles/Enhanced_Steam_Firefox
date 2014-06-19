@@ -2424,6 +2424,13 @@ function bind_ajax_content_highlighting() {
 					add_overlay();
 				}
 
+				if (node.classList && node.classList.contains("summersale_tabpage")) {
+					$(node).find(".summersale_dailydeal_ctn").each(function() {
+						start_highlighting_node(this);
+						check_early_access(this, "ea_231x87.png", 0);
+					});
+				}
+
 				if (node.classList && node.classList.contains("match")) start_highlighting_node(node);
                 if (node.classList && node.classList.contains("search_result_row")) start_highlighting_node(node);
 				if (node.classList && node.classList.contains("market_listing_row_link")) highlight_market_items();
@@ -2879,7 +2886,7 @@ function check_early_access(node, image_name, image_left, selector_modifier) {
 							break;							
 					}
 					overlay_img = $("<img class='es_overlay' src='" + image + "'>");
-					if(node.hasClass("small_cap")) {
+					if($(node).hasClass("small_cap")) {
 						$(overlay_img).css({"left":"-" + node.width() + "px", "position":"relative"});
 					}
 					else {
