@@ -1,6 +1,7 @@
 v6.4
 -----
 + Added a progress bar to the header that indicates if Enhanced Steam is processing requests
++ Added a "lightbox" effect to app page screenshots
 : Fixed a bug that caused PCGamingWiki links not to show correctly
 
 

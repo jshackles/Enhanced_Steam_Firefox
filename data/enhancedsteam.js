@@ -1526,6 +1526,70 @@ function enhance_game_background(type) {
 	$("#game_background").css("display", "block");
 }
 
+function add_screenshot_lightbox() {
+	$(".highlight_screenshot").find("a").addClass("es_lightbox_image");
+	var current, size = 0;
+	var game_name = $(".apphub_AppName:first").text();
+
+	$(".es_lightbox_image").click(function(e) {
+		e.preventDefault();
+		var image_href = $(this).attr("href");
+		var slideNum = $(".es_lightbox_image").index(this);
+		if ($('#es-lightbox').length > 0) {
+			$('#es-lightbox').fadeIn(300);
+		} else {
+			$('body').append("<div id='es-lightbox'><p>X</p><div id='es-lightbox-content'><ul></ul><div class='es-nav'><a href='#es-prev' class='es-prev slide-nav'><</a><a href='#es-next' class='es-next slide-nav'>></a></div><div id='es-lightbox-desc'></div></div></div>");
+		}
+
+		if (size === 0) {
+			$(".es_lightbox_image").each(function() {
+				var $href = $(this).attr("href");
+				$("#es-lightbox-content ul").append("<li><img src='" + $href + "'></li>");
+			});
+		}
+
+		size = $("#es-lightbox-content ul > li").length;
+		if (size === 1) { $(".es-nav").remove(); }
+		$("#es-lightbox-content ul > li").hide();
+		$("#es-lightbox-content ul > li:eq(" + slideNum + ")").show();
+		current = slideNum;
+		$("#es-lightbox-desc").text(game_name + "  " + (current + 1) + " / " + size);
+	});
+
+	$("body").on("click", "#es-lightbox", function() { $("#es-lightbox").fadeOut(300); });
+
+	$("body").on({ 
+		mouseenter: function() { $(".es-nav").fadeIn(300);	},
+		mouseleave: function() { $(".es-nav").fadeOut(300); }
+	}, "#es-lightbox-content");
+
+	$("body").on("click", ".slide-nav", function(e) {
+		e.preventDefault();
+		e.stopPropagation();
+
+		var $this = $(this);
+		var dest;
+
+		if ($this.hasClass('es-prev')) {
+			dest = current - 1;
+			if (dest < 0) {
+				dest = size - 1;
+			}
+		} else {
+			dest = current + 1;
+			if (dest > size - 1) {
+				dest = 0;
+			}
+		}
+
+		$('#es-lightbox-content ul > li:eq(' + current + ')').hide();
+		$('#es-lightbox-content ul > li:eq(' + dest + ')').show();
+
+		current = dest;
+		$("#es-lightbox-desc").text(game_name + "  " + (current + 1) + " / " + size);
+	});
+}
+
 function add_app_badge_progress(appid) {
 	if ($(".icon").find('img[src$="/ico_cards.png"]').length > 0) {
 		$(".communitylink .block_content:last").append("<div class='rule'></div><div class='block_content_inner'><link rel='stylesheet' type='text/css' href='http://cdn.steamcommunity.com/public/css/skin_1/badges.css'><div class='es_badge_progress'></div><div class='es_foil_badge_progress'></div></div><div style=\"clear: both\"></div>");
@@ -3954,6 +4018,7 @@ $(document).ready(function(){
 							show_pricing_history(appid, "app");
 							dlc_data_from_site(appid);
 							enhance_game_background();
+							add_screenshot_lightbox();
 
 							drm_warnings("app");
 							add_metracritic_userscore();
