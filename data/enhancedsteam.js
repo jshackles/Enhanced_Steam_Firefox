@@ -56,22 +56,27 @@ function setValue(key, data) {
 	var obj = { index: key, value: data };
 	var store = getObjectStore(DB_STORE_NAME, "readwrite");
 	var type = store.count(key);
-	if (type == 0) {
-		var req = store.add(obj);
-		req.onsuccess = function(event) {
-			console.log ("successfully inserted into database! " + key + ": " + data);
-		}
-		req.onerror = function() {
-			console.log("error inserting into database: " + this.error);
-		}
-	} else {
-		console.log ("key already found, updating");
-		var req = store.get(key);
-		req.onsuccess = function(event) {
-			var newdata = req.result;
-			newdata.value = data;
-			var requestUpdate = store.put(newdata);
-			console.log ("database record updated for " + key);
+	type.onsuccess = function(event) {
+		var count = type.result;
+		if (count == 0) {
+			var req = store.add(obj);
+			req.onsuccess = function(event) {
+				console.log ("successfully inserted into database! " + key + ": " + data);
+			}
+			req.onerror = function() {
+				console.log("error inserting into database: " + this.error);
+			}
+		} else {
+			console.log ("key already found, updating");
+			var req = store.get(key);
+			req.onsuccess = function(event) {
+				var newdata = req.result;
+				if (newdata) {
+					newdata.value = data;
+					var requestUpdate = store.put(newdata);
+					console.log ("database record updated for " + key);
+				}
+			}
 		}
 	}
 }
@@ -236,7 +241,7 @@ function is_signed_in() {
     var isSignedIn, signedInChecked;
 	if (!signedInChecked) {
 		var steamLogin = getCookie("steamLogin");
-		if (steamLogin) isSignedIn = steamLogin.replace(/%.*/, "");
+		if (steamLogin) isSignedIn = steamLogin.replace(/%.*/, "").match(/^\d+/);
 		signedInChecked = true;
 	}
 	return isSignedIn;
@@ -2593,47 +2598,164 @@ function add_app_page_highlights(appid) {
 }
 
 function start_highlights_and_tags(){
-	var selectors = [
-    	"div.tab_row",			// Storefront rows
-		"div.dailydeal",		// Christmas deals; https://www.youtube.com/watch?feature=player_detailpage&v=2gGopKNPqVk#t=52s
-		"div.wishlistRow",		// Wishlist row
-		"a.game_area_dlc_row",	// DLC on app pages
-		"a.small_cap",			// Featured storefront items, and "recommended" section on app pages.
-		"a.search_result_row",	// Search result row.
-		"a.match",				// Search suggestions row.
-		"a.cluster_capsule",	// Carousel items.
-		"div.recommendation_highlight",	// Recommendation page.
-		"div.recommendation_carousel_item",	// Recommendation page.
-		"div.friendplaytime_game",	// Recommendation page.
-		"div.dlc_page_purchase_dlc", // DLC page rows
-		"div.sale_page_purchase_item", // Sale pages
-		"div.item",				// Sale page / featured page
-		"div.home_area_spotlight",	// midweek and weekend deals
-		"div.summersale_dailydeal_ctn",
-		"div.browse_tag_game",			// Tagged games
-		"div.similar_grid_item",			// Items on the "Similarly tagged" pages
-		"a.vote_option_game"
-	];
+	var owned_promise = (function () {
+		var deferred = new $.Deferred();
+		if (is_signed_in() && window.location.protocol != "https:") {
+			var steamID = is_signed_in()[0];
 
-	// Get all appids and nodes from selectors.
-	$.each(selectors, function (i, selector) {
-		$.each($(selector), function(j, node){
-		    var appid = get_appid(node.href || $(node).find("a")[0].href) || get_appid_wishlist(node.id);
-    		if (appid) {
-				if ($(node).hasClass("item")) { node = $(node).find(".info")[0]; }
-				if ($(node).hasClass("home_area_spotlight")) { node = $(node).find(".spotlight_content")[0]; }
-			
-				on_app_info(appid, node, function(){
-					highlight_app(appid, node);
+			var expire_time = parseInt(Date.now() / 1000, 10) - 7 * 60 * 60 * 24; // One week ago
+			var last_updated = getValue("owned_games_time") || expire_time - 1;
+
+			if (last_updated < expire_time) {
+				get_http("http://api.enhancedsteam.com/steamapi/GetOwnedGames/?steamid=" + steamID + "&include_appinfo=0", function(txt) {
+					console.log (txt);
+					var data = JSON.parse(txt);
+					$.each(data['response']['games'], function(index, value) {
+						setValue(value['appid'] + "owned", true);
+					});
+					setValue("owned_games_time", parseInt(Date.now() / 1000, 10));
+					deferred.resolve();
 				});
 			} else {
-				var subid = get_subid(node.href || $(node).find("a")[0].href);
-				if (subid) {
-					get_sub_details (subid, node);
-				}
+				deferred.resolve();
 			}
+		} else {
+			deferred.resolve();
+		}
+		
+		return deferred.promise();
+	})();
+
+	var wishlist_promise = (function () {
+		var deferred = new $.Deferred();
+		if (is_signed_in() && window.location.protocol != "https:") {
+			var steamID = is_signed_in()[0];
+			var expire_time = parseInt(Date.now() / 1000, 10) - 1 * 60 * 60 ; // One hour ago
+			var last_updated = getValue("wishlist_games_time") || expire_time - 1;
+
+			if (last_updated < expire_time) {			
+				get_http("http://steamcommunity.com/profiles/" + steamID + "/wishlist", function(txt) {				
+					var html = $.parseHTML(txt);
+					$(html).find(".wishlistRow").each(function() {
+						var appid = $(this).attr("id").replace("game_", "");
+						setValue(appid + "wishlisted", true);
+						setValue(appid, parseInt(Date.now() / 1000, 10));
+					});
+					setValue("wishlist_games_time", parseInt(Date.now() / 1000, 10));
+					deferred.resolve();
+				});
+			} else {
+				deferred.resolve();
+			}
+		} else {
+			deferred.resolve();
+		}
+		
+		return deferred.promise();
+	})();
+
+	// Batch all the document.ready appid lookups into one storefront call.
+	$.when.apply($, [owned_promise, wishlist_promise]).done(function() {	
+		var selectors = [
+			"div.tab_row",				// Storefront rows
+			"div.dailydeal",			// Christmas deals; http://youtu.be/2gGopKNPqVk?t=52s
+			"div.wishlistRow",			// Wishlist rows
+			"a.game_area_dlc_row",			// DLC on app pages
+			"a.small_cap",				// Featured storefront items and "recommended" section on app pages
+			"a.search_result_row",			// Search result rows
+			"a.match",				// Search suggestions rows
+			"a.cluster_capsule",			// Carousel items
+			"div.recommendation_highlight",		// Recommendation pages
+			"div.recommendation_carousel_item",	// Recommendation pages
+			"div.friendplaytime_game",		// Recommendation pages
+			"div.dlc_page_purchase_dlc",		// DLC page rows
+			"div.sale_page_purchase_item",		// Sale pages
+			"div.item",				// Sale pages / featured pages
+			"div.home_area_spotlight",		// Midweek and weekend deals
+			"div.browse_tag_game",			// Tagged games
+			"div.similar_grid_item"			// Items on the "Similarly tagged" pages
+		];
+
+		var appids = [];
+
+		// Get all appids and nodes from selectors
+		$.each(selectors, function (i, selector) {
+			$.each($(selector), function(j, node){
+				var appid = get_appid(node.href || $(node).find("a")[0].href) || get_appid_wishlist(node.id);
+				if (appid) {
+					if ($(node).hasClass("item")) { node = $(node).find(".info")[0]; }
+					if ($(node).hasClass("home_area_spotlight")) { node = $(node).find(".spotlight_content")[0]; }
+
+					var pushvar = [appid, node];
+					appids.push(pushvar);
+				} else {
+					var subid = get_subid(node.href || $(node).find("a")[0].href);
+
+					if ($(node).hasClass("item")) { node = $(node).find(".info")[0]; }
+					if ($(node).hasClass("home_area_spotlight")) { node = $(node).find(".spotlight_content")[0]; }
+
+					if (subid) {
+						get_sub_details (subid, node);
+					}
+				}	
+			});
 		});
+
+		on_apps_info(appids);
 	});
+}
+
+// Accepts a multidimensional array with [appid, node] values
+function on_apps_info(appids) {
+	var appids_to_process = [];
+
+	$.each(appids, function(index, value) {
+		var appid = value[0];
+		ensure_appid_deferred(appid);
+
+		if (getValue(appid + "owned") != true) {
+			var expire_time = parseInt(Date.now() / 1000, 10) - 1 * 60 * 60; // One hour ago
+			var last_updated = getValue(appid) || expire_time - 1;
+
+			// If we have no data on appid, or the data has expired; add it to appids to fetch new data.
+			if (last_updated < expire_time) {
+				appids_to_process.push(appid);
+			}
+			else {
+				appid_promises[appid].resolve();
+			}
+		} else {
+			appid_promises[appid].resolve();
+		}
+
+		appid_promises[appid].promise.done(highlight_app(appid, value[1]));
+	});
+
+	if (appids_to_process.length) {
+		get_http('http://store.steampowered.com/api/appuserdetails/?appids=' + appids_to_process.join(), function (data) {
+			var storefront_data = JSON.parse(data);
+			$.each(storefront_data, function(appid, app_data){
+				if (app_data.success) {
+					setValue(appid + "owned", (app_data.data.is_owned === true));
+
+					if (app_data.data.is_owned != true) {
+						// Update time for caching
+						setValue(appid, parseInt(Date.now() / 1000, 10));
+					}
+				}
+
+				// Resolve promise to run any functions waiting for this apps info
+				appid_promises[appid].resolve();
+
+				// find the appropriate node to highlight
+				for (var i = 0; i < appids.length; i++) {
+					if (appids[i][0] === appid) {
+						highlight_app(appid, appids[i][1]);
+					}
+				}
+			});
+		});
+	}
 }
 
 function start_highlighting_node(node) {
@@ -2682,12 +2804,12 @@ function on_app_info(appid, node, cb) {
 
 function highlight_app(appid, node, override) {
 	if (!(node.classList.contains("wishlistRow") || node.classList.contains("wishlistRowItem"))) {
-		if (storageTest === true) { if (getValue(appid + "wishlisted")) highlight_wishlist(node); }		
-		if (override == "wishlisted") { highlight_wishlist(node); }
+		if (getValue(appid + "wishlisted")) highlight_wishlist(node); 
+		if (override == "wishlisted") highlight_wishlist(node);
 	}
 
-	if (storageTest === true) {	if (getValue(appid + "owned")) highlight_owned(node); }
-	if (override == "owned") { highlight_owned(node); }
+	if (getValue(appid + "owned")) highlight_owned(node); 
+	if (override == "owned") highlight_owned(node);
 }
 
 function get_app_details(appids, node) {
