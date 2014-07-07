@@ -13,30 +13,96 @@ if (cookie.match(/language=([a-z]{3})/i)) {
 }
 if (localized_strings[language] === undefined) { language = "eng"; }
 
-// Session storage functions.
-function setValue(key, value) {
-	if (storageTest === true) {	
-		localStorage.setItem(key, JSON.stringify(value));
+// index-db storage functions
+var db;
+const DB_NAME = 'EnhancedSteam';
+const DB_VERSION = 1;
+const DB_STORE_NAME = 'data';
+
+var database_open = (function() {
+	console.log ("opening database...");
+	var deferred = new $.Deferred();
+	var req = indexedDB.open(DB_NAME, DB_VERSION);
+	req.onsuccess = function(event) {
+		db = this.result;
+		console.log ("done opening database...");
+		deferred.resolve();
+	}
+	req.onerror = function(event) {
+		console.log ("error opening database: " + event.target);
+	}
+	req.onupgradeneeded = function(event) {
+		console.log ("database upgrade needed.");
+		var store = event.currentTarget.result.createObjectStore(DB_STORE_NAME, { keyPath: 'index', autoIncrement: false });
+		store.createIndex('value', 'value', { unique: false });	
+	}
+
+	return deferred.promise();
+})();
+
+function getObjectStore(store_name, mode) {	
+	console.log ("getting object store in mode: " + mode);
+	var tx = db.transaction(store_name, mode);
+	return tx.objectStore(store_name);
+}
+
+function clearObjectStore(store_name) {
+	var store = getObjectStore(store_name, "readwrite");
+	var req = store.clear();
+}
+
+function setValue(key, data) {
+	console.log ("storing value in database! " + key + ": " + data);
+	var obj = { index: key, value: data };
+	var store = getObjectStore(DB_STORE_NAME, "readwrite");
+	var type = store.count(key);
+	if (type == 0) {
+		var req = store.add(obj);
+		req.onsuccess = function(event) {
+			console.log ("successfully inserted into database! " + key + ": " + data);
+		}
+		req.onerror = function() {
+			console.log("error inserting into database: " + this.error);
+		}
+	} else {
+		console.log ("key already found, updating");
+		var req = store.get(key);
+		req.onsuccess = function(event) {
+			var newdata = req.result;
+			newdata.value = data;
+			var requestUpdate = store.put(newdata);
+			console.log ("database record updated for " + key);
+		}
 	}
 }
 
 function getValue(key) {
-	if (storageTest === true) {
-		var v = localStorage.getItem(key);
-		if (v === undefined) return v;
-		return JSON.parse(v);
+	console.log ("getting database value for " + key);
+	var store = getObjectStore(DB_STORE_NAME, "readonly");
+	var req = store.get(key);
+	req.onsuccess = function(event) {
+		var record = event.target.result;
+		if (typeof record == 'undefined') { console.log ("no matching record found"); return; }
+		console.log ("value of " + key + ": " + event.target.result.value);		
+		return event.target.result.value;
+	}
+}
+
+function delValue(key) {
+	var store = getObjectStore(db, DB_STORE_NAME, "readwrite");
+	var req = store.get(key);
+	req.onsuccess = function(evt) {
+		var record = evt.target.result;
+		if (typeof record == 'undefined') { return; }
+		req = store.delete(key);
+		req.onsuccess = function(event) {
+			console.log ("database record deleted for key " + key);
+		}
 	}
 }
 
 function storageTest() {
-    var test = 'test';
-    try {
-        localStorage.setItem(test, test);
-        localStorage.removeItem(test);
-        return true;
-    } catch(e) {
-        return false;
-    }
+	return true;
 }
 
 // Helper prototypes
@@ -3988,7 +4054,7 @@ $(document).ready(function(){
 
 		is_signed_in();
 
-		localization_promise.done(function(){
+		$.when.apply($, [localization_promise, database_open]).done(function(){
 			if (startsWith(window.location.pathname, "/api")) return;
 			if (startsWith(window.location.pathname, "/login")) return;
 			if (startsWith(window.location.pathname, "/checkout")) return;
