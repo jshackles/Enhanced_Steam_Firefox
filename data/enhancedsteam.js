@@ -4,6 +4,9 @@ var language;
 var appid_promises = {};
 var search_threshhold = $(window).height() - 80;
 
+var total_requests = 0;
+var processed_requests = 0;
+
 var cookie = document.cookie;
 if (cookie.match(/language=([a-z]{3})/i)) {
 	language = cookie.match(/language=([a-z]{3})/i)[1];
@@ -111,10 +114,21 @@ function xpath_each(xpath, callback) {
 }
 
 function get_http(url, callback) {
-    var http = new XMLHttpRequest();
+	total_requests += 1;
+	$("#es_progress").attr({"max": 100, "title": localized_strings[language].ready.loading});
+	$("#es_progress").removeClass("complete");
+	var http = new XMLHttpRequest();
 	http.onreadystatechange = function () {
 		if (this.readyState == 4 && this.status == 200) {
+			processed_requests += 1;
+			var complete_percentage = (processed_requests / total_requests) * 100;
+			$("#es_progress").val(complete_percentage);
+			if (complete_percentage == 100) { $("#es_progress").addClass("complete").attr("title", localized_strings[language].ready.ready); }
 			callback(this.responseText);
+		}
+
+		if (this.readyState == 4 && this.status != 200) {
+			$("#es_progress").val(100).addClass("error").attr({"title":localized_strings[language].ready.errormsg, "max":1});
 		}
 	};
 	http.open('GET', url, true);
@@ -690,6 +704,8 @@ function add_enhanced_steam_options() {
 	$("#global_action_menu")
 		.before($dropdown)
 		.before($dropdown_options_container);
+
+	$("#global_actions").after("<progress id='es_progress' class='complete' value='1' max='1' title='" + localized_strings[language].ready.ready + "'></progress>");
 }
 
 function add_fake_country_code_warning() {
