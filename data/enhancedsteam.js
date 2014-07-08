@@ -4156,6 +4156,8 @@ $(document).ready(function(){
 							subscription_savings_check();
 							show_pricing_history(subid, "sub");
 							add_steamdb_links(subid, "sub");
+
+							show_regional_pricing();
 							break;
 
 						case /^\/agecheck\/.*/.test(window.location.pathname):
