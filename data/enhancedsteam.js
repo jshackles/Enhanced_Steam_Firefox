@@ -973,63 +973,6 @@ function appdata_on_wishlist() {
 	});
 }
 
-function add_price_slider() {
-	$("#es_price_search_options").remove();
-	$("#es_price_search_options_text").remove();
-
-	var setprice_low = "0.00";
-	var setprice_high = "59.99";
-	var slider_pos = 100;
-	var display = "none";
-
-	var url_parameters = window.location.href.replace("#", "&");
-	var url_parameters_array = url_parameters.split("&");
-
-	$.each(url_parameters_array,function(index, url_parameter){
-		if (url_parameter.indexOf("price=") > -1) {
-			url_parameter = url_parameter.replace("price=", "");
-			if (url_parameter.indexOf("%2C") > -1) url_parameter = url_parameter.split("%2C");
-			if (url_parameter.indexOf(",") > -1) url_parameter = url_parameter.split(",");
-			if(url_parameter[0]>0){
-				setprice_low = url_parameter[0];
-			}
-			if(url_parameter[1]>0){
-				setprice_high = url_parameter[1];
-			}
-			slider_pos = (setprice_high / 59.99) * 100;
-			display = "block";
-		}
-	});
-
-	$("#advanced_search_toggle").find("a").after("<a id='es_price_search_options_text' style='margin-left: 4px; cursor: pointer;'>" + escapeHTML(localized_strings[language].price_options) + "</a>");
-	$("#advanced_search_ctn").after("<div id='es_price_search_options' style='display: " + escapeHTML(display) + ";'><div style='float: left; margin-top: 3px; margin-right: 5px;'>" + escapeHTML(localized_strings[language].price) + ": </div><div style='float: left;'><input class='es_price_range_slider' id='es_price_range' type='range' value='" + escapeHTML(slider_pos.toString()) + "' /></div><div class='search_controls' style='float: left;'><input type='text' class='text' id='es_price_text_low' style='width: 112px; margin-left: 15px;' value='" + escapeHTML(setprice_low) + "'></div><div style='float: left; margin-top: 3px; margin-left: 5px;'>to</div><div class='search_controls' style='float: left;'><input type='text' class='text' id='es_price_text_high' style='width: 112px; margin-left: 5px;' value='" + escapeHTML(setprice_high) + "'></div><div class='search_button' style='float: left; padding-left: 6px;'><input type='button' class='search_button' id='es_price_search' value='Search'></div></div><div style='clear: both'></div>");
-	
-	$("#es_price_search_options_text").click(function() {
-		$("#es_price_search_options").toggle();
-	});
-
-	$("#es_price_text_low").blur(function() {
-		if ($("#es_price_text_low").val() == "") { $("#es_price_text_low").val("0.00"); }
-	});
-
-	$("#es_price_text_high").blur(function() {
-		if ($("#es_price_text_high").val() == "") { $("#es_price_text_high").val("0.00"); }
-	});
-
-	$("#es_price_range").change(function() {
-		var price = (($("#es_price_range").val() * 59.98) / 100) + 0.01;
-		$("#es_price_text_low").val("0.00");
-		$("#es_price_text_high").val(price.toFixed(2));
-	});
-
-	$("#es_price_search").click(function() {
-		var lowprice = $("#es_price_text_low").val();
-		var highprice = $("#es_price_text_high").val();
-		var newurl = window.location.href.replace("#", "&") + "&price=" + escapeHTML(lowprice) + "," + escapeHTML(highprice);
-		window.location.assign(newurl);
-	});
-}
-
 function add_advanced_cancel() {
 	$("#advanced_search_controls").find(".control:first").append("<div id='es_advanced_cancel' style='display: inline-block;'>(<a style='cursor: pointer;'>" + escapeHTML(localized_strings[language].cancel) + "</a>)</div>");
 	$("#es_advanced_cancel").click(function() {
@@ -4290,7 +4233,6 @@ $(document).ready(function(){
 							break;
 
 						case /^\/search\/.*/.test(window.location.pathname):
-							//add_price_slider();
 							add_advanced_cancel();
 							endless_scrolling();
 							remove_non_specials();
