@@ -4012,30 +4012,6 @@ function search_in_names_only(calledbyajax) {
 	}
 }
 
-// Show what platform games are for
-function show_win_mac_linux() {
-	if (window.location.host != "store.steampowered.com" || !(/^\/$/.test(window.location.pathname))) return;
-	$(".summersale_dailydeal:not(.tiny)").each(function () {
-		var node = $(this);
-		if (node.find("#es_platform").length > 0) return;
-		var id = get_appid(node.attr("href"));
-		if (!id) return;
-		get_http('http://store.steampowered.com/api/appdetails/?filters=platforms&appids=' + id, function (data) {
-			if (data) {
-				var storefront_data = JSON.parse(data);
-				var platforms = storefront_data[id]['data']['platforms'];
-				var footer = node.children(".dailydeal_footer").first();
-				var html = '<div style="padding: 2px" id="es_platform">';
-				if (platforms['windows']) html += '<span class="platform_img win"></span>';
-				if (platforms['mac']) html += '<span class="platform_img mac"></span>';
-				if (platforms['linux']) html += '<span class="platform_img linux"></span>';
-				html += '</div>';
-				footer.prepend(html);
-			}
-		});
-	});
-}
-
 var ownedColor,
 	wishlistColor,
 	hideInstallSteam,
@@ -4193,7 +4169,6 @@ $(document).ready(function(){
 						case /^\/$/.test(window.location.pathname):
 							add_popular_tab();
 							add_carousel_descriptions();
-							show_win_mac_linux();
 							break;
 					}
 
