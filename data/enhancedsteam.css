@@ -711,6 +711,8 @@ input[type=checkbox].es_dlc_selection:checked + label {
 	appearance: none;
 	border: none;
 	border-radius: 8px;
+	width: 115px;
+	transition: width 1s ease-in-out;
 }
 #es_progress.error, #es_progress.complete {
 	width:14px;
