@@ -3225,50 +3225,11 @@ function show_regional_pricing() {
 		var available_currencies = ["USD","GBP","EUR","BRL","RUB"];
 		var conversion_rates = [1, 1, 1, 1, 1];
 		var currency_symbol;
-
-		// Get user's Steam currency
-		if ($(".price:first, .discount_final_price:first").text().trim().match(/(?:R\$|\$|€|£|pуб)/)) {
-			currency_symbol = $(".price:first, .discount_final_price:first").text().trim().match(/(?:R\$|\$|€|£|pуб)/)[0];
-		} else { return; }
-		local_currency = currency_symbol_to_type(currency_symbol);
-
-		var complete = 0;
-
-		$.each(available_currencies, function(index, currency_type) {
-			if (currency_type != local_currency) {
-				if (getValue(currency_type + "to" + local_currency)) {
-					var expire_time = parseInt(Date.now() / 1000, 10) - 24 * 60 * 60; // One day ago
-					var last_updated = getValue(currency_type + "to" + local_currency + "_time") || expire_time - 1;
-
-					if (last_updated < expire_time) {
-						get_http("http://api.enhancedsteam.com/currency/?" + local_currency.toLowerCase() + "=1&local=" + currency_type.toLowerCase(), function(txt) {
-							complete += 1;
-							conversion_rates[available_currencies.indexOf(currency_type)] = parseFloat(txt);
-							setValue(currency_type + "to" + local_currency, parseFloat(txt));
-							setValue(currency_type + "to" + local_currency + "_time", parseInt(Date.now() / 1000, 10));
-							if (complete == 4) process_data(conversion_rates);
-						});
-					} else {
-						complete += 1;
-						conversion_rates[available_currencies.indexOf(currency_type)] = getValue(currency_type + "to" + local_currency);
-						if (complete == 4) process_data(conversion_rates);
-					}	
-				} else {
-					get_http("http://api.enhancedsteam.com/currency/?" + local_currency.toLowerCase() + "=1&local=" + currency_type.toLowerCase(), function(txt) {
-						complete += 1;
-						conversion_rates[available_currencies.indexOf(currency_type)] = parseFloat(txt);
-						setValue(currency_type + "to" + local_currency, parseFloat(txt));
-						setValue(currency_type + "to" + local_currency + "_time", parseInt(Date.now() / 1000, 10));
-						if (complete == 4) process_data(conversion_rates);
-					});
-				}
-			}
-		});
 		
 		function process_data(conversion_array) {
 			// Clean up conversion script DOM nodes
 			$.each(available_currencies, function(index, currency_type) {
-				$("#es_compare_" + local_currency + "_" + currency_type).remove();					
+				$("#es_compare_" + local_currency + "_" + currency_type).remove();
 			});
 			$("#es_helper").remove();
 
@@ -3494,6 +3455,44 @@ function show_regional_pricing() {
 			}
 		}
 
+		// Get user's Steam currency
+		if ($(".price:first, .discount_final_price:first").text().trim().match(/(?:R\$|\$|€|£|pуб)/)) {
+			currency_symbol = $(".price:first, .discount_final_price:first").text().trim().match(/(?:R\$|\$|€|£|pуб)/)[0];
+		} else { return; }
+		local_currency = currency_symbol_to_type(currency_symbol);
+
+		var complete = 0;
+
+		$.each(available_currencies, function(index, currency_type) {
+			if (currency_type != local_currency) {
+				if (getValue(currency_type + "to" + local_currency)) {
+					var expire_time = parseInt(Date.now() / 1000, 10) - 24 * 60 * 60; // One day ago
+					var last_updated = getValue(currency_type + "to" + local_currency + "_time") || expire_time - 1;
+
+					if (last_updated < expire_time) {
+						get_http("http://api.enhancedsteam.com/currency/?" + local_currency.toLowerCase() + "=1&local=" + currency_type.toLowerCase(), function(txt) {
+							complete += 1;
+							conversion_rates[available_currencies.indexOf(currency_type)] = parseFloat(txt);
+							setValue(currency_type + "to" + local_currency, parseFloat(txt));
+							setValue(currency_type + "to" + local_currency + "_time", parseInt(Date.now() / 1000, 10));
+							if (complete == 4) { process_data(conversion_rates); }
+						});
+					} else {
+						complete += 1;
+						conversion_rates[available_currencies.indexOf(currency_type)] = getValue(currency_type + "to" + local_currency);
+						if (complete == 4) { process_data(conversion_rates); }
+					}	
+				} else {
+					get_http("http://api.enhancedsteam.com/currency/?" + local_currency.toLowerCase() + "=1&local=" + currency_type.toLowerCase(), function(txt) {
+						complete += 1;
+						conversion_rates[available_currencies.indexOf(currency_type)] = parseFloat(txt);
+						setValue(currency_type + "to" + local_currency, parseFloat(txt));
+						setValue(currency_type + "to" + local_currency + "_time", parseInt(Date.now() / 1000, 10));
+						if (complete == 4) { process_data(conversion_rates); }
+					});
+				}
+			}
+		});
 	}
 }
 
