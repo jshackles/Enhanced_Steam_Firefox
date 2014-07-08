@@ -3049,7 +3049,7 @@ function check_early_access(node, image_name, image_left, selector_modifier, act
 	}
 }
 
-function add_overlay() {
+function process_early_access() {
 	ea_promise.done(function(){
 		switch (window.location.host) {
 			case "store.steampowered.com":
@@ -4160,7 +4160,7 @@ $(document).ready(function(){
 			remove_install_steam_button();
 			remove_about_menu();
 			add_header_links();
-			add_overlay();
+			process_early_access();
 
 			switch (window.location.host) {
 				case "store.steampowered.com":
