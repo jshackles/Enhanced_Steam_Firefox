@@ -2,6 +2,7 @@ v6.4
 -----
 + Added a progress bar to the header that indicates if Enhanced Steam is processing requests
 + Added a "lightbox" effect to app page screenshots
++ Added a list of friends that own a game on the "friends that play" page
 + Increased Early Access detection speed (thanks henryg!)
 : Fixed the number of API requests to conform with Valve's throttling limits
 : Fixed a bug that caused PCGamingWiki links not to show correctly
