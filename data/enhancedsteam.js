@@ -4181,98 +4181,98 @@ $(document).ready(function(){
 
 				case "steamcommunity.com":
 
-				add_wallet_balance_to_header();
+					add_wallet_balance_to_header();
 
-				switch (true) {
-					case /^\/(?:id|profiles)\/.+\/wishlist/.test(window.location.pathname):
-						appdata_on_wishlist();
-						fix_wishlist_image_not_found();
-						add_empty_wishlist_buttons();
-						add_wishlist_filter();
-						add_wishlist_discount_sort();
-						add_wishlist_ajaxremove();
+					switch (true) {
+						case /^\/(?:id|profiles)\/.+\/wishlist/.test(window.location.pathname):
+							appdata_on_wishlist();
+							fix_wishlist_image_not_found();
+							add_empty_wishlist_buttons();
+							add_wishlist_filter();
+							add_wishlist_discount_sort();
+							add_wishlist_ajaxremove();
 
-						start_highlights_and_tags();
-						break;
+							start_highlights_and_tags();
+							break;
 
-					case /^\/(?:id|profiles)\/.+\/\b(home|myactivity|status)\b/.test(window.location.pathname):
-						start_friend_activity_highlights();
-						bind_ajax_content_highlighting();
-						break;
-
-					case /^\/(?:id|profiles)\/.+\/edit/.test(window.location.pathname):    					
-						add_es_background_selection();
-						break;
-
-					case /^\/(?:id|profiles)\/.+\/inventory/.test(window.location.pathname):
-						bind_ajax_content_highlighting();
-						inventory_market_prepare();
-						break;
-
-					case /^\/(?:id|profiles)\/(.+)\/games/.test(window.location.pathname):
-						totaltime();
-						totalsize();
-						add_gamelist_achievements();
-						add_gamelist_sort();
-						add_gamelist_filter();
-						break;
-
-					case /^\/(?:id|profiles)\/.+\/badges/.test(window.location.pathname):
-						add_badge_completion_cost();
-						add_total_drops_count();
-						add_cardexchange_links();
-						add_badge_filter();
-						add_badge_sort();
-						add_badge_view_options();
-						break;
-
-					case /^\/(?:id|profiles)\/.+\/stats/.test(window.location.pathname):
-						add_achievement_sort();
-						break;
-
-					case /^\/(?:id|profiles)\/.+\/gamecard/.test(window.location.pathname):
-						var gamecard = get_gamecard(window.location.pathname);
-						add_cardexchange_links(gamecard);
-						add_gamecard_market_links(gamecard);
-						add_gamecard_foil_link();
-						break;
-
-					case /^\/(?:id|profiles)\/.+\/friendsthatplay/.test(window.location.pathname):
-						add_friends_that_play();
-						break;
-
-					case /^\/(?:id|profiles)\/.+/.test(window.location.pathname):
-						add_community_profile_links();
-						add_wishlist_profile_link();
-						add_supporter_badges();
-						change_user_background();
-						fix_profile_image_not_found();
-						break;
-
-					case /^\/(?:sharedfiles|workshop)\/.*/.test(window.location.pathname):
-						hide_greenlight_banner();
-						break;
-
-					case /^\/market\/.*/.test(window.location.pathname):
-						load_inventory().done(function() {
-							highlight_market_items();
+						case /^\/(?:id|profiles)\/.+\/\b(home|myactivity|status)\b/.test(window.location.pathname):
+							start_friend_activity_highlights();
 							bind_ajax_content_highlighting();
-						});
-						add_market_total();
-						add_active_total();
-						break;
+							break;
 
-					case /^\/app\/.*/.test(window.location.pathname):
-						var appid = get_appid(window.location.host + window.location.pathname);
-						add_app_page_highlights(appid);
-						add_steamdb_links(appid, "gamehub");
-						break;
+						case /^\/(?:id|profiles)\/.+\/edit/.test(window.location.pathname):    					
+							add_es_background_selection();
+							break;
 
-					case /^\/games\/.*/.test(window.location.pathname):
-						var appid = document.querySelector( 'a[href*="http://steamcommunity.com/app/"]' );
-						appid = appid.href.match( /(\d)+/g );
-						add_steamdb_links(appid, "gamegroup");
-						break;
+						case /^\/(?:id|profiles)\/.+\/inventory/.test(window.location.pathname):
+							bind_ajax_content_highlighting();
+							inventory_market_prepare();
+							break;
+
+						case /^\/(?:id|profiles)\/(.+)\/games/.test(window.location.pathname):
+							totaltime();
+							totalsize();
+							add_gamelist_achievements();
+							add_gamelist_sort();
+							add_gamelist_filter();
+							break;
+
+						case /^\/(?:id|profiles)\/.+\/badges/.test(window.location.pathname):
+							add_badge_completion_cost();
+							add_total_drops_count();
+							add_cardexchange_links();
+							add_badge_filter();
+							add_badge_sort();
+							add_badge_view_options();
+							break;
+
+						case /^\/(?:id|profiles)\/.+\/stats/.test(window.location.pathname):
+							add_achievement_sort();
+							break;
+
+						case /^\/(?:id|profiles)\/.+\/gamecard/.test(window.location.pathname):
+							var gamecard = get_gamecard(window.location.pathname);
+							add_cardexchange_links(gamecard);
+							add_gamecard_market_links(gamecard);
+							add_gamecard_foil_link();
+							break;
+
+						case /^\/(?:id|profiles)\/.+\/friendsthatplay/.test(window.location.pathname):
+							add_friends_that_play();
+							break;
+
+						case /^\/(?:id|profiles)\/.+/.test(window.location.pathname):
+							add_community_profile_links();
+							add_wishlist_profile_link();
+							add_supporter_badges();
+							change_user_background();
+							fix_profile_image_not_found();
+							break;
+
+						case /^\/(?:sharedfiles|workshop)\/.*/.test(window.location.pathname):
+							hide_greenlight_banner();
+							break;
+
+						case /^\/market\/.*/.test(window.location.pathname):
+							load_inventory().done(function() {
+								highlight_market_items();
+								bind_ajax_content_highlighting();
+							});
+							add_market_total();
+							add_active_total();
+							break;
+
+						case /^\/app\/.*/.test(window.location.pathname):
+							var appid = get_appid(window.location.host + window.location.pathname);
+							add_app_page_highlights(appid);
+							add_steamdb_links(appid, "gamehub");
+							break;
+
+						case /^\/games\/.*/.test(window.location.pathname):
+							var appid = document.querySelector( 'a[href*="http://steamcommunity.com/app/"]' );
+							appid = appid.href.match( /(\d)+/g );
+							add_steamdb_links(appid, "gamegroup");
+							break;
 
 					}
 					break;
