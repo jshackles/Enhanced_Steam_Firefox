@@ -103,7 +103,6 @@ function xpath_each(xpath, callback) {
 }
 
 function get_http(url, callback) {
-	console.log (url);
 	total_requests += 1;
 	$("#es_progress").attr({"max": 100, "title": localized_strings[language].ready.loading});
 	$("#es_progress").removeClass("complete");
@@ -2801,37 +2800,52 @@ function get_app_details(appids, node) {
 }
 
 function get_sub_details(subid, node) {
-    if (getValue(subid + "owned")) { highlight_owned(node); return; }
-	get_http('http://store.steampowered.com/api/packagedetails/?packageids=' + subid, function (data) {
-		var pack_data = JSON.parse(data);
-		$.each(pack_data, function(subid, sub_data) {
-			if (sub_data.success) {
-				var app_ids = [];
-				var owned = [];
-				if (sub_data.data.apps) {
-					sub_data.data.apps.forEach(function(app) {
-						app_ids.push (app.id);
-						get_http('http://store.steampowered.com/api/appuserdetails/?appids=' + app.id, function (data2) {
-							var storefront_data = JSON.parse(data2);
-							$.each(storefront_data, function(appid, app_data) {
-								if (app_data.success) {
-									if (app_data.data.is_owned === true) {
-										owned.push(appid);
-									}
-								}
-							});
+	if (is_signed_in()) {
+		if (getValue(subid + "owned")) { highlight_owned(node); return; }
 
-							if (owned.length == app_ids.length) {
-								setValue(subid + "owned", true);
-								setValue(subid, parseInt(Date.now() / 1000, 10));
-								highlight_app(subid, node, "owned");
+		var expire_time = parseInt(Date.now() / 1000, 10) - 1 * 60 * 60; // One hour ago
+		var last_updated = getValue(subid) || expire_time - 1;
+
+		if (last_updated < expire_time) {
+			var app_ids = [];
+			var owned = [];
+
+			get_http('http://store.steampowered.com/api/packagedetails/?packageids=' + subid, function (data) {
+				var pack_data = JSON.parse(data);
+				$.each(pack_data, function(subid, sub_data) {
+					if (sub_data.success) {
+						if (sub_data.data.apps) {
+							sub_data.data.apps.forEach(function(app) {
+								app_ids.push (app.id.toString());
+							});
+						}
+					}
+				});
+
+				get_http('http://store.steampowered.com/api/appuserdetails/?appids=' + app_ids.toString(), function (data2) {
+					var storefront_data = JSON.parse(data2);
+					$.each(storefront_data, function(appid, app_data) {
+						if (app_data.success) {
+							if (app_data.data.is_owned === true) {
+								setValue(appid + "owned", true);
+								owned.push(appid);
+							} else {
+								setValue(appid + "owned", false);
+								setValue(appid, parseInt(Date.now() / 1000, 10));
 							}
-						});
+						}
 					});
-				}
-			}
-		});
-	});
+					if (owned.length == app_ids.length) {
+						setValue(subid + "owned", true);
+						highlight_app(subid, node);
+					} else {
+						setValue(subid + "owned", false);
+						setValue(subid, parseInt(Date.now() / 1000, 10));
+					}
+				});
+			});
+		}
+	}
 }
 
 function change_user_background() {
@@ -3223,14 +3237,28 @@ function show_regional_pricing() {
 		$.each(available_currencies, function(index, currency_type) {
 			if (currency_type != local_currency) {
 				if (getValue(currency_type + "to" + local_currency)) {
-					complete += 1;
-					conversion_rates[available_currencies.indexOf(currency_type)] = getValue(currency_type + "to" + local_currency);
-					if (complete == 4) process_data(conversion_rates);
+					var expire_time = parseInt(Date.now() / 1000, 10) - 24 * 60 * 60; // One day ago
+					var last_updated = getValue(currency_type + "to" + local_currency + "_time") || expire_time - 1;
+
+					if (last_updated < expire_time) {
+						get_http("http://api.enhancedsteam.com/currency/?" + local_currency.toLowerCase() + "=1&local=" + currency_type.toLowerCase(), function(txt) {
+							complete += 1;
+							conversion_rates[available_currencies.indexOf(currency_type)] = parseFloat(txt);
+							setValue(currency_type + "to" + local_currency, parseFloat(txt));
+							setValue(currency_type + "to" + local_currency + "_time", parseInt(Date.now() / 1000, 10));
+							if (complete == 4) process_data(conversion_rates);
+						});
+					} else {
+						complete += 1;
+						conversion_rates[available_currencies.indexOf(currency_type)] = getValue(currency_type + "to" + local_currency);
+						if (complete == 4) process_data(conversion_rates);
+					}	
 				} else {
 					get_http("http://api.enhancedsteam.com/currency/?" + local_currency.toLowerCase() + "=1&local=" + currency_type.toLowerCase(), function(txt) {
 						complete += 1;
 						conversion_rates[available_currencies.indexOf(currency_type)] = parseFloat(txt);
 						setValue(currency_type + "to" + local_currency, parseFloat(txt));
+						setValue(currency_type + "to" + local_currency + "_time", parseInt(Date.now() / 1000, 10));
 						if (complete == 4) process_data(conversion_rates);
 					});
 				}
