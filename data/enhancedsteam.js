@@ -13,97 +13,19 @@ if (cookie.match(/language=([a-z]{3})/i)) {
 }
 if (localized_strings[language] === undefined) { language = "eng"; }
 
-// index-db storage functions
-var db;
-const DB_NAME = 'EnhancedSteam';
-const DB_VERSION = 1;
-const DB_STORE_NAME = 'data';
-
-var database_open = (function() {
-	console.log ("opening database...");
-	var deferred = new $.Deferred();
-	var req = indexedDB.open(DB_NAME, DB_VERSION);
-	req.onsuccess = function(event) {
-		db = this.result;
-		console.log ("done opening database...");
-		deferred.resolve();
-	}
-	req.onerror = function(event) {
-		console.log ("error opening database: " + event.target);
-	}
-	req.onupgradeneeded = function(event) {
-		console.log ("database upgrade needed.");
-		var store = event.currentTarget.result.createObjectStore(DB_STORE_NAME, { keyPath: 'index', autoIncrement: false });
-		store.createIndex('value', 'value', { unique: false });	
-	}
-
-	return deferred.promise();
-})();
-
-function getObjectStore(store_name, mode) {	
-	console.log ("getting object store in mode: " + mode);
-	var tx = db.transaction(store_name, mode);
-	return tx.objectStore(store_name);
-}
-
-function clearObjectStore(store_name) {
-	var store = getObjectStore(store_name, "readwrite");
-	var req = store.clear();
-}
-
-function setValue(key, data) {
-	console.log ("storing value in database! " + key + ": " + data);
-	var obj = { index: key, value: data };
-	var store = getObjectStore(DB_STORE_NAME, "readwrite");
-	var type = store.count(key);
-	type.onsuccess = function(event) {
-		var count = type.result;
-		if (count == 0) {
-			var req = store.add(obj);
-			req.onsuccess = function(event) {
-				console.log ("successfully inserted into database! " + key + ": " + data);
-			}
-			req.onerror = function() {
-				console.log("error inserting into database: " + this.error);
-			}
-		} else {
-			console.log ("key already found, updating");
-			var req = store.get(key);
-			req.onsuccess = function(event) {
-				var newdata = req.result;
-				if (newdata) {
-					newdata.value = data;
-					var requestUpdate = store.put(newdata);
-					console.log ("database record updated for " + key);
-				}
-			}
-		}
-	}
+// Chrome storage functions
+function setValue(key, value) {
+	localStorage.setItem(key, JSON.stringify(value));
 }
 
 function getValue(key) {
-	console.log ("getting database value for " + key);
-	var store = getObjectStore(DB_STORE_NAME, "readonly");
-	var req = store.get(key);
-	req.onsuccess = function(event) {
-		var record = event.target.result;
-		if (typeof record == 'undefined') { console.log ("no matching record found"); return; }
-		console.log ("value of " + key + ": " + event.target.result.value);		
-		return event.target.result.value;
-	}
+	var v = localStorage.getItem(key);
+	if (v === undefined) return v;
+	return JSON.parse(v);
 }
 
 function delValue(key) {
-	var store = getObjectStore(db, DB_STORE_NAME, "readwrite");
-	var req = store.get(key);
-	req.onsuccess = function(evt) {
-		var record = evt.target.result;
-		if (typeof record == 'undefined') { return; }
-		req = store.delete(key);
-		req.onsuccess = function(event) {
-			console.log ("database record deleted for key " + key);
-		}
-	}
+	localStorage.removeItem(key);
 }
 
 function storageTest() {
@@ -185,6 +107,7 @@ function xpath_each(xpath, callback) {
 }
 
 function get_http(url, callback) {
+	console.log (url);
 	total_requests += 1;
 	$("#es_progress").attr({"max": 100, "title": localized_strings[language].ready.loading});
 	$("#es_progress").removeClass("complete");
@@ -754,9 +677,7 @@ function add_enhanced_steam_options() {
 
 	$clear_cache_link = $("<a class=\"popup_menu_item\" href=\"\">" + escapeHTML(localized_strings[language].clear_cache) + "</a>");
 	$clear_cache_link.click(function(){
-		if (storageTest === true) {
-			localStorage.clear();
-		}
+		localStorage.clear();
 		location.reload();
 	});
 
@@ -2597,63 +2518,62 @@ function add_app_page_highlights(appid) {
 	});
 }
 
+var owned_promise = (function () {
+	var deferred = new $.Deferred();
+	if (is_signed_in() && window.location.protocol != "https:") {
+		var steamID = is_signed_in()[0];
+
+		var expire_time = parseInt(Date.now() / 1000, 10) - 7 * 60 * 60 * 24; // One week ago
+		var last_updated = getValue("owned_games_time") || expire_time - 1;
+
+		if (last_updated < expire_time) {
+			get_http("http://api.enhancedsteam.com/steamapi/GetOwnedGames/?steamid=" + steamID + "&include_appinfo=0", function(txt) {
+				var data = JSON.parse(txt);
+				$.each(data['response']['games'], function(index, value) {
+					setValue(value['appid'] + "owned", true);
+				});
+				setValue("owned_games_time", parseInt(Date.now() / 1000, 10));
+				deferred.resolve();
+			});
+		} else {
+			deferred.resolve();
+		}
+	} else {
+		deferred.resolve();
+	}
+	
+	return deferred.promise();
+})();
+
+var wishlist_promise = (function () {
+	var deferred = new $.Deferred();
+	if (is_signed_in() && window.location.protocol != "https:") {
+		var steamID = is_signed_in()[0];
+		var expire_time = parseInt(Date.now() / 1000, 10) - 1 * 60 * 60 ; // One hour ago
+		var last_updated = getValue("wishlist_games_time") || expire_time - 1;
+
+		if (last_updated < expire_time) {			
+			get_http("http://steamcommunity.com/profiles/" + steamID + "/wishlist", function(txt) {				
+				var html = $.parseHTML(txt);
+				$(html).find(".wishlistRow").each(function() {
+					var appid = $(this).attr("id").replace("game_", "");
+					setValue(appid + "wishlisted", true);
+					setValue(appid, parseInt(Date.now() / 1000, 10));
+				});
+				setValue("wishlist_games_time", parseInt(Date.now() / 1000, 10));
+				deferred.resolve();
+			});
+		} else {
+			deferred.resolve();
+		}
+	} else {
+		deferred.resolve();
+	}
+	
+	return deferred.promise();
+})();
+
 function start_highlights_and_tags(){
-	var owned_promise = (function () {
-		var deferred = new $.Deferred();
-		if (is_signed_in() && window.location.protocol != "https:") {
-			var steamID = is_signed_in()[0];
-
-			var expire_time = parseInt(Date.now() / 1000, 10) - 7 * 60 * 60 * 24; // One week ago
-			var last_updated = getValue("owned_games_time") || expire_time - 1;
-
-			if (last_updated < expire_time) {
-				get_http("http://api.enhancedsteam.com/steamapi/GetOwnedGames/?steamid=" + steamID + "&include_appinfo=0", function(txt) {
-					console.log (txt);
-					var data = JSON.parse(txt);
-					$.each(data['response']['games'], function(index, value) {
-						setValue(value['appid'] + "owned", true);
-					});
-					setValue("owned_games_time", parseInt(Date.now() / 1000, 10));
-					deferred.resolve();
-				});
-			} else {
-				deferred.resolve();
-			}
-		} else {
-			deferred.resolve();
-		}
-		
-		return deferred.promise();
-	})();
-
-	var wishlist_promise = (function () {
-		var deferred = new $.Deferred();
-		if (is_signed_in() && window.location.protocol != "https:") {
-			var steamID = is_signed_in()[0];
-			var expire_time = parseInt(Date.now() / 1000, 10) - 1 * 60 * 60 ; // One hour ago
-			var last_updated = getValue("wishlist_games_time") || expire_time - 1;
-
-			if (last_updated < expire_time) {			
-				get_http("http://steamcommunity.com/profiles/" + steamID + "/wishlist", function(txt) {				
-					var html = $.parseHTML(txt);
-					$(html).find(".wishlistRow").each(function() {
-						var appid = $(this).attr("id").replace("game_", "");
-						setValue(appid + "wishlisted", true);
-						setValue(appid, parseInt(Date.now() / 1000, 10));
-					});
-					setValue("wishlist_games_time", parseInt(Date.now() / 1000, 10));
-					deferred.resolve();
-				});
-			} else {
-				deferred.resolve();
-			}
-		} else {
-			deferred.resolve();
-		}
-		
-		return deferred.promise();
-	})();
-
 	// Batch all the document.ready appid lookups into one storefront call.
 	$.when.apply($, [owned_promise, wishlist_promise]).done(function() {	
 		var selectors = [
@@ -2694,6 +2614,43 @@ function start_highlights_and_tags(){
 					if ($(node).hasClass("item")) { node = $(node).find(".info")[0]; }
 					if ($(node).hasClass("home_area_spotlight")) { node = $(node).find(".spotlight_content")[0]; }
 
+					if (subid) {
+						get_sub_details (subid, node);
+					}
+				}	
+			});
+		});
+
+		on_apps_info(appids);
+	});
+}
+
+function start_friend_activity_highlights() {
+	$.when.apply($, [owned_promise, wishlist_promise]).done(function() {
+		var selectors = [
+			".blotter_author_block a",
+			".blotter_gamepurchase_details a",
+			".blotter_daily_rollup_line a"
+		];
+
+		var appids = [];
+
+		// Get all appids and nodes from selectors
+		$.each(selectors, function (i, selector) {
+			$.each($(selector), function(j, node){
+				var appid = get_appid(node.href);
+				if (appid && !node.classList.contains("blotter_userstats_game")) {
+					if (selector == ".blotter_author_block a") { $(node).addClass("inline_tags"); }
+					if (selector == ".blotter_daily_rollup_line a") {
+						if ($(node).parent().parent().html().match(/<img src="(.+apps.+)"/)) {
+							add_achievement_comparison_link($(node).parent().parent());
+						}
+					}
+
+					var pushvar = [appid, node];
+					appids.push(pushvar);
+				} else {
+					var subid = get_subid(node.href || $(node).find("a")[0].href);
 					if (subid) {
 						get_sub_details (subid, node);
 					}
@@ -3000,32 +2957,6 @@ function highlight_market_items() {
     		}
     	}
     });
-}
-
-function start_friend_activity_highlights() {
-    var selectors = [
-		".blotter_author_block a",
-		".blotter_gamepurchase_details a",
-		".blotter_daily_rollup_line a"
-	];
-	
-	$.each(selectors, function (i, selector) {
-		$.each($(selector), function(j, node){
-			var appid = get_appid(node.href);
-			if (appid && !node.classList.contains("blotter_userstats_game")) {
-				if (selector == ".blotter_author_block a") { $(node).addClass("inline_tags"); }
-				if (selector == ".blotter_daily_rollup_line a") { 
-					if ($(node).parent().parent().html().match(/<img src="(.+apps.+)"/)) {
-						add_achievement_comparison_link($(node).parent().parent()); 
-					}
-				}	
-				
-				on_app_info(appid, node, function(){
-					highlight_app(appid, node);					
-				});
-			}
-		});	
-	});
 }
 
 function add_achievement_comparison_link(node) {
@@ -4176,7 +4107,7 @@ $(document).ready(function(){
 
 		is_signed_in();
 
-		$.when.apply($, [localization_promise, database_open]).done(function(){
+		localization_promise.done(function(){
 			if (startsWith(window.location.pathname, "/api")) return;
 			if (startsWith(window.location.pathname, "/login")) return;
 			if (startsWith(window.location.pathname, "/checkout")) return;
