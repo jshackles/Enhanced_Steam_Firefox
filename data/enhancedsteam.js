@@ -13,6 +13,15 @@ if (cookie.match(/language=([a-z]{3})/i)) {
 }
 if (localized_strings[language] === undefined) { language = "eng"; }
 
+
+// Run script in the context of the current tab
+function runInPageContext(fun){
+	var script  = document.createElement('script');
+	script.textContent = '(' + fun + ')();';
+	document.documentElement.appendChild(script);
+	script.parentNode.removeChild(script);
+}
+
 // Chrome storage functions
 function setValue(key, value) {
 	localStorage.setItem(key, JSON.stringify(value));
@@ -3619,6 +3628,18 @@ function add_badge_filter() {
 			html += "</div>";
 
 		$('.profile_badges_header').append(html);
+
+		var resetLazyLoader = function() { runInPageContext(function() { 
+				// Clear registered image lazy loader watchers (CScrollOffsetWatcher is found in shared_global.js)
+				CScrollOffsetWatcher.sm_rgWatchers = [];
+				
+				// Recreate registered image lazy loader watchers
+				$J('div[id^=image_group_scroll_badge_images_gamebadge_]').each(function(i,e){
+					// LoadImageGroupOnScroll is found in shared_global.js
+					LoadImageGroupOnScroll(e.id, e.id.substr(19));
+				});
+			});
+		};
 		
 		$('#es_badge_all').on('click', function() {
 			$('.is_link').css('display', 'block');
@@ -3642,6 +3663,7 @@ function add_badge_filter() {
 					}
 				}
 			});
+			resetLazyLoader();
 		});
 	}	
 }
@@ -3650,6 +3672,18 @@ function add_badge_sort() {
 	if ($(".profile_badges_sortoptions").find("a[href$='sort=r']").length > 0) {
 		$(".profile_badges_sortoptions").find("a[href$='sort=r']").after("&nbsp;&nbsp;<a class='badge_sort_option whiteLink' id='es_badge_sort_drops'>" + escapeHTML(localized_strings[language].most_drops) + "</a>&nbsp;&nbsp;<a class='badge_sort_option whiteLink' id='es_badge_sort_value'>" + escapeHTML(localized_strings[language].drops_value) + "</a>");
 	}
+
+	var resetLazyLoader = function() { runInPageContext(function() { 
+			// Clear registered image lazy loader watchers (CScrollOffsetWatcher is found in shared_global.js)
+			CScrollOffsetWatcher.sm_rgWatchers = [];
+			
+			// Recreate registered image lazy loader watchers
+			$J('div[id^=image_group_scroll_badge_images_gamebadge_]').each(function(i,e){
+				// LoadImageGroupOnScroll is found in shared_global.js
+				LoadImageGroupOnScroll(e.id, e.id.substr(19));
+			});
+		});
+	};
 
 	$("#es_badge_sort_drops").on("click", function() {
 		var badgeRows = [];
@@ -3685,6 +3719,7 @@ function add_badge_sort() {
 
 		$(".active").removeClass("active");
 		$(this).addClass("active");
+		resetLazyLoader();
 	});
 
 	$("#es_badge_sort_value").on("click", function() {
@@ -3959,7 +3994,7 @@ function add_badge_completion_cost() {
 				get_http(url, function(txt) {
 					if ($(node).find("div[class$='badge_progress_info']").text()) {
 						var card = $(node).find("div[class$='badge_progress_info']").text().trim().match(/(\d+)\D*(\d+)/);
-						var need = card[2] - card[1];
+						if (card) { var need = card[2] - card[1]; }
 					}
 
 					var cost = (need * parseFloat(txt)).toFixed(2);
