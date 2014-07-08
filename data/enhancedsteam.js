@@ -108,16 +108,18 @@ function get_http(url, callback) {
 	$("#es_progress").removeClass("complete");
 	var http = new XMLHttpRequest();
 	http.onreadystatechange = function () {
-		if (this.readyState == 4 && this.status == 200) {
-			processed_requests += 1;
-			var complete_percentage = (processed_requests / total_requests) * 100;
-			$("#es_progress").val(complete_percentage);
-			if (complete_percentage == 100) { $("#es_progress").addClass("complete").attr("title", localized_strings[language].ready.ready); }
-			callback(this.responseText);
-		}
+		if (this.readyState) {
+			if (this.readyState == 4 && this.status == 200) {
+				processed_requests += 1;
+				var complete_percentage = (processed_requests / total_requests) * 100;
+				$("#es_progress").val(complete_percentage);
+				if (complete_percentage == 100) { $("#es_progress").addClass("complete").attr("title", localized_strings[language].ready.ready); }
+				callback(this.responseText);
+			}
 
-		if (this.readyState == 4 && this.status != 200) {
-			$("#es_progress").val(100).addClass("error").attr({"title":localized_strings[language].ready.errormsg, "max":1});
+			if (this.readyState == 4 && this.status != 200) {
+				$("#es_progress").val(100).addClass("error").attr({"title":localized_strings[language].ready.errormsg, "max":1});
+			}
 		}
 	};
 	http.open('GET', url, true);
@@ -2246,7 +2248,6 @@ function add_carousel_descriptions() {
 
 				if (last_updated < expire_time) {
 					get_http('http://store.steampowered.com/app/' + appid, function(txt) {
-						console.log (txt);
 						var desc = txt.match(/textarea name="w_text" placeholder="(.+)" maxlength/);
 						if (desc) {
 							setValue(appid + "carousel", desc[1]);
@@ -2276,38 +2277,6 @@ function add_carousel_descriptions() {
 				}
 			}
 		}
-    }
-}
-
-function add_affordable_button() {
-    if ($("#header_wallet_ctn").length > 0) {
-        var balance_text = $("#header_wallet_ctn").text().trim();        
-    	var currency_symbol = balance_text.match(/(?:R\$|\$|€|£|pуб)/)[0];
-    	var balance = balance_text.replace(currency_symbol, "");
-    	if(currency_symbol == "$") balance = balance.replace(" USD", "");
-    	balance = balance.replace(",", ".");
-    	if (balance > 0) {
-    		var link = "http://store.steampowered.com/search/?sort_by=Price&sort_order=DESC&price=0%2C" + escapeHTML(balance);
-    		$(".btn_browse").each(function(index) {
-    			if (index == 1) {
-    				switch (currency_symbol) {
-    					case "€":
-    						$(this).after("<a class='btn_browse' style='width: 308px; background-image: url( " + self.options.img_es_btn_browse + " );' href='" + escapeHTML(link) + "'><h3 style='width: 120px;'>" + escapeHTML(balance) + "<span class='currency'>" + escapeHTML(currency_symbol) + "</span></h3><h5><span id='es_results'></span> games under " + escapeHTML(balance_text) + "</h5></a>");
-    						break;
-    					case "pуб":
-    						$(this).after("<a class='btn_browse' style='width: 308px; background-image: url( " + self.options.img_es_btn_browse + " );' href='" + escapeHTML(link) + "'><h3 style='width: 120px;'>" + escapeHTML(balance) + "</h3><h5><span id='es_results'></span> games under " + escapeHTML(balance_text) + "</h5></a>");
-    						break;
-    					default:
-    						$(this).after("<a class='btn_browse' style='width: 308px; background-image: url( " + self.options.img_es_btn_browse + " );' href='" + escapeHTML(link) + "'><h3 style='width: 120px;'><span class='currency'>" + escapeHTML(currency_symbol) + "</span>" + escapeHTML(balance) + "</h3><h5><span id='es_results'></span> games under " + escapeHTML(balance_text) + "</h5></a>");
-    				}		
-    				get_http(link, function(txt) {
-    					var results = txt.match(/search_pagination_left(.+)\r\n(.+)/)[2];
-    					results = results.match(/(\d+)(?!.*\d)/)[0];
-    					$("#es_results").text(results);
-    				});	
-    			}	
-    		});
-    	}
     }
 }
 
@@ -4267,7 +4236,6 @@ $(document).ready(function(){
 						case /^\/$/.test(window.location.pathname):
 							add_popular_tab();
 							add_carousel_descriptions();
-							//add_affordable_button();
 							show_win_mac_linux();
 							break;
 					}
