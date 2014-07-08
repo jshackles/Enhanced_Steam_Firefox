@@ -4170,6 +4170,7 @@ $(document).ready(function(){
 
 						case /^\/account\/.*/.test(window.location.pathname):
 							account_total_spent();
+							return;
 							break;
 
 						case /^\/steamaccount\/addfunds/.test(window.location.pathname):
