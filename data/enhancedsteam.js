@@ -1549,7 +1549,7 @@ function add_metracritic_userscore() {
         	var meta_real_link = meta[i].href;
         	get_http("http://api.enhancedsteam.com/metacritic/?mcurl=" + meta_real_link, function (txt) {
         		metauserscore = escapeHTML(txt);
-        		metauserscore = metauserscore.replace(".","");		
+        		metauserscore = metauserscore*10;
         		var newmeta = '<div id="game_area_metascore" style="background-image: url(' + self.options.img_metacritic_bg + ');"><div id="metapage">' + escapeHTML(metauserscore) + '</div></div>';
         		$("#game_area_metascore").after(newmeta);
         	});
