@@ -1,6 +1,7 @@
 v6.5
 -----
 : Fixed a bug where Metacritic scores would sometimes show incorrectly
+: Fixed a bug that caused achievement sorting not to work correctly
 
 
 v6.4
