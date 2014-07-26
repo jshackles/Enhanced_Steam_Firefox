@@ -778,3 +778,12 @@ input[type=checkbox].es_dlc_selection:checked + label {
 }
 .es-next { right: 14px; }
 .es-prev { left: 14px; }
+.es_wishlist_note {
+	overflow: hidden;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	width: 455px;
+	height: 13px;
+	font-style: italic;
+	margin-top: -3px;
+}
