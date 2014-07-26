@@ -3,6 +3,7 @@ v6.5
 : Fixed a bug where Metacritic scores would sometimes show incorrectly
 : Fixed a bug that caused achievement sorting not to work correctly
 : Fixed active market listing total to work with new data format
+: Updated highlighting code to be more robust
 
 
 v6.4
