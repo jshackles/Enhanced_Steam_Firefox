@@ -8,6 +8,7 @@ v6.5
 : Fixed a bug that would sometimes cause you not to be able to remove an item from your wishlist
 : Updated highlighting code to be more robust
 - Removed button to delete owned games from wishlist, as Steam now does this automatically
+- Removed "Remove from wishlist" link on store pages, due to change in Valve's servers
 
 
 v6.4
