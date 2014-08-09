@@ -4190,7 +4190,6 @@ $(document).ready(function(){
 							add_steamdb_links(appid, "app");
 							add_familysharing_warning(appid);
 							add_dlc_page_link(appid);
-							add_remove_from_wishlist_button(appid);
 							add_4pack_breakdown();
 							add_steamchart_info(appid);
 							add_app_badge_progress(appid);
