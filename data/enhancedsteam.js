@@ -330,7 +330,17 @@ function load_inventory() {
 	var expire_time = parseInt(Date.now() / 1000, 10) - 1 * 60 * 60; // One hour ago
 	var last_updated = localStorage.getItem("inventory_time") || expire_time - 1;
 	if (last_updated < expire_time || !localStorage.getItem("inventory_1") || !localStorage.getItem("inventory_3")) {		
+		
+		// purge stale information from localStorage
+		var i = 0, sKey;
+		for (; sKey = window.localStorage.key(i); i++) {
+			if (sKey.match(/coupon/)) { delValue(sKey); }
+			if (sKey.match(/card:/)) { delValue(sKey); }
+			if (sKey.match(/gift/)) { delValue(sKey); }
+			if (sKey.match(/guestpass/)) { delValue(sKey); }
+		}
 		localStorage.setItem("inventory_time", parseInt(Date.now() / 1000, 10))
+
 		if (profileurl) {
 			get_http(profileurl + '/inventory/json/753/1/', handle_inv_ctx1);
 			get_http(profileurl + '/inventory/json/753/3/', handle_inv_ctx3);        
