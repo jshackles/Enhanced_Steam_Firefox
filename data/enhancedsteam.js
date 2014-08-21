@@ -56,7 +56,7 @@ function formatCurrency(number, type) {
 			places = 2; symbol = "£"; thousand = ","; decimal = "."; right = false;
 			break;
 		case "RUB":
-			places = 0; symbol = " pуб."; thousand = "."; decimal = ","; right = true;
+			places = 0; symbol = " pуб."; thousand = ""; decimal = ","; right = true;
 			if (number % 1 != 0) { places = 2; }
 			break;
 		default:
@@ -1872,7 +1872,7 @@ function add_active_total() {
 		var total_after = 0;	
 		
 		$(".my_listing_section:first").find(".market_listing_row").find(".market_listing_my_price").each(function() {			
-			var temp = $(this).text().trim().replace(",", ".").replace(/[^0-9(\.]+/g,"").split("(");
+			var temp = $(this).text().trim().replace(/pуб./g,"").replace(/,/g,".").replace(/[^0-9(\.]+/g,"").split("(");
 			total += Number(temp[0]);
 			total_after += Number(temp[1]);
 			currency_symbol = $(this).text().trim().match(/(?:R\$|\$|€|£|pуб)/)[0];
