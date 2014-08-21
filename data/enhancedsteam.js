@@ -968,9 +968,9 @@ function display_coupon_message(appid) {
 	$('#game_area_purchase').before($(""+
 	"<div class=\"early_access_header\">" +
 	"    <div class=\"heading\">" +
-	"        <h1 class=\"inset\">" + escapeHTML(localized_strings[language].coupon_available) + "</h1>" +
-    "        <h2 class=\"inset\">" + escapeHTML(localized_strings[language].coupon_application_note) + "</h2>" +
-	"        <p>" + escapeHTML(localized_strings[language].coupon_learn_more) + "</p>" +
+	"        <h1 class=\"inset\">" + localized_strings[language].coupon_available + "</h1>" +
+    "        <h2 class=\"inset\">" + localized_strings[language].coupon_application_note + "</h2>" +
+	"        <p>" + localized_strings[language].coupon_learn_more + "</p>" +
 	"    </div>" +
 	"    <div class=\"devnotes\">" +
 	"        <table border=0>" +
