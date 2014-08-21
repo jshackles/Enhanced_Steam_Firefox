@@ -59,6 +59,9 @@ function formatCurrency(number, type) {
 			places = 0; symbol = " pуб."; thousand = "."; decimal = ","; right = true;
 			if (number % 1 != 0) { places = 2; }
 			break;
+		case "JPY":
+			places = 0; symbol = "¥ "; thousand = ","; decimal = "."; right = false;
+			break;	
 		default:
 			places = 2; symbol = "$"; thousand = ","; decimal = "."; right = false;
 			break;
@@ -84,6 +87,8 @@ function currency_symbol_to_type (currency_symbol) {
 			return "GBP";
 		case "R$":
 			return "BRL";
+		case "¥":
+			return "JPY";	
 		default:
 			return "USD";
 	}
@@ -3144,7 +3149,7 @@ function process_early_access() {
 function show_regional_pricing() {
 	if (showregionalprice) {
 		var api_url = "http://store.steampowered.com/api/packagedetails/";
-		var countries = ["US","GB","EU1","EU2","BR","RU","AU"];
+		var countries = ["US","GB","EU1","EU2","BR","RU","AU","JP"];
 		var pricing_div = "<div class='es_regional_container'></div>";
 		var world = self.options.img_world;
 		var currency_deferred = [];
@@ -3154,8 +3159,8 @@ function show_regional_pricing() {
 		var sale;
 		var sub;
 		var region_appended=0;
-		var available_currencies = ["USD","GBP","EUR","BRL","RUB"];
-		var conversion_rates = [1, 1, 1, 1, 1];
+		var available_currencies = ["USD","GBP","EUR","BRL","RUB","JPY"];
+		var conversion_rates = [1, 1, 1, 1, 1, 1];
 		var currency_symbol;
 		
 		function process_data(conversion_array) {
@@ -3388,8 +3393,8 @@ function show_regional_pricing() {
 		}
 
 		// Get user's Steam currency
-		if ($(".price:first, .discount_final_price:first").text().trim().match(/(?:R\$|\$|€|£|pуб)/)) {
-			currency_symbol = $(".price:first, .discount_final_price:first").text().trim().match(/(?:R\$|\$|€|£|pуб)/)[0];
+		if ($(".price:first, .discount_final_price:first").text().trim().match(/(?:R\$|\$|€|¥|£|pуб)/)) {
+			currency_symbol = $(".price:first, .discount_final_price:first").text().trim().match(/(?:R\$|\$|€|¥|£|pуб)/)[0];
 		} else { return; }
 		local_currency = currency_symbol_to_type(currency_symbol);
 
