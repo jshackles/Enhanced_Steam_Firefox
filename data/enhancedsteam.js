@@ -1,4 +1,4 @@
-// Enhanced Steam v6.6
+// Enhanced Steam v6.7
 var apps;
 var language;
 var appid_promises = {};
