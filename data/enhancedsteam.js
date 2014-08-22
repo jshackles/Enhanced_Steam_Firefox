@@ -3272,7 +3272,7 @@ function show_regional_pricing() {
 			}
 
 			$.each(all_game_areas,function(index,app_package){
-				var subid = $(app_package).find("input").last().val();
+				var subid = $(app_package).find("input[name='subid']").val();
 				if(subid>0){
 					subid_info[index]=[];
 					subid_info[index]["subid"]=subid;
@@ -3394,7 +3394,7 @@ function show_regional_pricing() {
 							}
 						});
 						$.each(all_game_areas,function(index,app_package){
-							var subid = $(app_package).find("input").last().val();
+							var subid = $(app_package).find("input[name='subid']").val();
 							if(subid){
 								$(app_package).find(".price").css({"padding-left":"25px","background-image":"url("+world+")","background-repeat":"no-repeat","background-position":"5px 8px"});
 								$(app_package).find(".discount_original_price").css({"position":"relative","float":"left"});
@@ -4303,6 +4303,7 @@ $(document).ready(function(){
 						case /^\/$/.test(window.location.pathname):
 							add_popular_tab();
 							add_carousel_descriptions();
+							show_regional_pricing();
 							break;
 					}
 
