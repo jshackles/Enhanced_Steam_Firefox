@@ -1592,17 +1592,16 @@ function subscription_savings_check() {
 			// Remove children, leave only text(price or only discounted price, if there are discounts)
 			price_container = $(node).find(".tab_price").children().remove().end().text().trim();
 
-		if (price_container !== "N/A" && price_container !== "Free") {
-			if (price_container) {
+		if (price_container) {
+			if (price_container.search(/([0-9]+(?:(?:\,|\.)[0-9]+)?)/) > -1) {
 				itemPrice = parseFloat(price_container.match(/([0-9]+(?:(?:\,|\.)[0-9]+)?)/)[1]);
 				if (!currency_symbol) currency_symbol = price_container.match(/(?:R\$|\$|€|¥|£|pуб)/)[0];
-				if (!comma) comma = (price_container.search(/,\d\d(?!\d)/));
 			} else {
 				itemPrice = 0;
 			}
 		} else {
 			itemPrice = 0;
-		}
+		} //rewrite to support different locales
 
 		// Batch app ids, checking for existing promises, then do this.
 		ensure_appid_deferred(appid);
@@ -1621,6 +1620,7 @@ function subscription_savings_check() {
 		if ($bundle_price.length === 0) $bundle_price = $(".game_purchase_price");
 
         var bundle_price = $($bundle_price).html();
+	if (!comma) comma = (bundle_price.search(/,\d\d(?!\d)/)); //here's a right place to search if we plan to fix a bundle price
         bundle_price = bundle_price.replace(/[^0-9\.]+/g,"");
         bundle_price = parseFloat(bundle_price);
 		if (comma > -1) { bundle_price = bundle_price / 100; }                
