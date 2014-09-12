@@ -1596,7 +1596,6 @@ function subscription_savings_check() {
 			if (price_container) {
 				itemPrice = parseFloat(price_container.match(/([0-9]+(?:(?:\,|\.)[0-9]+)?)/)[1]);
 				if (!currency_symbol) currency_symbol = price_container.match(/(?:R\$|\$|€|¥|£|pуб)/)[0];
-				if (!comma) comma = (price_container.search(/,\d\d(?!\d)/));
 			} else {
 				itemPrice = 0;
 			}
@@ -1621,6 +1620,7 @@ function subscription_savings_check() {
 		if ($bundle_price.length === 0) $bundle_price = $(".game_purchase_price");
 
         var bundle_price = $($bundle_price).html();
+	if (!comma) comma = (bundle_price.search(/,\d\d(?!\d)/)); //why search through app prices if we want to fix bundle price later?
         bundle_price = bundle_price.replace(/[^0-9\.]+/g,"");
         bundle_price = parseFloat(bundle_price);
 		if (comma > -1) { bundle_price = bundle_price / 100; }                
