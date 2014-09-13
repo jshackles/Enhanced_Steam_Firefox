@@ -772,7 +772,10 @@ function add_fake_country_code_warning() {
 // Displays warning if browsing in a different language
 function add_language_warning() {
 	if (showlanguagewarning) {
-		var currentLanguage = cookie.match(/language=([a-z]+)/i)[1];
+		var currentLanguage = "English";
+		if (cookie.match(/language=([a-z]+)/i)) {
+			currentLanguage = cookie.match(/language=([a-z]+)/i)[1];
+		}
 		currentLanguage = currentLanguage.charAt(0).toUpperCase() + currentLanguage.slice(1);
 
 		function make_language_pretty(language_string) {
@@ -1321,6 +1324,13 @@ function add_pcgamingwiki_link(appid) {
 				$('#demo_block').find('.block_content_inner').prepend('<div class="demo_area_button"><a class="game_area_wishlist_btn" target="_blank" href="' + url + '" style="background-image:url(' + self.options.img_pcgw + ')">' + localized_strings[language].wiki_article.replace("__pcgw__","PC Gaming Wiki") + '</a></div>');
 			}
 		});
+	}
+}
+
+// Add link to Steam Card Exchange
+function add_steamcardexchange_link(appid){
+	if ($(".icon").find('img[src$="/ico_cards.png"]').length > 0) {
+		$("#demo_block").find('.block_content_inner').prepend('<div class="demo_area_button"><a class="game_area_wishlist_btn" target="_blank" href="http://www.steamcardexchange.net/index.php?gamepage-appid-' + appid + '" style="background-image:url(' + self.options.img_steamcardexchange_store + ')">' + localized_strings[language].view_in + ' Steam Card Exchange</a></div>');
 	}
 }
 
@@ -4211,6 +4221,7 @@ $(document).ready(function(){
 							add_widescreen_certification(appid);
 							add_hltb_info(appid);
 							add_pcgamingwiki_link(appid);
+							add_steamcardexchange_link(appid);
 							add_app_page_highlights(appid);
 							add_steamdb_links(appid, "app");
 							add_familysharing_warning(appid);
