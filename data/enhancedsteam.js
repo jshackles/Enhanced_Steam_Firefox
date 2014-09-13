@@ -1864,7 +1864,7 @@ function add_active_total() {
 function account_total_spent() {
 	if (showtotal === true) {
 		if ($('.transactionRow').length !== 0) {
-			var available_currencies = ["USD","GBP","EUR","BRL","RUB","JPY"];
+			var available_currencies = ["USD","GBP","EUR","BRL","RUB","JPY","NOK","IDR","MYR","PHP","SGD","THB","VND","KRW","TRY","UAH","MXN","CAD","AUD","NZD"];
 			var currency_symbol;
 
 			// Get user's Steam currency
