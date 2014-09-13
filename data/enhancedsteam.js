@@ -61,7 +61,49 @@ function formatCurrency(number, type) {
 			break;
 		case "JPY":
 			places = 0; symbol = "¥ "; thousand = ","; decimal = "."; right = false;
-			break;	
+			break;
+		case "MYR":
+			places = 2; symbol = "RM"; thousand = ","; decimal = "."; right = false;
+			break;
+		case "NOK":
+			places = 2; symbol = " kr"; thousand = "."; decimal = ","; right = true;
+			break;
+		case "IDR":
+			places = 2; symbol = "Rp "; thousand = ""; decimal = "."; right = false;
+			break;
+		case "PHP":
+			places = 2; symbol = "P"; thousand = ","; decimal = "."; right = false;
+			break;
+		case "SGD":
+			places = 2; symbol = "S$"; thousand = ","; decimal = "."; right = false;
+			break;
+		case "THB":
+			places = 2; symbol = "฿"; thousand = ","; decimal = "."; right = false;
+			break;
+		case "VND":
+			places = 2; symbol = "₫"; thousand = ","; decimal = "."; right = false;
+			break;
+		case "KRW":
+			places = 2; symbol = "₩"; thousand = ","; decimal = "."; right = false;
+			break;
+		case "TRY":
+			places = 2; symbol = " TL"; thousand = ""; decimal = ","; right = true;
+			break;
+		case "UAH":
+			places = 2; symbol = "₴"; thousand = ""; decimal = ","; right = true;
+			break;
+		case "MXN":
+			places = 2; symbol = "Mex$ "; thousand = ","; decimal = "."; right = false;
+			break;
+		case "CAD":
+			places = 2; symbol = "C$ "; thousand = ","; decimal = "."; right = false;
+			break;
+		case "AUD":
+			places = 2; symbol = "A$ "; thousand = ","; decimal = "."; right = false;
+			break;
+		case "NZD":
+			places = 2; symbol = "NZ$ "; thousand = ","; decimal = "."; right = false;
+			break;
 		default:
 			places = 2; symbol = "$"; thousand = ","; decimal = "."; right = false;
 			break;
@@ -88,10 +130,46 @@ function currency_symbol_to_type (currency_symbol) {
 		case "R$":
 			return "BRL";
 		case "¥":
-			return "JPY";	
+			return "JPY";
+		case "kr":
+			return "NOK";
+		case "Rp":
+			return "IDR";
+		case "RM":
+			return "MYR";
+		case "P":
+			return "PHP";
+		case "S$":
+			return "SGD";
+		case "฿":
+			return "THB";
+		case "₫":
+			return "VND";
+		case "₩":
+			return "KRW";
+		case "TL":
+			return "TRY";
+		case "₴":
+			return "UAH";
+		case "Mex$":
+			return "MXN";
+		case "C$":
+			return "CAD";
+		case "A$":
+			return "AUD";
+		case "NZ$":
+			return "NZD";
 		default:
 			return "USD";
 	}
+}
+
+function currency_symbol_from_string (string_with_symbol) {
+	var return_string = "";
+	if (string_with_symbol.match(/(?:R\$|S\$|\$|RM|kr|Rp|€|¥|£|฿|pуб|P|₫|₩|TL|₴|Mex\$|C\$|A\$|NZ\$)/)) {
+		return_string = string_with_symbol.match(/(?:R\$|S\$|\$|RM|kr|Rp|€|¥|£|฿|pуб|P|₫|₩|TL|₴|Mex\$|C\$|A\$|NZ\$)/)[0];
+	}
+	return return_string;
 }
 
 HTMLreplacements = { "&": "&amp;", '"': "&quot;", "<": "&lt;", ">": "&gt;" };
@@ -555,7 +633,7 @@ function pack_split(node, ways) {
 		comma = true;
 		price_text = price_text.replace(",", ".");
 	}
-	var currency_symbol = price_text.match(/(?:R\$|\$|€|¥|£|pуб)/)[0];
+	var currency_symbol = currency_symbol_from_string(price_text);
 	var currency_type = currency_symbol_to_type(currency_symbol);
 	var price = (Number(price_text.replace(/[^0-9\.]+/g,""))) / ways;
 	price = (Math.ceil(price * 100) / 100);
@@ -764,7 +842,7 @@ function add_custom_wallet_amount() {
 	$(addfunds).find(".btn_addtocart_content").addClass("es_custom_button");
 	$(addfunds).find("h1").text(localized_strings[language].wallet.custom_amount);
 	$(addfunds).find("p").text(localized_strings[language].wallet.custom_amount_text.replace("__minamount__", $(addfunds).find(".price").text().trim()));
-	var currency_symbol = $(addfunds).find(".price").text().trim().match(/(?:R\$|\$|€|¥|£|pуб)/)[0];
+	var currency_symbol = currency_symbol_from_string($(addfunds).find(".price").text().trim());
 	var minimum = $(addfunds).find(".price").text().trim().replace(/(?:R\$|\$|€|¥|£|pуб)/, "");
 	var formatted_minimum = minimum;
 	switch (currency_symbol) {
@@ -1007,7 +1085,7 @@ function display_coupon_message(appid) {
     var price_div = $("[itemtype=\"http://schema.org/Offer\"]");
 	var	cart_id = $(document).find("[name=\"subid\"]")[0].value;
 	var actual_price_container = $(price_div).find("[itemprop=\"price\"]").text().trim();
-	var currency_symbol = actual_price_container.match(/(?:R\$|\$|€|¥|£|pуб)/)[0]; // Lazy but effective
+	var currency_symbol = currency_symbol_from_string(actual_price_container);
 	var currency_type = currency_symbol_to_type(currency_symbol);
 	var comma = actual_price_container.search(/,\d\d(?!\d)/);
 
@@ -1595,7 +1673,7 @@ function subscription_savings_check() {
 		if (price_container !== "N/A" && price_container !== "Free") {
 			if (price_container) {
 				itemPrice = parseFloat(price_container.match(/([0-9]+(?:(?:\,|\.)[0-9]+)?)/)[1]);
-				if (!currency_symbol) currency_symbol = price_container.match(/(?:R\$|\$|€|¥|£|pуб)/)[0];
+				if (!currency_symbol) currency_symbol = currency_symbol_from_string(price_container);
 				if (!comma) comma = (price_container.search(/,\d\d(?!\d)/));
 			} else {
 				itemPrice = 0;
@@ -1671,7 +1749,7 @@ function add_market_total() {
 			function get_market_data(txt) {
 				var data = JSON.parse(txt);
 				market = data['results_html'];
-				if (!currency_symbol) currency_symbol = $(market).find(".market_listing_price").text().trim().match(/(?:R\$|\$|€|¥|£|pуб)/)[0];
+				if (!currency_symbol) currency_symbol = currency_symbol_from_string($(market).find(".market_listing_price").text().trim());
 
 				pur_totaler = function (p, i) {
 					if ($(p).find(".market_listing_price").length > 0) {
@@ -1757,7 +1835,7 @@ function add_active_total() {
 			var temp = $(this).text().trim().replace(/pуб./g,"").replace(/,(\d\d(?!\d))/g, ".$1").replace(/[^0-9(\.]+/g,"").split("(");
 			total += Number(temp[0]);
 			total_after += Number(temp[1]);
-			currency_symbol = $(this).text().trim().match(/(?:R\$|\$|€|¥|£|pуб)/)[0];
+			currency_symbol = currency_symbol_from_string($(this).text().trim());
 		});
 		
 		if (total != 0) {
@@ -1772,7 +1850,7 @@ function add_active_total() {
 		$(".my_listing_section:nth-child(2)").find(".market_listing_row").find(".market_listing_my_price:first").each(function() {
 			var qty = $(this).parent().find(".market_listing_my_price:last").text().trim();
 			total += Number($(this).text().trim().replace(/pуб./g,"").replace(/,(\d\d(?!\d))/g, ".$1").replace(/[^0-9\.]+/g,"")) * Number(qty);
-			currency_symbol = $(this).text().trim().match(/(?:R\$|\$|€|¥|£|pуб)/)[0];
+			currency_symbol = currency_symbol_from_string($(this).text().trim());
 		});
 		
 		if (total != 0) {
@@ -1790,9 +1868,8 @@ function account_total_spent() {
 			var currency_symbol;
 
 			// Get user's Steam currency
-			if ($(".accountBalance").text().trim().match(/(?:R\$|\$|€|¥|£|pуб)/)) {
-				currency_symbol = $(".accountBalance").text().trim().match(/(?:R\$|\$|€|¥|£|pуб)/)[0];
-			} else { return; }
+			currency_symbol = currency_symbol_from_string($(".accountBalance").text().trim());
+			if (currency_symbol == "") { return; }
 			local_currency = currency_symbol_to_type(currency_symbol);
 
 			function totaler(p, i) {
@@ -1800,7 +1877,7 @@ function account_total_spent() {
 					if ($(p).find(".transactionRowPrice")) {
 						var price = $(p).find(".transactionRowPrice").text().match(/(\d+[.,]?\d+)/);
 						if (price !== null) {
-							var currency = currency_symbol_to_type($(p).find(".transactionRowPrice").text().match(/(?:R\$|\$|€|¥|£|pуб)/)[0]);
+							var currency = currency_symbol_to_type(currency_symbol_from_string($(p).find(".transactionRowPrice").text()));
 							var tempprice = price[0].toString();
 							tempprice = tempprice.replace(/,(\d\d)$/, ".$1");
 							tempprice = tempprice.replace(/,/g, "");
@@ -1969,7 +2046,7 @@ function inventory_market_helper(response) {
 		} else {
 			if (hash_name && hash_name.match(/Booster Pack/g)) {
 				setTimeout(function() {
-					var currency_symbol = $("#iteminfo" + item + "_item_market_actions").text().match(/(?:R\$|\$|€|¥|£|pуб)/)[0];
+					var currency_symbol = currency_symbol_from_string($("#iteminfo" + item + "_item_market_actions").text());
 					var currency_type = currency_symbol_to_type(currency_symbol);
 					var api_url = "http://api.enhancedsteam.com/market_data/average_card_price/?appid=" + appid + "&cur=" + currency_type.toLowerCase();
 
@@ -3080,8 +3157,8 @@ function show_regional_pricing() {
 		var sale;
 		var sub;
 		var region_appended=0;
-		var available_currencies = ["USD","GBP","EUR","BRL","RUB","JPY"];
-		var conversion_rates = [1, 1, 1, 1, 1, 1];
+		var available_currencies = ["USD","GBP","EUR","BRL","RUB","JPY","NOK","IDR","MYR","PHP","SGD","THB","VND","KRW","TRY","UAH","MXN","CAD","AUD","NZD"];
+		var conversion_rates = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1];
 		var currency_symbol;
 		
 		function process_data(conversion_array) {
@@ -3314,9 +3391,8 @@ function show_regional_pricing() {
 		}
 
 		// Get user's Steam currency
-		if ($(".price:first, .discount_final_price:first").text().trim().match(/(?:R\$|\$|€|¥|£|pуб)/)) {
-			currency_symbol = $(".price:first, .discount_final_price:first").text().trim().match(/(?:R\$|\$|€|¥|£|pуб)/)[0];
-		} else { return; }
+		currency_symbol = currency_symbol_from_string($(".price:first, .discount_final_price:first").text().trim());
+		if (currency_symbol == "") { return; }
 		local_currency = currency_symbol_to_type(currency_symbol);
 
 		var complete = 0;
@@ -3786,7 +3862,7 @@ function add_gamecard_market_links(game) {
 	});
 
 	get_http("http://store.steampowered.com/app/220/", function(txt) {
-		var currency_symbol = $(txt).find(".price, .discount_final_price").text().trim().match(/(?:R\$|\$|€|¥|£|pуб)/)[0];
+		var currency_symbol = currency_symbol_from_string($(txt).find(".price, .discount_final_price").text().trim());
 		var currency_type = currency_symbol_to_type(currency_symbol);
 
 		get_http("http://api.enhancedsteam.com/market_data/card_prices/?appid=" + game, function(txt) {
@@ -3884,7 +3960,7 @@ function add_gamecard_market_links(game) {
 function add_badge_completion_cost() {
 	$(".profile_xp_block_right").after("<div id='es_cards_worth'></div>");
 	get_http("http://store.steampowered.com/app/220/", function(txt) {
-		var currency_symbol = $(txt).find(".price, .discount_final_price").text().trim().match(/(?:R\$|\$|€|¥|£|pуб)/)[0];
+		var currency_symbol = currency_symbol_from_string($(txt).find(".price, .discount_final_price").text().trim());
 		var currency_type = currency_symbol_to_type(currency_symbol);
 		var cur, total_worth = 0, count = 0;
 		$(".badge_row").each(function() {
