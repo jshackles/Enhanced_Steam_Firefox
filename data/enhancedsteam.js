@@ -10,6 +10,8 @@ var processed_requests = 0;
 var cookie = document.cookie;
 if (cookie.match(/language=([a-z]{3})/i)) {
 	language = cookie.match(/language=([a-z]{3})/i)[1];
+} else {
+	var language = "eng";
 }
 if (localized_strings[language] === undefined) { language = "eng"; }
 
