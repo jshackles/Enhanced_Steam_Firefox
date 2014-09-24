@@ -3317,7 +3317,10 @@ function show_regional_pricing() {
 								else if (sale){
 									$(".sale_page_purchase_item").eq(index).find(".game_purchase_action_bg").before(app_pricing_div);
 								} else {
-									$(".game_area_purchase_game").eq(index).after(app_pricing_div);
+									$(".game_area_purchase_game").eq(index).append(app_pricing_div);
+									$(app_pricing_div).css("top", $(".game_area_purchase_game").eq(index).outerHeight(true));
+									$(".game_area_purchase_game").css("z-index", "auto");
+									$(".game_purchase_action").css("z-index", "1");
 								}
 								sub_formatted["subid"]=subid_info[index]["subid"].toString();
 								formatted_regional_price_array.push(sub_formatted);
@@ -3369,9 +3372,9 @@ function show_regional_pricing() {
 									} else if(sale) {
 										$("#es_pricing_" + subid).css("right", $(app_package).find(".game_purchase_action").width() + 25 +"px");
 									} else if(sub) {
-										$("#es_pricing_" + subid).css("right", $(".rightcol").width() + $(app_package).find(".game_purchase_action").width() + 45 +"px");
+										$("#es_pricing_" + subid).css("right", $(app_package).find(".game_purchase_action").width() + 45 + "px");
 									} else {
-										$("#es_pricing_" + subid).css("right", $(".rightcol").width() + $(app_package).find(".game_purchase_action").width() + 35 +"px");
+										$("#es_pricing_" + subid).css("right", $(app_package).find(".game_purchase_action").width() + 20 + "px");
 									}
 									$("#es_pricing_" + subid).show();
 								})
