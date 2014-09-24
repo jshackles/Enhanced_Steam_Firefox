@@ -2047,22 +2047,30 @@ function inventory_market_helper(response) {
 
 // Add SteamDB links to pages
 function add_steamdb_links(appid, type) {
-    if (showdblinks === true) {
-    	switch (type) {
-    		case "gamehub":
-    			$(".apphub_OtherSiteInfo").append('<a href="http://steamdb.info/app/' + escapeHTML(appid) + '/" class="btn_darkblue_white_innerfade btn_medium" target="_blank"><span>Steam Database</span>');
-    			break;
-    		case "gamegroup":
-    			$('#rightActionBlock' ).append('<div class="actionItemIcon"><img src="' + self.options.img_steamdb + '" width="16" height="16" alt=""></div><a class="linkActionMinor" target="_blank" href="http://steamdb.info/app/' + escapeHTML(appid) + '/">' + escapeHTML(localized_strings[language].view_in) + ' Steam Database</a>');
-    			break;
-    		case "app":
-    			$('#demo_block').find('.block_content_inner').prepend('<div class="demo_area_button"><a class="game_area_wishlist_btn" target="_blank" href="http://steamdb.info/app/' + escapeHTML(appid) + '/" style="background-image:url(' + self.options.img_steamdb_store + ')">' + escapeHTML(localized_strings[language].view_in) + ' Steam Database</a></div>');
-    			break;
-    		case "sub":	
-    			$(".share").before('<a class="game_area_wishlist_btn" target="_blank" href="http://steamdb.info/sub/' + escapeHTML(appid) + '/" style="background-image:url(' + self.options.img_steamdb_store + ')">' + escapeHTML(localized_strings[language].view_in) + ' Steam Database</a>');
-    			break;
-    	}
-    }
+	if (showdblinks === true) {
+		switch (type) {
+			case "gamehub":
+				$(".apphub_OtherSiteInfo").append('<a class="btnv6_blue_hoverfade btn_medium steamdb_ico" target="_blank" href="http://steamdb.info/app/' + appid + '/"><span><i class="ico16" style="background-image:url(' + self.options.img_steamdb_store + ')"></i>&nbsp; Steam Database</span></a>');
+				break;
+			case "gamegroup":
+				$('#rightActionBlock' ).append('<div class="actionItemIcon"><img src="' + chrome.extension.getURL("img/steamdb.png") + '" width="16" height="16" alt=""></div><a class="linkActionMinor" target="_blank" href="http://steamdb.info/app/' + appid + '/">' + localized_strings[language].view_in + ' Steam Database</a>');
+				break;
+			case "app":
+				$('#demo_block').prepend('<a class="btnv6_blue_hoverfade btn_medium steamdb_ico" target="_blank" href="http://steamdb.info/app/' + appid + '/" style="display: block; margin-bottom: 6px;"><span><i class="ico16" style="background-image:url(' + self.options.img_steamdb_store + ')"></i>&nbsp; &nbsp;' + localized_strings[language].view_in + ' Steam Database</span></a>');
+				break;
+			case "sub":
+				$(".share").before('<a class="btnv6_blue_hoverfade btn_medium steamdb_ico" target="_blank" href="http://steamdb.info/app/' + appid + '/" style="display: block; margin-bottom: 6px;"><span><i class="ico16" style="background-image:url(' + self.options.img_steamdb_store + ')"></i>&nbsp; &nbsp;' + localized_strings[language].view_in + ' Steam Database</span></a>');
+				break;
+		}
+
+		$(".steamdb_ico").hover(
+			function() {
+				$(this).find("i").css("background-image", "url(" + self.options.img_steamdb_store_black + ")");
+			}, function() {
+				$(this).find("i").css("background-image", "url(" + self.options.img_steamdb_store + ")");
+			}
+		)
+	}
 }
 
 function add_familysharing_warning(appid) {
