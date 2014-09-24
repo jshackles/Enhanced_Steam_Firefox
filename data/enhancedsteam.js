@@ -2186,7 +2186,7 @@ function drm_warnings(type) {
 function add_carousel_descriptions() {
     if (showappdesc == true) {
     	if ($(".main_cluster_content").length > 0) {
-			var description_height_to_add = 62;
+			var description_height_to_add = 56;
 			$(".main_cluster_content").css("height", parseInt($(".main_cluster_content").css("height").replace("px", ""), 10) + description_height_to_add + "px");
 			
 			$.each($(".cluster_capsule"), function(i, _obj) {
@@ -2206,13 +2206,15 @@ function add_carousel_descriptions() {
 						if (desc) {
 							setValue(appid + "carousel", desc[1]);
 							setValue(appid + "carousel_time", parseInt(Date.now() / 1000, 10));
-							$desc.append(desc[1]);
+							var value_to_add = "<div class='main_cap_status' style='font-size: 12px; line-height: normal;'>" + desc[1] + "</div>";
+							$desc.append(value_to_add);
 						}
 					});
 				}
 				else {
 					var desc = getValue(appid + "carousel");
-					$desc.append(desc);
+					var value_to_add = "<div class='main_cap_status' style='font-size: 12px; line-height: normal;'>" + desc + "</div>";
+					$desc.append(value_to_add);					
 				}
 			});
 
