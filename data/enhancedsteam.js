@@ -3068,7 +3068,7 @@ function process_early_access() {
 function show_regional_pricing() {
 	if (showregionalprice) {
 		var api_url = "http://store.steampowered.com/api/packagedetails/";
-		var countries = ["US","GB","EU1","EU2","BR","RU","AU","JP"];
+		var countries = [];
 		var pricing_div = "<div class='es_regional_container'></div>";
 		var world = self.options.img_world;
 		var currency_deferred = [];
@@ -3081,6 +3081,16 @@ function show_regional_pricing() {
 		var available_currencies = ["USD","GBP","EUR","BRL","RUB","JPY","NOK","IDR","MYR","PHP","SGD","THB","VND","KRW","TRY","UAH","MXN","CAD","AUD","NZD"];
 		var conversion_rates = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1];
 		var currency_symbol;
+
+		if (region1 != "") countries.push(region1);
+		if (region2 != "") countries.push(region2);
+		if (region3 != "") countries.push(region3);
+		if (region4 != "") countries.push(region4);
+		if (region5 != "") countries.push(region5);
+		if (region6 != "") countries.push(region6);
+		if (region7 != "") countries.push(region7);
+		if (region8 != "") countries.push(region8);
+		if (region9 != "") countries.push(region9);
 		
 		function process_data(conversion_array) {
 			// Clean up conversion script DOM nodes
@@ -4026,7 +4036,16 @@ var highlight_owned_bool,
 	showallachievements,
 	showlanguagewarninglanguage,
 	showlanguagewarning,
-	showastats;
+	showastats,
+	region1,
+	region2,
+	region3,
+	region4,
+	region5,
+	region6,
+	region7,
+	region8,
+	region9;
 
 $(document).ready(function(){
 	// get preference values here   
@@ -4058,6 +4077,15 @@ $(document).ready(function(){
 		showlanguagewarninglanguage = data[22];
 		showlanguagewarning = data[23];
 		showastats = data[24];
+		region1 = data[27];
+		region2 = data[28];
+		region3 = data[29];
+		region4 = data[30];
+		region5 = data[31];
+		region6 = data[32];
+		region7 = data[33];
+		region8 = data[34];
+		region9 = data[35];
 
 		is_signed_in();
 
