@@ -673,7 +673,7 @@ function add_4pack_breakdown() {
 
 function send_age_verification() {
     document.getElementsByName("ageYear")[0].value="1955";
-	document.getElementsByClassName("btn_checkout_green")[0].click();
+	document.getElementsByClassName("btnv6_blue_hoverfade")[0].click();
 }
 
 function add_steamchart_info(appid) {
