@@ -299,6 +299,7 @@ function highlight_node(node, color) {
 
 	$node.css("backgroundImage", "none");
 	$node.css("backgroundColor", color);
+	$node.find("img").css("opacity", "1");
 
 	// Set text colour to not conflict with highlight.
 	if (node.classList.contains("tab_row")) $node.find(".tab_desc").css("color", "lightgrey");
@@ -2512,10 +2513,11 @@ function start_highlights_and_tags(){
 	$.when.apply($, [owned_promise, wishlist_promise]).done(function() {	
 		var selectors = [
 			"div.tab_row",				// Storefront rows
-			"div.dailydeal",			// Christmas deals; http://youtu.be/2gGopKNPqVk?t=52s
+			"div.dailydeal_ctn",
 			"div.wishlistRow",			// Wishlist rows
 			"a.game_area_dlc_row",			// DLC on app pages
 			"a.small_cap",				// Featured storefront items and "recommended" section on app pages
+			"a.home_smallcap",
 			"a.search_result_row",			// Search result rows
 			"a.match",				// Search suggestions rows
 			"a.cluster_capsule",			// Carousel items
@@ -2527,7 +2529,10 @@ function start_highlights_and_tags(){
 			"div.item",				// Sale pages / featured pages
 			"div.home_area_spotlight",		// Midweek and weekend deals
 			"div.browse_tag_game",			// Tagged games
-			"div.similar_grid_item"			// Items on the "Similarly tagged" pages
+			"div.similar_grid_item",			// Items on the "Similarly tagged" pages
+			"div.tab_item",			// Items on new homepage
+			"div.special",			// new homepage specials
+			"div.curated_app_item"	// curated app items!
 		];
 
 		var appids = [];
