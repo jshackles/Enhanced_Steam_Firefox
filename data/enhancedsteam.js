@@ -2938,7 +2938,7 @@ function fix_achievement_icon_size() {
 
 function add_astats_link(appid) {
 	if (showastats === true) {
-		$(".communitylink_achievement_inner a:last").after("<a class='linkbar' href='http://astats.astats.nl/astats/Steam_Game_Info.php?AppID=" + appid + "' target='_blank'><div class='rightblock'><img src='" + self.options.img_ico_astatsnl + "' style='margin-right: 11px;'></div>" + localized_strings[language].view_astats + "</a>")
+		$("#achievement_block").append("<div class='game_area_details_specs'><div class='icon'><img src='" + self.options.img_ico_astatsnl + "' style='margin-left: 4px'></div><a class='name' href='http://astats.astats.nl/astats/Steam_Game_Info.php?AppID=" + appid + "' target='_blank'><span>" + localized_strings[language].view_astats + "</span></a>");
 	}	
 }
 
