@@ -2105,39 +2105,41 @@ function drm_warnings(type) {
 }
 
 function add_carousel_descriptions() {
-    if (showappdesc == true) {
-    	if ($(".main_cluster_content").length > 0) {
-			var description_height_to_add = 56;
+	if (showappdesc == true) {
+		if ($(".main_cluster_content").length > 0) {
+			var description_height_to_add = 62;
 			$(".main_cluster_content").css("height", parseInt($(".main_cluster_content").css("height").replace("px", ""), 10) + description_height_to_add + "px");
-			
-			$.each($(".cluster_capsule"), function(i, _obj) {
-				var appid = get_appid(_obj.href),
-					$desc = $(_obj).find(".main_cap_content"),
-					$desc_content = $("<p></p>");
-				
-				$desc.css("height", parseInt($desc.css("height").replace("px", ""), 10) + description_height_to_add + "px");
-				$desc.parent().css("height", parseInt($desc.parent().css("height").replace("px", ""), 10) + description_height_to_add + "px");
 
-				var expire_time = parseInt(Date.now() / 1000, 10) - 1 * 60 * 60; // One hour ago
-				var last_updated = getValue(appid + "carousel_time") || expire_time - 1;
+			setTimeout(function() {
+				$(".cluster_capsule").each(function(i, _obj) {
+					var appid = get_appid(_obj.href),
+						$desc = $(_obj).find(".main_cap_content"),
+						$desc_content = $("<p></p>");
+					
+					$desc.css("height", parseInt($desc.css("height").replace("px", ""), 10) + description_height_to_add + "px");
+					$desc.parent().css("height", parseInt($desc.parent().css("height").replace("px", ""), 10) + description_height_to_add + "px");
 
-				if (last_updated < expire_time) {
-					get_http('http://store.steampowered.com/app/' + appid, function(txt) {
-						var desc = txt.match(/textarea name="w_text" placeholder="(.+)" maxlength/);
-						if (desc) {
-							setValue(appid + "carousel", desc[1]);
-							setValue(appid + "carousel_time", parseInt(Date.now() / 1000, 10));
-							var value_to_add = "<div class='main_cap_status' style='font-size: 12px; line-height: normal;'>" + desc[1] + "</div>";
-							$desc.append(value_to_add);
-						}
-					});
-				}
-				else {
-					var desc = getValue(appid + "carousel");
-					var value_to_add = "<div class='main_cap_status' style='font-size: 12px; line-height: normal;'>" + desc + "</div>";
-					$desc.append(value_to_add);					
-				}
-			});
+					var expire_time = parseInt(Date.now() / 1000, 10) - 1 * 60 * 60; // One hour ago
+					var last_updated = getValue(appid + "carousel_time") || expire_time - 1;
+
+					if (last_updated < expire_time) {
+						get_http('http://store.steampowered.com/app/' + appid, function(txt) {
+							var desc = txt.match(/textarea name="w_text" placeholder="(.+)" maxlength/);
+							if (desc) {
+								setValue(appid + "carousel", desc[1]);
+								setValue(appid + "carousel_time", parseInt(Date.now() / 1000, 10));
+								var value_to_add = "<div class='main_cap_status' style='font-size: 12px; line-height: normal;'>" + desc[1] + "</div>";
+								$desc.append(value_to_add);
+							}
+						});
+					}
+					else {
+						var desc = getValue(appid + "carousel");
+						var value_to_add = "<div class='main_cap_status' style='font-size: 12px; line-height: normal;'>" + desc + "</div>";
+						$desc.append(value_to_add);
+					}
+				});
+			}, 750);
 
 			// purge stale information from localStorage				
 			var i = 0, sKey;
@@ -2154,7 +2156,7 @@ function add_carousel_descriptions() {
 				}
 			}
 		}
-    }
+	}
 }
 
 var processing = false;
