@@ -1592,10 +1592,9 @@ function subscription_savings_check() {
 		comma;
 
 	// Load each apps info
-	$.each($(".tab_row"), function (i, node) {
+	$.each($(".tab_item"), function (i, node) {
 		var appid = get_appid(node.querySelector("a").href),
-			// Remove children, leave only text(price or only discounted price, if there are discounts)
-			price_container = $(node).find(".tab_price").children().remove().end().text().trim();
+			price_container = $(node).find(".discount_final_price").text().trim();
 
 		if (price_container !== "N/A" && price_container !== "Free") {
 			if (price_container) {
@@ -1622,8 +1621,8 @@ function subscription_savings_check() {
 		for (var i = 0; i < sub_apps.length; i++) {
 			if (!getValue(sub_apps[i] + "owned")) not_owned_games_prices += sub_app_prices[sub_apps[i]];
 		}
-		var $bundle_price = $(".discount_final_price");
-		if ($bundle_price.length === 0) $bundle_price = $(".game_purchase_price");
+		var $bundle_price = $(".game_purchase_price");
+		if ($bundle_price.length === 0) $bundle_price = $(".discount_final_price:first");
 
         var bundle_price = $($bundle_price).html();
         bundle_price = bundle_price.replace(/[^0-9\.]+/g,"");
