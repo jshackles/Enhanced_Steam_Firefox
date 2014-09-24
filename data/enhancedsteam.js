@@ -1057,14 +1057,6 @@ function appdata_on_wishlist() {
 	});
 }
 
-function add_advanced_cancel() {
-	$("#advanced_search_controls").find(".control:first").append("<div id='es_advanced_cancel' style='display: inline-block;'>(<a style='cursor: pointer;'>" + escapeHTML(localized_strings[language].cancel) + "</a>)</div>");
-	$("#es_advanced_cancel").click(function() {
-		$("#advanced_search_ctn").hide();
-		$("#advanced_search_toggle").show();
-	});
-}
-
 // If app has a coupon, display message
 function display_coupon_message(appid) {
 
@@ -4135,7 +4127,6 @@ $(document).ready(function(){
 							break;
 
 						case /^\/search\/.*/.test(window.location.pathname):
-							add_advanced_cancel();
 							endless_scrolling();
 							break;
 
