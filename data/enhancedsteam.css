@@ -695,7 +695,9 @@ input[type=checkbox].es_dlc_selection:checked + label {
 .es_drm_warning {
 	display: table; 
 	width: 100%; 
-	padding: 0px !important;
+	padding-top: 8px;
+	padding-bottom: 8px;
+	min-height: 38px;
 }
 .es_drm_warning span {
 	display: table-cell; 
