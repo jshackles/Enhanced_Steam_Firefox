@@ -253,14 +253,18 @@ function is_signed_in() {
 
 // colors the tile for owned games
 function highlight_owned(node) {
-	node.classList.add("es_highlight_owned");
-    highlight_node(node, ownedColor);  
+	if (highlight_owned_bool) {
+		node.classList.add("es_highlight_owned");
+    	highlight_node(node, ownedColor);
+    }
 }
 
 // colors the tile for wishlist games
 function highlight_wishlist(node) {
-	node.classList.add("es_highlight_wishlist");
-	highlight_node(node, wishlistColor);
+	if (highlight_wishlist_bool) {
+		node.classList.add("es_highlight_wishlist");
+		highlight_node(node, wishlistColor);
+	}
 }
 
 function hexToRgb(hex) {
@@ -2165,10 +2169,11 @@ function load_search_results () {
 			var html = $.parseHTML(txt);
 			html = $(html).find("a.search_result_row");
 			$(".search_result_row").last().after(html);
-			search_threshhold = search_threshhold + 1450; //each result is 58px height * 25 results per page = 1450
+			search_threshhold = search_threshhold + 1125; //each result is 45px height * 25 results per page = 1125
 			search_page = search_page + 1;
 			processing = false;
-			add_overlay();
+			process_early_access();
+			runInPageContext("GDynamicStore.DecorateDynamicItems( $('.search_result_row') )");
 		});
 	}
 }
@@ -3988,7 +3993,9 @@ function add_friends_that_play() {
 	});
 }
 
-var ownedColor,
+var highlight_owned_bool,
+	ownedColor,
+	highlight_wishlist_bool,
 	wishlistColor,
 	hideInstallSteam,
 	showDRM,
@@ -4017,7 +4024,9 @@ var ownedColor,
 $(document).ready(function(){
 	// get preference values here   
 	self.port.on("get-prefs", function(data) {
+		highlight_owned_bool = data[25];
 		ownedColor = data[0];
+		highlight_wishlist_bool = data[26];
 		wishlistColor = data[1];
 		hideInstallSteam = data[2];
 		showDRM = data[3];

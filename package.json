@@ -1,6 +1,12 @@
 {
     "license": "",
     "preferences": [
+        {   
+            "type": "bool",
+            "name": "highlight_owned",
+            "value": false,
+            "title": "Highlight games you own"
+        },
         {
             "type": "color",
             "name": "ownedColor",
@@ -12,6 +18,12 @@
             "type": "control",
             "name": "ownedColorDefault",
             "label": "Default"
+        },
+        {   
+            "type": "bool",
+            "name": "highlight_wishlist",
+            "value": false,
+            "title": "Highlight games on your wishlist"
         },
         {
             "type": "color",
