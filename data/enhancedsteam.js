@@ -705,7 +705,7 @@ function add_wallet_balance_to_header() {
 // Adds Enhanced Steam menu
 function add_enhanced_steam_options() {
     $dropdown = $("<span class=\"pulldown global_action_link\" id=\"enhanced_pulldown\">Enhanced Steam</span>");
-	$dropdown_options_container = $("<div class=\"popup_block\"><div class=\"popup_body popup_menu\"></div></div>");
+	$dropdown_options_container = $("<div class=\"popup_block_new\"><div class=\"popup_body popup_menu\" id=\"es_popup\"></div></div>");
 	$dropdown_options = $dropdown_options_container.find(".popup_body");
 	$dropdown_options.css("display", "none");
 
