@@ -2322,6 +2322,10 @@ function bind_ajax_content_highlighting() {
 					add_overlay();
 				}
 
+				if (node.classList && node.classList.contains("searchtag")) {
+					search_threshhold = 1125;
+				}
+
 				if ($(node).children('div')[0] && $(node).children('div')[0].classList.contains("blotter_day")) {
 					start_friend_activity_highlights();
 					add_overlay();
