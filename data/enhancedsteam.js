@@ -878,8 +878,11 @@ function add_custom_wallet_amount() {
 }
 
 function add_empty_cart_button() {
-	addtext = "<a id='es_empty_cart' class='btn_checkout_blue' style='float: left; margin-top: 14px;'><div class='leftcap'></div><div class='rightcap'></div>" + escapeHTML(localized_strings[language].empty_cart) + "</a>";
+	addtext = "<a id='es_empty_cart' class='es_empty btnv6_green_white_innerfade btn_medium continue' style='float: left;'><span>" + escapeHTML(localized_strings[language].empty_cart) + "</span></a>";
 	$(".checkout_content").prepend(addtext);
+	if ($(".cart_row").length === 0) {
+		$(".es_empty").addClass("btn_disabled");
+	}
 	$("#es_empty_cart").on("click", function() {
 		document.cookie = 'shoppingCartGID' + '=; expires=Thu, 01 Jan 1970 00:00:01 GMT; path=/';
 		location.href=location.href;
@@ -3352,7 +3355,7 @@ function show_regional_pricing() {
 								$(app_package).find(".discount_original_price").css({"position":"relative","float":"left"});
 								$(app_package).find(".discount_block").css({"padding-left":"25px","background-image":"url("+world+")","background-repeat":"no-repeat","background-position":"77px 8px","background-color":"#000000"});
 								$(app_package).find(".discount_prices").css({"background":"none"});
-								
+
 								$(app_package).find(".price, .discount_block")
 								.mouseover(function() {
 									var purchase_location = $(app_package).find("div.game_purchase_action_bg").offset();
