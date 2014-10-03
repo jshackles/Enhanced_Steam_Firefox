@@ -3162,6 +3162,7 @@ function customize_app_page() {
 		setValue("show_apppage_recommendedbycurators", true);
 		setValue("show_apppage_recentupdates", true);
 		setValue("show_apppage_reviews", true);
+		setValue("show_apppage_playfire", true);
 		setValue("show_apppage_about", true);
 		setValue("show_apppage_current", true);
 		setValue("show_apppage_sysreq", true);
@@ -3204,6 +3205,12 @@ function customize_app_page() {
 			html += "<div class='home_viewsettings_checkboxrow ellipsis' id='show_apppage_reviews'><div class='home_viewsettings_checkbox'></div><div class='home_viewsettings_label'>" + text + "</div></div>";
 			$("#game_area_reviews").hide();
 		}
+	}
+
+	// Rewards from Playfire
+	if (getValue("show_apppage_playfire")) { html += "<div class='home_viewsettings_checkboxrow ellipsis' id='show_apppage_playfire'><div class='home_viewsettings_checkbox checked'></div><div class='home_viewsettings_label'>" + localized_strings[language].playfire_heading + "</div></div>"; }
+	else {
+		html += "<div class='home_viewsettings_checkboxrow ellipsis' id='show_apppage_playfire'><div class='home_viewsettings_checkbox'></div><div class='home_viewsettings_label'>" + localized_strings[language].playfire_heading + "</div></div>";
 	}
 
 	// About this game
@@ -3331,6 +3338,23 @@ function customize_app_page() {
 			setValue("show_apppage_reviews", true);
 			$("#game_area_reviews").show();
 			$(this).find(".home_viewsettings_checkbox").addClass("checked");
+		}
+	});
+
+	$("#show_apppage_playfire").click(function() {
+		if (getValue("show_apppage_playfire")) {
+			setValue("show_apppage_playfire", false);
+			$("#es_playfire").hide();
+			$(this).find(".home_viewsettings_checkbox").removeClass("checked");
+		} else {
+			setValue("show_apppage_playfire", true);
+			$("#es_playfire").show();
+			$(this).find(".home_viewsettings_checkbox").addClass("checked");
+		}
+
+		if (getValue("show_apppage_playfire") && $("#es_playfire").length == 0) {
+			var appid = get_appid(window.location.host + window.location.pathname);
+			get_playfire_rewards(appid);
 		}
 	});
 
@@ -4345,35 +4369,41 @@ function add_friends_that_play() {
 }
 
 function get_playfire_rewards(appid) {
-	get_http("http://api.enhancedsteam.com/playfire/?appid=" + appid, function(data) {
-		if (data) {
-			var rewards = JSON.parse(data),
-				$rewards = $('<div id="es_playfire" class="game_area_rewards_section" />');
+	if (getValue("show_apppage_initialsetup") === null) {
+		setValue("show_apppage_playfire", true);
+	}
 
-			$rewards.html('<h2>' + localized_strings[language].playfire_heading + '</h2>');
-			$rewards.append('<ul>');
+	if (getValue("show_apppage_playfire")) {
+		get_http("http://api.enhancedsteam.com/playfire/?appid=" + appid, function(data) {
+			if (data) {
+				var rewards = JSON.parse(data),
+					$rewards = $('<div id="es_playfire" class="game_area_rewards_section" />');
 
-			$.each(rewards, function( index, value ) {
-				var reward = value,
-					$li = $('<li class="reward-detail-item">');
+				$rewards.html('<h2>' + localized_strings[language].playfire_heading + '</h2>');
+				$rewards.append('<ul>');
 
-				$li.append('<div class="reward-img"><img src="' + reward.icon + '" class="actual" alt="' + reward.name + '"></div>');
-				$li.append('<div class="left-side"><span class="title tooltip-truncate">' + reward.name + '</span><span class="text">' + reward.description + '</span><span class="validity">' + localized_strings[language].valid + ': ' + reward.starts + ' - ' + reward.ends + '</span></div>');
-				$li.append('<div class="game_purchase_action"><div class="game_purchase_action_bg"><div class="game_purchase_price price">' + reward.prize + '</div></div></div>');
-				
-				$rewards.find('ul').append($li);
-			});
+				$.each(rewards, function( index, value ) {
+					var reward = value,
+						$li = $('<li class="reward-detail-item">');
 
-			if (rewards.length > 0) {
-				$rewards.find('ul').after('<span class="chart-footer" style="margin-top: -15px;">Powered by <a href="https://www.playfire.com/" target="_blank">playfire.com</a></span>');
-				$('#game_area_description').closest('.game_page_autocollapse_ctn').before($rewards);
+					$li.append('<div class="reward-img"><img src="' + reward.icon + '" class="actual" alt="' + reward.name + '"></div>');
+					$li.append('<div class="left-side"><span class="title tooltip-truncate">' + reward.name + '</span><span class="text">' + reward.description + '</span><span class="validity">' + localized_strings[language].valid + ': ' + reward.starts + ' - ' + reward.ends + '</span></div>');
+					$li.append('<div class="game_purchase_action"><div class="game_purchase_action_bg"><div class="game_purchase_price price">' + reward.prize + '</div></div></div>');
+					
+					$rewards.find('ul').append($li);
+				});
+
+				if (rewards.length > 0) {
+					$rewards.find('ul').after('<span class="chart-footer" style="margin-top: -15px;">Powered by <a href="https://www.playfire.com/" target="_blank">playfire.com</a></span>');
+					$('#game_area_description').closest('.game_page_autocollapse_ctn').before($rewards);
+				} else {
+					$("#show_apppage_playfire").remove();
+				}
 			} else {
 				$("#show_apppage_playfire").remove();
 			}
-		} else {
-			$("#show_apppage_playfire").remove();
-		}
-	});
+		});
+	}
 }
 
 var highlight_owned_bool,
