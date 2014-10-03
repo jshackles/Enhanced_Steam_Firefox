@@ -1597,9 +1597,9 @@ function subscription_savings_check() {
 			price_container = $(node).find(".discount_final_price").text().trim();
 
 		if (price_container) {//why not check this first?
-			if (price_container.search(/([0-9]+(?:(?:\,|\.)[0-9]+)?)/) > -1) {//we are searching for prices only, not for some junk, aren't we?
-				comma = (price_container.match(/([0-9]+(?:(?:\,|\.)[0-9]+)?)/)[1].search(/[\.,]\d\d(?!\d)/));//the idea was to scrap everything except numbers and then divide by 100 if needed
-				itemPrice = parseFloat(price_container.match(/([0-9]+(?:(?:\,|\.)[0-9]+)?)/)[1].replace(/[\.,]/g,""));//here we scrap
+			if (price_container.search(/([0-9]+(?:(?:\,|\.| )[0-9]+)?)/) > -1) {//we are searching for prices only, not for some junk, aren't we?
+				comma = (price_container.match(/([0-9]+(?:(?:\,|\.| )[0-9]+)?)/)[1].search(/[\.,]\d\d(?!\d)/));//the idea was to scrap everything except numbers and then divide by 100 if needed
+				itemPrice = parseFloat(price_container.match(/([0-9]+(?:(?:\,|\.| )[0-9]+)?)/)[1].replace(/[\., ]/g,""));//here we scrap
 				if (comma > -1) { itemPrice = itemPrice / 100; }//here we divide
 				if (!currency_symbol) currency_symbol = currency_symbol_from_string(price_container);
 			} else {
