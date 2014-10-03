@@ -381,6 +381,9 @@ img.platform_small, .platform_img {
 #es_popular {
 	margin-left: 3px;
 }
+#es_allreleases {
+	margin-left: 3px;
+}
 .search_result_row .tags a {
 	text-decoration: none;
 	color: #FFF;
