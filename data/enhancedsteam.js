@@ -52,7 +52,7 @@ function formatCurrency(number, type) {
 			places = 2; symbol = "R$ "; thousand = "."; decimal = ","; right = false;
 			break;
 		case "EUR":
-			places = 2; symbol = "€"; thousand = ","; decimal = "."; right = true;
+			places = 2; symbol = "€"; thousand = " "; decimal = ","; right = true;
 			break;
 		case "GBP":
 			places = 2; symbol = "£"; thousand = ","; decimal = "."; right = false;
