@@ -3077,7 +3077,6 @@ function show_regional_pricing() {
 		var currency_deferred = [];
 		var local_country;
 		var local_currency;
-		var dailydeal;
 		var sale;
 		var sub;
 		var region_appended=0;
@@ -3102,10 +3101,6 @@ function show_regional_pricing() {
 			});
 			$("#es_helper").remove();
 
-			if (/^\/$/.test(window.location.pathname)) {
-				dailydeal = true;
-				pricing_div = $(pricing_div).addClass("es_regional_dailydeal");
-			}
 			if (/^\/sale\/.*/.test(window.location.pathname)) {
 				sale=true;
 				pricing_div = $(pricing_div).addClass("es_regional_sale");
@@ -3123,9 +3118,7 @@ function show_regional_pricing() {
 				countries.push(local_country);
 			}
 			var all_game_areas = $(".game_area_purchase_game").toArray();
-			if (dailydeal) {
-				all_game_areas = $(".dailydeal_content").toArray();
-			} else if(sale) {
+			if (sale) {
 				all_game_areas = $(".sale_page_purchase_item").toArray();
 			}
 			var subid_info = [];
@@ -3249,11 +3242,8 @@ function show_regional_pricing() {
 								}
 							});
 							$.when.apply(null,convert_deferred).done(function(){
-								if(dailydeal){
-									$(".dailydeal_content").eq(index).find(".game_purchase_action_bg").before(app_pricing_div);
-								}
-								else if (sale){
-									$(".sale_page_purchase_item").eq(index).find(".game_purchase_action_bg").before(app_pricing_div);
+								if (sale){
+									$(".sale_page_purchase_item").eq(index).find(".game_purchase_action_bg").after(app_pricing_div);
 								} else {
 									$(".game_area_purchase_game").eq(index).append(app_pricing_div);
 									$(app_pricing_div).css("top", $(".game_area_purchase_game").eq(index).outerHeight(true));
@@ -3306,10 +3296,8 @@ function show_regional_pricing() {
 								$(app_package).find(".price, .discount_block")
 								.mouseover(function() {
 									var purchase_location = $(app_package).find("div.game_purchase_action_bg").offset();
-									if(dailydeal) {
-										$("#es_pricing_" + subid).css("right", $(app_package).find(".game_purchase_action").width()+18 +"px");
-									} else if(sale) {
-										$("#es_pricing_" + subid).css("right", $(app_package).find(".game_purchase_action").width() + 25 +"px");
+									if (sale) {
+										$("#es_pricing_" + subid).css("right", $(app_package).find(".game_purchase_action").width() + 25 +"px").css("top", "138px");
 									} else if(sub) {
 										$("#es_pricing_" + subid).css("right", $(app_package).find(".game_purchase_action").width() + 25 + "px").css("top", "70px");
 									} else {
