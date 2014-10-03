@@ -1598,8 +1598,8 @@ function subscription_savings_check() {
 
 		if (price_container) {//why not check this first?
 			if (price_container.search(/([0-9]+(?:(?:\,|\.)[0-9]+)?)/) > -1) {//we are searching for prices only, not for some junk, aren't we?
-				comma = (price_container.match(/([0-9]+(?:(?:\,|\.)[0-9]+)?)/)[1].search(/[.,]\d\d(?!\d)/));//the idea is to scrap everything except numbers and then divide by 100 if needed
-				itemPrice = parseFloat(price_container.match(/([0-9]+(?:(?:\,|\.)[0-9]+)?)/)[1].replace(/.,/g,""));//here we scrap
+				comma = (price_container.match(/([0-9]+(?:(?:\,|\.)[0-9]+)?)/)[1].search(/[\.,]\d\d(?!\d)/));//the idea was to scrap everything except numbers and then divide by 100 if needed
+				itemPrice = parseFloat(price_container.match(/([0-9]+(?:(?:\,|\.)[0-9]+)?)/)[1].replace(/[\.,]/g,""));//here we scrap
 				if (comma > -1) { itemPrice = itemPrice / 100; }//here we divide
 				if (!currency_symbol) currency_symbol = currency_symbol_from_string(price_container);
 			} else {
@@ -1626,7 +1626,7 @@ function subscription_savings_check() {
 		if ($bundle_price.length === 0) $bundle_price = $(".game_area_purchase_game").find(".game_purchase_price");
 
         	var bundle_price = $($bundle_price).html();
-        	comma = (bundle_price.search(/[.,]\d\d(?!\d)/));//here we also check
+        	comma = (bundle_price.search(/[\.,]\d\d(?!\d)/));//here we also check
         	bundle_price = bundle_price.replace(/[^0-9]+/g,"");//scrap
         	bundle_price = parseFloat(bundle_price);
 		if (comma > -1) { bundle_price = bundle_price / 100; }//and divide
