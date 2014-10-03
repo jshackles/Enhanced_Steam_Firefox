@@ -1596,16 +1596,17 @@ function subscription_savings_check() {
 		var appid = get_appid(node.querySelector("a").href),
 			price_container = $(node).find(".discount_final_price").text().trim();
 
-		if (price_container !== "N/A" && price_container !== "Free") {
-			if (price_container) {
-				itemPrice = parseFloat(price_container.match(/([0-9]+(?:(?:\,|\.)[0-9]+)?)/)[1]);
+		if (price_container) {//why not check this first?
+			if (price_container.search(/([0-9]+(?:(?:\,|\.)[0-9]+)?)/) > -1) {//we are searching for prices only, not for some junk, aren't we?
+				comma = (price_container.match(/([0-9]+(?:(?:\,|\.)[0-9]+)?)/)[1].search(/[.,]\d\d(?!\d)/));//the idea is to scrap everything except numbers and then divide by 100 if needed
+				itemPrice = parseFloat(price_container.match(/([0-9]+(?:(?:\,|\.)[0-9]+)?)/)[1].replace(/.,/g,""));//here we scrap
+				if (comma > -1) { itemPrice = itemPrice / 100; }//here we divide
 				if (!currency_symbol) currency_symbol = currency_symbol_from_string(price_container);
-				if (!comma) comma = (price_container.search(/,\d\d(?!\d)/));
 			} else {
-				itemPrice = 0;
+				itemPrice = 0;//junk
 			}
 		} else {
-			itemPrice = 0;
+			itemPrice = 0;//empty
 		}
 
 		// Batch app ids, checking for existing promises, then do this.
@@ -1619,17 +1620,18 @@ function subscription_savings_check() {
 	$.when.apply(null, appid_info_deferreds).done(function() {
 		currency_type = currency_symbol_to_type(currency_symbol);
 		for (var i = 0; i < sub_apps.length; i++) {
-			if (!getValue(sub_apps[i] + "owned")) not_owned_games_prices += sub_app_prices[sub_apps[i]];
+			if (!getValue(sub_apps[i] + "owned")) not_owned_games_prices += sub_app_prices[sub_apps[i]];//a bit buggy during a random "free weekend"
 		}
 		var $bundle_price = $(".game_area_purchase_game").find(".discount_final_price:last");
 		if ($bundle_price.length === 0) $bundle_price = $(".game_area_purchase_game").find(".game_purchase_price");
 
-        var bundle_price = $($bundle_price).html();
-        bundle_price = bundle_price.replace(/[^0-9\.]+/g,"");
-        bundle_price = parseFloat(bundle_price);
-		if (comma > -1) { bundle_price = bundle_price / 100; }                
+        	var bundle_price = $($bundle_price).html();
+        	comma = (bundle_price.search(/[.,]\d\d(?!\d)/));//here we also check
+        	bundle_price = bundle_price.replace(/[^0-9]+/g,"");//scrap
+        	bundle_price = parseFloat(bundle_price);
+		if (comma > -1) { bundle_price = bundle_price / 100; }//and divide
 		var corrected_price = not_owned_games_prices - bundle_price;
-		
+
 		var $message = $('<div class="savings">' + formatCurrency(corrected_price, currency_type) + '</div>');
 		if (corrected_price < 0) $message[0].style.color = "red";
 		$('.savings').replaceWith($message);
