@@ -679,16 +679,16 @@ function add_4pack_breakdown() {
 }
 
 function send_age_verification() {
-    document.getElementsByName("ageYear")[0].value="1955";
+	document.getElementsByName("ageYear")[0].value="1955";
 	document.getElementsByClassName("btnv6_blue_hoverfade")[0].click();
 }
 
 function add_steamchart_info(appid) {
-    if (getValue("show_apppage_initialsetup") === null) {
+	if (getValue("show_apppage_initialsetup") === null) {
 		setValue("show_apppage_current", true);
 	}
 
-    if ($(".game_area_dlc_bubble").length == 0) {
+	if ($(".game_area_dlc_bubble").length == 0) {
 		if (showsteamchartinfo === true && getValue("show_apppage_current")) {
 			get_http("http://api.enhancedsteam.com/charts/?appid=" + appid, function (txt) {
 				if (txt.length > 0) {
@@ -3419,6 +3419,286 @@ function customize_app_page() {
 	});
 }
 
+function customize_home_page() {
+	$(".home_page_content:first").append("<div id='es_customize_btn' class='home_actions_ctn' style='margin-bottom: 4px;'><div class='home_btn home_customize_btn' style='z-index: 13;'>" + localized_strings[language].customize + "</div></div><div style='clear: both;'></div>");
+	$(".home_page_body_ctn:first").css("min-height", "400px");
+	$(".has_takeover").css("min-height", "600px");
+
+	if (getValue("show_homepage_initialsetup") === null) {
+		setValue("show_homepage_carousel", true);
+		setValue("show_homepage_spotlight", true);
+		setValue("show_homepage_newsteam", true);
+		setValue("show_homepage_updated", true);
+		setValue("show_homepage_recommended", true);
+		setValue("show_homepage_explore", true);
+		setValue("show_homepage_curators", true);
+		setValue("show_homepage_tabs", true);
+		setValue("show_homepage_specials", true);
+		setValue("show_homepage_sidebar", true);
+		setValue("show_homepage_initialsetup", true);
+	}
+
+	var html = "<div class='home_viewsettings_popup' style='display: none; z-index: 12; right: 18px;'><div class='home_viewsettings_instructions' style='font-size: 12px;'>" + localized_strings[language].apppage_sections + "</div>"
+
+	// Carousel
+	if ($("#home_main_cluster").length > 0) {
+		text = localized_strings[language].homepage_carousel;
+		if (getValue("show_homepage_carousel")) { html += "<div class='home_viewsettings_checkboxrow ellipsis' id='show_homepage_carousel'><div class='home_viewsettings_checkbox checked'></div><div class='home_viewsettings_label'>" + text + "</div></div>"; }
+		else {
+			html += "<div class='home_viewsettings_checkboxrow ellipsis' id='show_homepage_carousel'><div class='home_viewsettings_checkbox'></div><div class='home_viewsettings_label'>" + text + "</div></div>";
+			$("#home_main_cluster").parent().hide();
+		}
+	}
+
+	// Spotlight
+	if ($("#spotlight_scroll").length > 0) {
+		text = localized_strings[language].homepage_spotlight;
+		if (getValue("show_homepage_spotlight")) { html += "<div class='home_viewsettings_checkboxrow ellipsis' id='show_homepage_spotlight'><div class='home_viewsettings_checkbox checked'></div><div class='home_viewsettings_label'>" + text + "</div></div>"; }
+		else {
+			html += "<div class='home_viewsettings_checkboxrow ellipsis' id='show_homepage_spotlight'><div class='home_viewsettings_checkbox'></div><div class='home_viewsettings_label'>" + text + "</div></div>";
+			$("#spotlight_scroll").parent().parent().hide();
+		}
+	}
+
+	// New on Steam
+	if ($(".new_on_steam").length > 0) {
+		text = $(".new_on_steam").find("a:first").text();
+		if (getValue("show_homepage_newsteam")) { html += "<div class='home_viewsettings_checkboxrow ellipsis' id='show_homepage_newsteam'><div class='home_viewsettings_checkbox checked'></div><div class='home_viewsettings_label'>" + text + "</div></div>"; }
+		else {
+			html += "<div class='home_viewsettings_checkboxrow ellipsis' id='show_homepage_newsteam'><div class='home_viewsettings_checkbox'></div><div class='home_viewsettings_label'>" + text + "</div></div>";
+			$(".new_on_steam").hide();
+		}
+	}
+
+	// Recently Updated
+	if ($(".recently_updated").length > 0) {
+		text = $(".recently_updated").find("a:first").text();
+		if (getValue("show_homepage_updated")) { html += "<div class='home_viewsettings_checkboxrow ellipsis' id='show_homepage_updated'><div class='home_viewsettings_checkbox checked'></div><div class='home_viewsettings_label'>" + text + "</div></div>"; }
+		else {
+			html += "<div class='home_viewsettings_checkboxrow ellipsis' id='show_homepage_updated'><div class='home_viewsettings_checkbox'></div><div class='home_viewsettings_label'>" + text + "</div></div>";
+			$(".recently_updated").hide();
+		}
+	}
+
+	// Recommended For You
+	if ($(".recommended").length > 0) {
+		text = $(".recommended").find("h2:first").text();
+		if (getValue("show_homepage_recommended")) { html += "<div class='home_viewsettings_checkboxrow ellipsis' id='show_homepage_recommended'><div class='home_viewsettings_checkbox checked'></div><div class='home_viewsettings_label'>" + text + "</div></div>"; }
+		else {
+			html += "<div class='home_viewsettings_checkboxrow ellipsis' id='show_homepage_recommended'><div class='home_viewsettings_checkbox'></div><div class='home_viewsettings_label'>" + text + "</div></div>";
+			$(".recommended").hide();
+		}
+	}
+
+	// Explore Your Queue
+	if ($(".discovery_queue_ctn").length > 0) {
+		text = $(".discovery_queue_ctn").find("a:first").text();
+		if (getValue("show_homepage_explore")) { html += "<div class='home_viewsettings_checkboxrow ellipsis' id='show_homepage_explore'><div class='home_viewsettings_checkbox checked'></div><div class='home_viewsettings_label'>" + text + "</div></div>"; }
+		else {
+			html += "<div class='home_viewsettings_checkboxrow ellipsis' id='show_homepage_explore'><div class='home_viewsettings_checkbox'></div><div class='home_viewsettings_label'>" + text + "</div></div>";
+			$(".discovery_queue_ctn").hide();
+			$("#content_callout").hide();
+			$("#content_loading").hide();
+		}
+	}
+
+	// Steam Curators
+	if ($(".apps_recommended_by_curators_ctn").length > 0) {
+		text = $(".apps_recommended_by_curators_ctn").find("a:first").text();
+		if (getValue("show_homepage_curators")) { html += "<div class='home_viewsettings_checkboxrow ellipsis' id='show_homepage_curators'><div class='home_viewsettings_checkbox checked'></div><div class='home_viewsettings_label'>" + text + "</div></div>"; }
+		else {
+			html += "<div class='home_viewsettings_checkboxrow ellipsis' id='show_homepage_curators'><div class='home_viewsettings_checkbox'></div><div class='home_viewsettings_label'>" + text + "</div></div>";
+			$(".apps_recommended_by_curators_ctn").hide();
+		}
+	}
+
+	// Homepage Tabs
+	if ($(".home_tab_col").length > 0) {
+		text = localized_strings[language].homepage_tabs;
+		if (getValue("show_homepage_tabs")) { html += "<div class='home_viewsettings_checkboxrow ellipsis' id='show_homepage_tabs'><div class='home_viewsettings_checkbox checked'></div><div class='home_viewsettings_label'>" + text + "</div></div>"; }
+		else {
+			html += "<div class='home_viewsettings_checkboxrow ellipsis' id='show_homepage_tabs'><div class='home_viewsettings_checkbox'></div><div class='home_viewsettings_label'>" + text + "</div></div>";
+			$(".home_tab_col").hide();
+		}
+	}
+
+	// Specials
+	if ($(".dailydeal_ctn").length > 0) {
+		text = $(".dailydeal_ctn").parent().find("h2:first").text();
+		if (getValue("show_homepage_specials")) { html += "<div class='home_viewsettings_checkboxrow ellipsis' id='show_homepage_specials'><div class='home_viewsettings_checkbox checked'></div><div class='home_viewsettings_label'>" + text + "</div></div>"; }
+		else {
+			html += "<div class='home_viewsettings_checkboxrow ellipsis' id='show_homepage_specials'><div class='home_viewsettings_checkbox'></div><div class='home_viewsettings_label'>" + text + "</div></div>";
+			$(".dailydeal_ctn").parent().hide();
+		}
+	}
+
+	// Sidebar
+	if ($(".home_page_gutter").length > 0) {
+		text = localized_strings[language].homepage_sidebar;
+		if (getValue("show_homepage_sidebar")) { html += "<div class='home_viewsettings_checkboxrow ellipsis' id='show_homepage_sidebar'><div class='home_viewsettings_checkbox checked'></div><div class='home_viewsettings_label'>" + text + "</div></div>"; }
+		else {
+			html += "<div class='home_viewsettings_checkboxrow ellipsis' id='show_homepage_sidebar'><div class='home_viewsettings_checkbox'></div><div class='home_viewsettings_label'>" + text + "</div></div>";
+			$(".home_page_gutter").hide();
+			$(".home_page_body_ctn").css("margin-left", "0px");
+			$(".home_page_content").css("padding-left", "0px");
+		}
+	}
+
+	$("#es_customize_btn").append(html);
+
+	$("#es_customize_btn").find(".home_customize_btn").click(function() {
+		if ($(this).hasClass("active")) {
+			$(this).removeClass("active");
+		} else {
+			$(this).addClass("active");
+		}
+
+		if ($(this).parent().find(".home_viewsettings_popup").is(":visible")) {
+			$(this).parent().find(".home_viewsettings_popup").hide();
+		} else {
+			$(this).parent().find(".home_viewsettings_popup").show();
+		}
+	});
+
+	$('body').bind('click', function(e) {
+		if($(e.target).closest("#es_customize_btn").length == 0) {
+			if ($("#es_customize_btn").find(".home_customize_btn").hasClass("active")) {
+				$("#es_customize_btn").find(".home_customize_btn").removeClass("active");
+			}
+			if ($("#es_customize_btn").find(".home_viewsettings_popup").is(":visible")) {
+				$("#es_customize_btn").find(".home_viewsettings_popup").hide();
+			}
+		}
+	});
+
+	$("#show_homepage_carousel").click(function() {
+		if (getValue("show_homepage_carousel")) {
+			setValue("show_homepage_carousel", false);
+			$("#home_main_cluster").parent().hide();
+			$(this).find(".home_viewsettings_checkbox").removeClass("checked");
+		} else {
+			setValue("show_homepage_carousel", true);
+			$("#home_main_cluster").parent().show();
+			$(this).find(".home_viewsettings_checkbox").addClass("checked");
+		}
+	});
+
+	$("#show_homepage_spotlight").click(function() {
+		if (getValue("show_homepage_spotlight")) {
+			setValue("show_homepage_spotlight", false);
+			$("#spotlight_scroll").parent().parent().hide();
+			$(this).find(".home_viewsettings_checkbox").removeClass("checked");
+		} else {
+			setValue("show_homepage_spotlight", true);
+			$("#spotlight_scroll").parent().parent().show();
+			$(this).find(".home_viewsettings_checkbox").addClass("checked");
+		}
+	});
+
+	$("#show_homepage_newsteam").click(function() {
+		if (getValue("show_homepage_newsteam")) {
+			setValue("show_homepage_newsteam", false);
+			$(".new_on_steam").hide();
+			$(this).find(".home_viewsettings_checkbox").removeClass("checked");
+		} else {
+			setValue("show_homepage_newsteam", true);
+			$(".new_on_steam").show();
+			$(this).find(".home_viewsettings_checkbox").addClass("checked");
+		}
+	});
+
+	$("#show_homepage_updated").click(function() {
+		if (getValue("show_homepage_updated")) {
+			setValue("show_homepage_updated", false);
+			$(".recently_updated").hide();
+			$(this).find(".home_viewsettings_checkbox").removeClass("checked");
+		} else {
+			setValue("show_homepage_updated", true);
+			$(".recently_updated").show();
+			$(this).find(".home_viewsettings_checkbox").addClass("checked");
+		}
+	});
+
+	$("#show_homepage_recommended").click(function() {
+		if (getValue("show_homepage_recommended")) {
+			setValue("show_homepage_recommended", false);
+			$(".recommended").hide();
+			$(this).find(".home_viewsettings_checkbox").removeClass("checked");
+		} else {
+			setValue("show_homepage_recommended", true);
+			$(".recommended").show();
+			$(this).find(".home_viewsettings_checkbox").addClass("checked");
+		}
+	});
+
+	$("#show_homepage_explore").click(function() {
+		if (getValue("show_homepage_explore")) {
+			setValue("show_homepage_explore", false);
+			$(".discovery_queue_ctn").hide();
+			$("#content_callout").hide();
+			$("#content_loading").hide();
+			$(this).find(".home_viewsettings_checkbox").removeClass("checked");
+		} else {
+			setValue("show_homepage_explore", true);
+			$(".discovery_queue_ctn").show();
+			$("#content_callout").show();
+			$("#content_loading").show();
+			$(this).find(".home_viewsettings_checkbox").addClass("checked");
+		}
+	});
+
+	$("#show_homepage_curators").click(function() {
+		if (getValue("show_homepage_curators")) {
+			setValue("show_homepage_curators", false);
+			$(".apps_recommended_by_curators_ctn").hide();
+			$(this).find(".home_viewsettings_checkbox").removeClass("checked");
+		} else {
+			setValue("show_homepage_curators", true);
+			$(".apps_recommended_by_curators_ctn").show();
+			$(this).find(".home_viewsettings_checkbox").addClass("checked");
+		}
+	});
+
+	$("#show_homepage_tabs").click(function() {
+		if (getValue("show_homepage_tabs")) {
+			setValue("show_homepage_tabs", false);
+			$(".home_tab_col").hide();
+			$(this).find(".home_viewsettings_checkbox").removeClass("checked");
+		} else {
+			setValue("show_homepage_tabs", true);
+			$(".home_tab_col").show();
+			$(this).find(".home_viewsettings_checkbox").addClass("checked");
+		}
+	});
+
+	$("#show_homepage_specials").click(function() {
+		if (getValue("show_homepage_specials")) {
+			setValue("show_homepage_specials", false);
+			$(".dailydeal_ctn").parent().hide();
+			$(this).find(".home_viewsettings_checkbox").removeClass("checked");
+		} else {
+			setValue("show_homepage_specials", true);
+			$(".dailydeal_ctn").parent().show();
+			$(this).find(".home_viewsettings_checkbox").addClass("checked");
+		}
+	});
+
+	$("#show_homepage_sidebar").click(function() {
+		if (getValue("show_homepage_sidebar")) {
+			setValue("show_homepage_sidebar", false);
+			$(".home_page_gutter").hide();
+			$(".home_page_body_ctn").css("margin-left", "0px");
+			$(".home_page_content").css("padding-left", "0px");
+			$(this).find(".home_viewsettings_checkbox").removeClass("checked");
+		} else {
+			setValue("show_homepage_sidebar", true);
+			$(".home_page_gutter").show();
+			$(".home_page_content").css("padding-left", "204px");
+			$(this).find(".home_viewsettings_checkbox").addClass("checked");
+		}
+	});
+}
+
 function totalsize() {
     var html = $("html").html();
 	var txt = html.match(/var rgGames = (.+);/);
@@ -4240,6 +4520,7 @@ $(document).ready(function(){
 							add_allreleases_tab();
 							add_carousel_descriptions();
 							show_regional_pricing();
+							window.setTimeout(function() { customize_home_page(); }, 1000);
 							break;
 					}
 
