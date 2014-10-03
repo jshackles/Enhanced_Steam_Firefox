@@ -1,5 +1,6 @@
 v6.8
 -----
++ Completely re-wrote how Enhanced Steam handles highlighting to be faster and more accurate
 : Fixed a bug that caused coupon discounts to not display properly on app pages
 : Fixed the placement of regional price comparison box on sale pages
 : Fixed the spacing of the "Popular" tab on the home page
