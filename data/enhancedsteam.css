@@ -378,6 +378,9 @@ img.platform_small, .platform_img {
 	margin:9px 0 0 5px;
 	direction:rtl;
 }
+#es_popular {
+	margin-left: 3px;
+}
 .search_result_row .tags a {
 	text-decoration: none;
 	color: #FFF;
