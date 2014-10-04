@@ -3643,6 +3643,7 @@ function customize_home_page() {
 			$(".home_page_gutter").hide();
 			$(".home_page_body_ctn").css("margin-left", "0px");
 			$(".home_page_content").css("padding-left", "0px");
+			$(".has_takeover").find(".page_background_holder").css("margin-left", "-202px");
 		}
 	}
 
@@ -3791,11 +3792,13 @@ function customize_home_page() {
 			$(".home_page_gutter").hide();
 			$(".home_page_body_ctn").css("margin-left", "0px");
 			$(".home_page_content").css("padding-left", "0px");
+			$(".has_takeover").find(".page_background_holder").css("margin-left", "-202px");
 			$(this).find(".home_viewsettings_checkbox").removeClass("checked");
 		} else {
 			setValue("show_homepage_sidebar", true);
 			$(".home_page_gutter").show();
 			$(".home_page_content").css("padding-left", "204px");
+			$(".has_takeover").find(".page_background_holder").css("margin-left", "0px");
 			$(this).find(".home_viewsettings_checkbox").addClass("checked");
 		}
 	});
