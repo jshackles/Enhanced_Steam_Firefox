@@ -171,7 +171,9 @@ function escapeHTML(str) {
 }
 
 function getCookie(name) {
-    return decodeURIComponent(document.cookie.replace(new RegExp("(?:(?:^|.*;)\\s*" + encodeURIComponent(name).replace(/[\-\.\+\*]/g, "\\$&") + "\\s*\\=\\s*([^;]*).*$)|^.*$"), "$1")) || null;
+	var re = new RegExp(name + "=([^;]+)");
+	var value = re.exec(document.cookie);
+	return (value != null) ? unescape(value[1]) : null;
 }
 
 function get_http(url, callback) {
@@ -180,17 +182,19 @@ function get_http(url, callback) {
 	$("#es_progress").removeClass("complete");
 	var http = new XMLHttpRequest();
 	http.onreadystatechange = function () {
-		if (this.readyState) {
-			if (this.readyState == 4 && this.status == 200) {
-				processed_requests += 1;
-				var complete_percentage = (processed_requests / total_requests) * 100;
-				$("#es_progress").val(complete_percentage);
-				if (complete_percentage == 100) { $("#es_progress").addClass("complete").attr("title", localized_strings[language].ready.ready); }
-				callback(this.responseText);
-			}
+		if (this) {
+			if (this.readyState) {
+				if (this.readyState == 4 && this.status == 200) {
+					processed_requests += 1;
+					var complete_percentage = (processed_requests / total_requests) * 100;
+					$("#es_progress").val(complete_percentage);
+					if (complete_percentage == 100) { $("#es_progress").addClass("complete").attr("title", localized_strings[language].ready.ready); }
+					callback(this.responseText);
+				}
 
-			if (this.readyState == 4 && this.status != 200) {
-				$("#es_progress").val(100).addClass("error").attr({"title":localized_strings[language].ready.errormsg, "max":1});
+				if (this.readyState == 4 && this.status != 200) {
+					$("#es_progress").val(100).addClass("error").attr({"title":localized_strings[language].ready.errormsg, "max":1});
+				}
 			}
 		}
 	};
@@ -1145,15 +1149,12 @@ function show_pricing_history(appid, type) {
         storestring = "steam,amazonus,impulse,gamersgate,greenmangaming,gamefly,origin,uplay,indiegalastore,gametap,gamesplanet,getgames,desura,gog,dotemu,fireflower,gameolith,humblewidgets,adventureshop,nuuvem,shinyloot,dlgamer,humblestore,indiegamestand,squenix,bundlestars";
 
     	// Get country code from Steam cookie
-		var cookies = document.cookie;
-		var matched = cookies.match(/fakeCC=([a-z]{2})/i);
 		var cc = "us";
-		if (matched != null && matched.length == 2) {
-			cc = matched[1];
-		} else {
-			matched = cookies.match(/steamCC(?:_\d+){4}=([a-z]{2})/i);
-			if (matched != null && matched.length == 2) {
-				cc = matched[1];
+		if (getCookie("fakeCC") != null || getCookie("LKGBillingCountry") != null) {
+			if (getCookie("fakeCC")){
+				cc = getCookie("fakeCC").toLowerCase();
+			} else {
+				cc = getCookie("LKGBillingCountry").toLowerCase();
 			}
 		}
     	
@@ -2630,7 +2631,7 @@ function start_highlights_and_tags(){
 					highlight_wishlist(node_to_highlight);
 				}
 
-				var appid = get_appid(node.href || $(node).find("a")[0].href) || get_appid_wishlist(node.id);
+				var appid = get_appid(node.href || $(node).find("a").attr("href")) || get_appid_wishlist(node.id);
 			});
 		});
 	}, 500);
@@ -3081,10 +3082,12 @@ function show_regional_pricing() {
 				sub=true;
 				pricing_div = $(pricing_div).addClass("es_regional_sub");
 			}
-			if(getCookie("fakeCC")){
-				local_country = getCookie("fakeCC").toLowerCase();
-			} else {
-				local_country = getCookie("LKGBillingCountry").toLowerCase();
+			if (getCookie("fakeCC") != null || getCookie("LKGBillingCountry") != null) {
+				if (getCookie("fakeCC")){
+					local_country = getCookie("fakeCC").toLowerCase();
+				} else {
+					local_country = getCookie("LKGBillingCountry").toLowerCase();
+				}
 			}
 			if(countries.indexOf(local_country)===-1){
 				countries.push(local_country);
