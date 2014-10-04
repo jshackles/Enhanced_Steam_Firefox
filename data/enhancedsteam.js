@@ -3632,6 +3632,7 @@ function customize_home_page() {
 		setValue("show_homepage_curators", true);
 		setValue("show_homepage_tabs", true);
 		setValue("show_homepage_specials", true);
+		setValue("show_homepage_under10", true);
 		setValue("show_homepage_sidebar", true);
 		setValue("show_homepage_initialsetup", true);
 	}
@@ -3721,13 +3722,27 @@ function customize_home_page() {
 		}
 	}
 
+	var specials_section_parent = $(".dailydeal_ctn").parent();
+	specials_section_parent.parent().find("h2:first, .dailydeal_ctn, .home_specials_grid:first, .home_block_footer:first, .home_specials_spacer").wrapAll("<div id='es_specials_section' />");
+	specials_section_parent.parent().find("h2:last, .home_specials_grid:last, .home_block_footer:last").wrapAll("<div id='es_under_ten_section' />");
+
 	// Specials
-	if ($(".dailydeal_ctn").length > 0) {
-		text = $(".dailydeal_ctn").parent().find("h2:first").text();
+	if ($("#es_specials_section").length > 0) {
+		text = $("#es_specials_section h2").text();
 		if (getValue("show_homepage_specials")) { html += "<div class='home_viewsettings_checkboxrow ellipsis' id='show_homepage_specials'><div class='home_viewsettings_checkbox checked'></div><div class='home_viewsettings_label'>" + text + "</div></div>"; }
 		else {
 			html += "<div class='home_viewsettings_checkboxrow ellipsis' id='show_homepage_specials'><div class='home_viewsettings_checkbox'></div><div class='home_viewsettings_label'>" + text + "</div></div>";
-			$(".dailydeal_ctn").parent().hide();
+			$("#es_specials_section").hide();
+		}
+	}
+
+	// Under 10
+	if ($("#es_under_ten_section").length > 0) {
+		text = $("#es_under_ten_section h2").text();
+		if (getValue("show_homepage_under10")) { html += "<div class='home_viewsettings_checkboxrow ellipsis' id='show_homepage_under10'><div class='home_viewsettings_checkbox checked'></div><div class='home_viewsettings_label'>" + text + "</div></div>"; }
+		else {
+			html += "<div class='home_viewsettings_checkboxrow ellipsis' id='show_homepage_under10'><div class='home_viewsettings_checkbox'></div><div class='home_viewsettings_label'>" + text + "</div></div>";
+			$("#es_under_ten_section").hide();
 		}
 	}
 
@@ -3881,6 +3896,18 @@ function customize_home_page() {
 		} else {
 			setValue("show_homepage_specials", true);
 			$(".dailydeal_ctn").parent().show();
+			$(this).find(".home_viewsettings_checkbox").addClass("checked");
+		}
+	});
+
+	$("#show_homepage_under10").click(function() {
+		if (getValue("show_homepage_under10")) {
+			setValue("show_homepage_under10", false);
+			$("#es_under_ten_section").hide();
+			$(this).find(".home_viewsettings_checkbox").removeClass("checked");
+		} else {
+			setValue("show_homepage_under10", true);
+			$("#es_under_ten_section").show();
 			$(this).find(".home_viewsettings_checkbox").addClass("checked");
 		}
 	});
