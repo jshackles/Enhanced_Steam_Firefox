@@ -43,7 +43,7 @@ function startsWith(string, search) {
 
 var currency_format_info = {
 	"BRL": { places: 2, hidePlacesWhenZero: false, symbolFormat: "R$ ", thousand: ".", decimal: ",", right: false },
-	"EUR": { places: 2, hidePlacesWhenZero: false, symbolFormat: "€", thousand: ",", decimal: ".", right: true },
+	"EUR": { places: 2, hidePlacesWhenZero: false, symbolFormat: "€", thousand: " ", decimal: ",", right: true },//because steam formats this way
 	"GBP": { places: 2, hidePlacesWhenZero: false, symbolFormat: "£", thousand: ",", decimal: ".", right: false },
 	"RUB": { places: 2, hidePlacesWhenZero: true,  symbolFormat: " pуб.", thousand: "", decimal: ",", right: true },
 	"JPY": { places: 0, hidePlacesWhenZero: false, symbolFormat: "¥ ", thousand: ",", decimal: ".", right: false },
@@ -1624,20 +1624,17 @@ function subscription_savings_check() {
 		$.each($(".tab_item"), function (i, node) {
 			var price_container = $(node).find(".discount_final_price").text().trim();
 
-			if (price_container !== "N/A" && price_container !== "Free") {
-				if (price_container) {
-					if (parseFloat(price_container.match(/([0-9]+(?:(?:\,|\.)[0-9]+)?)/))) {
-						itemPrice = parseFloat(price_container.match(/([0-9]+(?:(?:\,|\.)[0-9]+)?)/)[1]);
-					} else {
-						itemPrice = 0;
-					}
+			if (price_container) {//why not check this first?
+				if (price_container.search(/([0-9]+(?:(?:\,|\.| )[0-9]+)?)/) > -1) {//we are searching for prices only, not for some junk, aren't we? and there are plenty variants of that junk, not just those two hardcoded before
+					comma = (price_container.match(/([0-9]+(?:(?:\,|\.| )[0-9]+)?)/)[1].search(/[\.,]\d\d(?!\d)/));//the idea is to scrap everything except numbers and then divide by 100 if needed
+					itemPrice = parseFloat(price_container.match(/([0-9]+(?:(?:\,|\.| )[0-9]+)?)/)[1].replace(/[\., ]/g,""));//here we scrap
+					if (comma > -1) { itemPrice = itemPrice / 100; }//here we divide
 					if (!currency_symbol) currency_symbol = currency_symbol_from_string(price_container);
-					if (!comma) comma = (price_container.search(/,\d\d(?!\d)/));
 				} else {
-					itemPrice = 0;
+					itemPrice = 0;//junk
 				}
 			} else {
-				itemPrice = 0;
+				itemPrice = 0;//empty
 			}
 
 			if ($(node).find(".ds_owned_flag").length == 0) {
@@ -1647,9 +1644,10 @@ function subscription_savings_check() {
 
 		currency_type = currency_symbol_to_type(currency_symbol);
 		var bundle_price = $($bundle_price).html();
-		bundle_price = bundle_price.replace(/[^0-9\.]+/g,"");
+		comma = (bundle_price.search(/[\.,]\d\d(?!\d)/));//here we also check. because we need to
+		bundle_price = bundle_price.replace(/[^0-9\., ]+/g,"");//scrap. if we dont's scrap whitespaces, we hit whe wrong number
 		bundle_price = parseFloat(bundle_price);
-		if (comma > -1) { bundle_price = bundle_price / 100; }                
+		if (comma > -1) { bundle_price = bundle_price / 100; }//divide
 		var corrected_price = not_owned_games_prices - bundle_price;
 		
 		var $message = $('<div class="savings">' + formatCurrency(corrected_price, currency_type) + '</div>');
