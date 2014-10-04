@@ -1,6 +1,5 @@
 // Enhanced Steam v6.8
 var language;
-var search_threshhold = $(window).height() - 80;
 
 var total_requests = 0;
 var processed_requests = 0;
@@ -315,7 +314,6 @@ function highlight_node(node, color) {
 function hide_node(node) {
     if (node.classList.contains("search_result_row") || node.classList.contains("tab_row") || node.classList.contains("game_area_dlc_row")) {
 		$(node).css("display", "none");
-        search_threshhold = search_threshhold - 58;
 	}
 }
 
@@ -2210,25 +2208,53 @@ function load_search_results () {
 		get_http('http://store.steampowered.com/search/results' + search + '&page=' + search_page + '&snr=es', function (txt) {
 			var html = $.parseHTML(txt);
 			html = $(html).find("a.search_result_row");
+			
+			var added_date = +new Date();
+			$('#search_result_container').attr('data-last-add-date', added_date);
+			html.attr('data-added-date', added_date);
+
 			$(".search_result_row").last().after(html);
-			search_threshhold = search_threshhold + 1125; //each result is 45px height * 25 results per page = 1125
 			search_page = search_page + 1;
 			processing = false;
-			process_early_access();
-			runInPageContext("GDynamicStore.DecorateDynamicItems( $('.search_result_row') )");
-			runInPageContext("BindStoreTooltip( $J('.search_result_row [data-store-tooltip]') )");
+
+			var ripc = function () {
+				var added_date = jQuery('#search_result_container').attr('data-last-add-date');
+				GDynamicStore.DecorateDynamicItems(jQuery('.search_result_row[data-added-date="' + added_date + '"]'));
+				BindStoreTooltip(jQuery('.search_result_row[data-added-date="' + added_date + '"] [data-store-tooltip]'));
+			};
+
+			runInPageContext(ripc);
 		});
 	}
 }
 
+function is_element_in_viewport($elem) {
+	// only concerned with vertical at this point
+	var elem_offset = $elem.offset(),
+		elem_bottom = elem_offset.top + $elem.height(),
+		viewport_top = jQuery(window).scrollTop(),
+		viewport_bottom = window.innerHeight + viewport_top;
+
+	return (elem_bottom <= viewport_bottom && elem_offset.top >= viewport_top);
+}
+
 function endless_scrolling() {
 	if (contscroll == true) {		
+		var result_count;
 		$(".search_pagination_right").css("display", "none");
-		$(".search_pagination_left").text($(".search_pagination_left").text().trim().match(/(\d+)$/)[0] + " Results");
+		if ($(".search_pagination_left").text().trim().match(/(\d+)$/)) {
+			result_count = $(".search_pagination_left").text().trim().match(/(\d+)$/)[0];
+			$(".search_pagination_left").text(result_count + " Results");
+		}
 
 		$(window).scroll(function() {
-			if ($(window).scrollTop() > search_threshhold) {
-				load_search_results();
+			// if the pagination element is in the viewport, continue loading
+			if (is_element_in_viewport($(".search_pagination_left"))) {
+				if (result_count > $('.search_result_row').length) {
+					load_search_results();
+				} else {
+					$(".search_pagination_left").text('All ' + result_count + ' results displayed');
+				}
 			}
 		});
 	}
@@ -2407,13 +2433,10 @@ function bind_ajax_content_highlighting() {
 				}
                 
 				if (node.id == "search_result_container") {
+    				processing = false;
     				endless_scrolling();
 					start_highlights_and_tags();
 					add_overlay();
-				}
-
-				if (node.classList && node.classList.contains("searchtag")) {
-					search_threshhold = 1125;
 				}
 
 				if ($(node).children('div')[0] && $(node).children('div')[0].classList.contains("blotter_day")) {
@@ -2426,16 +2449,16 @@ function bind_ajax_content_highlighting() {
 					add_overlay();
 				}
 
-				if (node.classList && node.classList.contains("summersale_tabpage")) {
-					$(node).find(".summersale_dailydeal_ctn").each(function() {
-						start_highlighting_node(this);
-						check_early_access(this, "ea_231x87.png", 0);
-					});
-					show_win_mac_linux();
+				if (node.classList && node.classList.contains("match")) { 
+					start_highlighting_node(node);
+					check_early_access(node, "ea_184x69.png", 0);
 				}
 
-				if (node.classList && node.classList.contains("match")) start_highlighting_node(node);
-                if (node.classList && node.classList.contains("search_result_row")) start_highlighting_node(node);
+				if (node.classList && node.classList.contains("search_result_row")) {
+					start_highlighting_node(node);
+					check_early_access(node, "ea_sm_120.png", 0);
+				}
+
 				if (node.classList && node.classList.contains("market_listing_row_link")) highlight_market_items();
                 if ($(node).parent()[0] && $(node).parent()[0].classList.contains("search_result_row")) start_highlighting_node($(node).parent()[0]);
 			}
@@ -2793,39 +2816,41 @@ var ea_appids, ea_promise = (function () {
 })();
 
 function check_early_access(node, image_name, image_left, selector_modifier, action) {
-	var href = ($(node).find("a").attr("href") || $(node).attr("href"));
-	var appid = get_appid(href);
-	if (appid === null) { 
-		if ($(node).find("img").attr("src").match(/\/apps\/(\d+)\//)) {
-			appid = $(node).find("img").attr("src").match(/\/apps\/(\d+)\//)[1];
+	ea_promise.done(function(){
+		var href = ($(node).find("a").attr("href") || $(node).attr("href"));
+		var appid = get_appid(href);
+		if (appid === null) { 
+			if ($(node).find("img").attr("src").match(/\/apps\/(\d+)\//)) {
+				appid = $(node).find("img").attr("src").match(/\/apps\/(\d+)\//)[1];
+			}
 		}
-	}
-	var early_access = JSON.parse(ea_appids);
-	if (early_access["ea"].indexOf(appid) >= 0) {
-		var selector = "img";
-		if (selector_modifier != undefined) selector += selector_modifier;
-		var image;
-		switch (image_name) {
-			case "ea_sm_120.png":
-				image = self.options.img_overlay_ea_sm_120;
-				break;
-			case "ea_184x69.png":
-				image = self.options.img_overlay_ea_184x69;
-				break;
-			case "ea_231x87.png":
-				image = self.options.img_overlay_ea_231x87;
-				break;
-			case "ea_292x136.png":
-				image = self.options.img_overlay_ea_292x136;
-				break;
-			case "ea_467x181.png":
-				image = self.options.img_overlay_ea_467x181;
-				break;
+		var early_access = JSON.parse(ea_appids);
+		if (early_access["ea"].indexOf(appid) >= 0) {
+			var selector = "img";
+			if (selector_modifier != undefined) selector += selector_modifier;
+			var image;
+			switch (image_name) {
+				case "ea_sm_120.png":
+					image = self.options.img_overlay_ea_sm_120;
+					break;
+				case "ea_184x69.png":
+					image = self.options.img_overlay_ea_184x69;
+					break;
+				case "ea_231x87.png":
+					image = self.options.img_overlay_ea_231x87;
+					break;
+				case "ea_292x136.png":
+					image = self.options.img_overlay_ea_292x136;
+					break;
+				case "ea_467x181.png":
+					image = self.options.img_overlay_ea_467x181;
+					break;
+			}
+			overlay_img = $("<img class='es_overlay' src='" + image + "'>");
+			$(overlay_img).css({"left":image_left+"px"});
+			$(node).find(selector.trim()).before(overlay_img);
 		}
-		overlay_img = $("<img class='es_overlay' src='" + image + "'>");
-		$(overlay_img).css({"left":image_left+"px"});
-		$(node).find(selector.trim()).before(overlay_img);
-	}
+	});
 }
 
 function process_early_access() {
