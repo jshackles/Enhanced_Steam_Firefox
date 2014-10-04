@@ -504,7 +504,7 @@ function empty_wishlist() {
 			var deferred = new $.Deferred();
 			var appid = get_appid_wishlist($obj.id),
 				profile = $(".playerAvatar a")[0].href.replace("http://steamcommunity.com/", ""),
-				session = decodeURIComponent(cookie.match(/sessionid=(.+?);/i)[1]);
+				session = getCookie("sessionid");
 
 			$.ajax({
 				type:"POST",
@@ -636,7 +636,7 @@ function add_wishlist_ajaxremove() {
 		var appid = $(this).parent().parent()[0].id.replace("game_", "");
 		$(this).after("<span class='es_wishlist_remove' id='es_wishlist_remove_" + escapeHTML(appid) + "'>" + escapeHTML($(this).text()) + "</span>");
 		$(this).remove();
-		var session = decodeURIComponent(cookie.match(/sessionid=(.+?);/i)[1]);
+		var session = getCookie("sessionid");
 
 		$("#es_wishlist_remove_" + appid).on("click", function() {
 			$.ajax({
@@ -2817,7 +2817,7 @@ function add_achievement_comparison_link(node) {
 }
 
 function add_dlc_checkboxes() {
-	var session = decodeURIComponent(cookie.match(/sessionid=(.+?);/i)[1]);
+	var session = getCookie("sessionid");
 	if ($("#game_area_dlc_expanded").length > 0) {
 		$("#game_area_dlc_expanded").after("<div class='game_purchase_action game_purchase_action_bg' style='float: left; margin-top: 4px; margin-bottom: 10px; display: none;' id='es_selected_btn'><div class='btn_addtocart'><a class='btnv6_green_white_innerfade btn_medium' href='javascript:document.forms[\"add_selected_dlc_to_cart\"].submit();'><span>" + localized_strings[language].add_selected_dlc_to_cart + "</span></a></div></div>");
 		$(".game_area_dlc_section").after("<div style='clear: both;'></div>");
@@ -3068,12 +3068,6 @@ function show_regional_pricing() {
 		if (region9 != "") countries.push(region9);
 		
 		function process_data(conversion_array) {
-			// Clean up conversion script DOM nodes
-			$.each(available_currencies, function(index, currency_type) {
-				$("#es_compare_" + local_currency + "_" + currency_type).remove();
-			});
-			$("#es_helper").remove();
-
 			if (/^\/sale\/.*/.test(window.location.pathname)) {
 				sale=true;
 				pricing_div = $(pricing_div).addClass("es_regional_sale");
@@ -3084,9 +3078,11 @@ function show_regional_pricing() {
 			}
 			if (getCookie("fakeCC") != null || getCookie("LKGBillingCountry") != null) {
 				if (getCookie("fakeCC")){
-					local_country = getCookie("fakeCC").toLowerCase();
+					local_country = getCookie("fakeCC");
+					local_country = local_country.toLowerCase();
 				} else {
-					local_country = getCookie("LKGBillingCountry").toLowerCase();
+					local_country = getCookie("LKGBillingCountry");
+					local_country = local_country.toLowerCase();
 				}
 			}
 			if(countries.indexOf(local_country)===-1){
