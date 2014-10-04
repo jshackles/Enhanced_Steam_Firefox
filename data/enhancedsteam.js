@@ -1645,7 +1645,7 @@ function subscription_savings_check() {
 		currency_type = currency_symbol_to_type(currency_symbol);
 		var bundle_price = $($bundle_price).html();
 		comma = (bundle_price.search(/[\.,]\d\d(?!\d)/));//here we also check. because we need to
-		bundle_price = bundle_price.replace(/[^0-9\., ]+/g,"");//scrap. if we dont's scrap whitespaces, we hit whe wrong number
+		bundle_price = bundle_price.replace(/[^0-9]+/g,"");//scrap. if we dont's scrap whitespaces, we hit whe wrong number
 		bundle_price = parseFloat(bundle_price);
 		if (comma > -1) { bundle_price = bundle_price / 100; }//divide
 		var corrected_price = not_owned_games_prices - bundle_price;
