@@ -591,6 +591,42 @@ function add_wishlist_discount_sort() {
 	});
 }
 
+// Calculate total cost of all items on wishlist
+function add_wishlist_total() {
+	var total = 0;
+	var gamelist = "";
+	var items = 0;
+	var currency_symbol;
+	var apps = "";
+
+	function calculate_node($node, search) {
+		var parsed = parse_currency($node.find(search).text().trim());
+
+		if (parsed) {
+			currency_symbol = parsed.currency_symbol;
+			gamelist += $node.find("h4").text().trim() + ", ";
+			items ++;
+			total += parsed.value;
+			apps += get_appid($node.find("a[class='btn_visit_store']")[0].href) + ",";
+		}
+	}
+
+	$('.wishlistRow').each(function () {
+		var $this = $(this);
+
+		if ($this.find("div[class='price']").length != 0 && $this.find("div[class='price']").text().trim() != "")
+			calculate_node($this, "div[class='price']");
+
+		if ($this.find("div[class='discount_final_price']").length != 0)
+			calculate_node($this, "div[class='discount_final_price']");
+	});
+	gamelist = gamelist.replace(/, $/, "");
+	
+	currency_type = currency_symbol_to_type(currency_symbol);
+	total = formatCurrency(parseFloat(total), currency_type);
+	$(".games_list").after("<link href='http://cdn4.store.steampowered.com/public/css/styles_gamev5.css' rel='stylesheet' type='text/css'><div class='game_area_purchase_game' style='width: 600px; margin-top: 15px;'><h1>" + localized_strings[language].wishlist + "</h1><p class='package_contents'><b>" + localized_strings[language].bundle.includes.replace("(__num__)", items) + ":</b> " + gamelist + "</p><div class='game_purchase_action'><div class='game_purchase_action_bg'><div class='game_purchase_price price'>" + total + "</div></div></div></div></div></div>");
+}
+
 function add_wishlist_ajaxremove() {
 	$("a[onclick*=wishlist_remove]").each(function() {		
 		var appid = $(this).parent().parent()[0].id.replace("game_", "");
@@ -1017,15 +1053,6 @@ function appdata_on_wishlist() {
 			var storefront_data = JSON.parse(data);
 			$.each(storefront_data, function(appid, app_data) {
 				if (app_data.success) {
-					if (app_data.data.packages && app_data.data.packages[0]) {
-						var htmlstring = '<form name="add_to_cart_' + escapeHTML(app_data.data.packages[0].toString()) + '" action="http://store.steampowered.com/cart/" method="POST">';
-						htmlstring += '<input type="hidden" name="snr" value="1_5_9__403">';
-						htmlstring += '<input type="hidden" name="action" value="add_to_cart">';
-						htmlstring += '<input type="hidden" name="subid" value="' + escapeHTML(app_data.data.packages[0].toString()) + '">';
-						htmlstring += '</form>';
-						$(node).before('</form>' + htmlstring + '<a href="#" onclick="document.forms[\'add_to_cart_' + escapeHTML(app_data.data.packages[0].toString()) + '\'].submit();" class="btn_visit_store">' + escapeHTML(localized_strings[language].add_to_cart) + '</a>  ');
-					}
-
 					if (app_data.data.platforms) {
 						var htmlstring = "";
 						var platforms = 0;
@@ -4656,6 +4683,7 @@ $(document).ready(function(){
 							add_empty_wishlist_buttons();
 							add_wishlist_filter();
 							add_wishlist_discount_sort();
+							add_wishlist_total();
 							add_wishlist_ajaxremove();
 							add_wishlist_notes();
 

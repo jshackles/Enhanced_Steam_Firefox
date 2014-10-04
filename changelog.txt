@@ -13,6 +13,8 @@ v6.8
 : Fixed a bug that caused some packages not to process savings calculations corectly
 : Fixed a bug where DLC checkboxes would behave incorrectly if the DLC had no subID
 : Updated DLC pages to work with the new store layout including the "add all unowned" button
+- Removed cart buttons on wishlist page due to changes made by Valve
+
 
 v6.7
 -----
