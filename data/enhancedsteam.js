@@ -3869,8 +3869,11 @@ function customize_home_page() {
 			$(this).find(".home_viewsettings_checkbox").removeClass("checked");
 		} else {
 			setValue("show_homepage_curators", true);
-			$(".apps_recommended_by_curators_ctn").show();
-			$(".steam_curators_ctn").show();
+			if ($("#apps_recommended_by_curators").children().length > 0) {
+				$(".apps_recommended_by_curators_ctn").show();
+			} else {
+				$(".steam_curators_ctn").show();
+			}
 			$(this).find(".home_viewsettings_checkbox").addClass("checked");
 		}
 	});
