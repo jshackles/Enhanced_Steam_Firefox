@@ -4727,6 +4727,15 @@ function add_friends_that_play() {
 	});
 }
 
+function add_decline_button() {
+	if (window.location.href.match(/tradeoffers\/$/)) {
+		$(".maincontent .profile_leftcol .tradeoffer").each(function(index) {
+			var offerID = $(this).attr("id").replace("tradeofferid_", "");
+			$(this).prepend("<a href='javascript:DeclineTradeOffer(\"" + offerID + "\");' style='background-image: url(" + self.options.img_decline + ");' class='btn_grey_grey btn_es_decline'>&nbsp;</a>");
+		});
+	}
+}
+
 function get_playfire_rewards(appid) {
 	if (getValue("show_apppage_initialsetup") === null) {
 		setValue("show_apppage_playfire", true);
@@ -5015,6 +5024,10 @@ $(document).ready(function(){
 
 						case /^\/(?:id|profiles)\/.+\/friendsthatplay/.test(window.location.pathname):
 							add_friends_that_play();
+							break;
+
+						case /^\/(?:id|profiles)\/.+\/tradeoffers/.test(window.location.pathname):
+							add_decline_button();
 							break;
 
 						case /^\/(?:id|profiles)\/.+/.test(window.location.pathname):

@@ -1,6 +1,7 @@
 v7.0
 -----
 + Added highlighting and tags back to the Friend Activity page
++ Added a button to easily decline trade offers (even invalid ones)
 + Enhanced Steam will now show bundle savings calculations on bundles with no savings
 : Updated wishlist code to work with the new page layout and design
 : Updated Early Access banners to work with more store sections
@@ -11,6 +12,7 @@ v6.9
 -----
 + Added a "Customize" button the the "All New Releases" section
 + Added option to hide "Items under $10" section on home page
++ Added a "remove" button to the custom background selection dialog
 : Fixed a bug with Euro price formatting
 : Fixed a bug that caused some packages not to process savings calculations corectly (again)
 : Fixed the centering of the home page splash screen if present and the sidebar is disabled
