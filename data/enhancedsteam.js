@@ -4752,6 +4752,52 @@ function add_decline_button() {
 	}
 }
 
+function add_acrtag_warning() {
+	if (showACRTAG) {
+		var acrtag_subids, acrtag_promise = (function () {
+			var deferred = new $.Deferred();
+			if (window.location.protocol != "https:") {
+				// is the data cached?
+				var expire_time = parseInt(Date.now() / 1000, 10) - 8 * 60 * 60;
+				var last_updated = getValue("acrtag_subids_time") || expire_time - 1;
+				
+				if (last_updated < expire_time) {
+					// if no cache exists, pull the data from the website
+					get_http("http://api.enhancedsteam.com/acrtag/", function(txt) {
+						acrtag_subids = txt;
+						setValue("acrtag_subids", acrtag_subids);
+						setValue("acrtag_subids_time", parseInt(Date.now() / 1000, 10));
+						deferred.resolve();	
+					});
+				} else {
+					acrtag_subids = getValue("acrtag_subids");
+					deferred.resolve();
+				}
+				
+				return deferred.promise();
+			} else {
+				deferred.resolve();
+				return deferred.promise();
+			}
+		})();
+
+		acrtag_promise.done(function(){
+			var all_game_areas = $(".game_area_purchase_game");
+			var acrtag = JSON.parse(getValue("acrtag_subids"));
+
+			$.each(all_game_areas,function(index,app_package){
+				var subid = $(app_package).find("input[name='subid']").val();
+				if (subid > 0) {
+					if (acrtag["acrtag"].indexOf(subid) >= 0) {
+						$(this).after('<div class="DRM_notice" style="padding-left: 17px; margin-top: 0px; padding-top: 20px; min-height: 28px;"><div class="gift_icon"><img src="' + self.options.img_trading + '" style="float: left; margin-right: 13px;"></div><div data-store-tooltip="' + localized_strings[language].acrtag_tooltip + '">' + localized_strings[language].acrtag_msg + '.</div></div>');
+						runInPageContext("function() {BindStoreTooltip(jQuery('.DRM_notice [data-store-tooltip]')) }");
+					}
+				}
+			});
+		});
+	}
+}
+
 function get_playfire_rewards(appid) {
 	if (getValue("show_apppage_initialsetup") === null) {
 		setValue("show_apppage_playfire", true);
@@ -4796,6 +4842,7 @@ var highlight_owned_bool,
 	wishlistColor,
 	hideInstallSteam,
 	showDRM,
+	showACRTAG,
 	showmcus,
 	showdblinks,
 	showwsgf,
@@ -4836,6 +4883,7 @@ $(document).ready(function(){
 		wishlistColor = data[1];
 		hideInstallSteam = data[2];
 		showDRM = data[3];
+		showACRTAG = data[36];
 		showmcus = data[4];
 		showdblinks = data[5];
 		showwsgf = data[6];
@@ -4921,6 +4969,7 @@ $(document).ready(function(){
 							add_astats_link(appid);
 
 							show_regional_pricing();
+							add_acrtag_warning();
 							get_playfire_rewards(appid);
 
 							customize_app_page();

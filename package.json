@@ -64,6 +64,12 @@
         },
         {
             "type": "bool",
+            "name": "showACRTAG",
+            "value": false,
+            "title": "Show warnings on items where cross region trading is disabled"
+        },
+        {
+            "type": "bool",
             "name": "showmcus",
             "value": true,
             "title": "Show Metacritic User Scores"
