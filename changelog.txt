@@ -9,7 +9,6 @@ v7.0
 : Updated Early Access banners to work with more store sections
 : Fixed a bug in market total calculations
 
-
 v6.9
 -----
 + Added a "Customize" button the the "All New Releases" section
