@@ -1,5 +1,6 @@
 v7.1
 -----
+: Fixed a bug that would cause items to be tagged as gifts incorrectly under certain conditions
 : Fixed a bug in regional price comparisons introduced by a change in the API
 
 

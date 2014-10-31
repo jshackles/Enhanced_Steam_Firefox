@@ -176,6 +176,13 @@ function getCookie(name) {
 	return (value != null) ? unescape(value[1]) : null;
 }
 
+function matchAll(re, str) {
+	var p, r = [];
+	while(p = re.exec(str))
+		r.push(p[1]);
+	return r;
+}
+
 function get_http(url, callback) {
 	total_requests += 1;
 	$("#es_progress").attr({"max": 100, "title": localized_strings[language].ready.loading});
@@ -205,6 +212,11 @@ function get_http(url, callback) {
 function get_appid(t) {
 	if (t && t.match(/(?:store\.steampowered|steamcommunity)\.com\/app\/(\d+)\/?/)) return RegExp.$1;
 	else return null;
+}
+
+function get_appids(t) {
+	var res = matchAll(/(?:store\.steampowered|steamcommunity)\.com\/app\/(\d+)\/?/g, t);
+	return (res.length > 0) ? res : null;
 }
 
 function get_subid(t) {
@@ -325,9 +337,29 @@ function load_inventory() {
 			var data = JSON.parse(txt);
 			if (data.success) {
 				$.each(data.rgDescriptions, function(i, obj) {
-					if (obj.actions) {
+					var is_package = false;
+					var appids;
+
+					if (obj.descriptions) {
+						for (var d = 0; d < obj.descriptions.length; d++) {
+							if (obj.descriptions[d].type == "html") {
+								appids = get_appids(obj.descriptions[d].value);
+								if (appids) {
+									// Gift package with multiple apps
+									is_package = true;
+									for (var j = 0; j < appids.length; j++) {
+										if (appids[j]) setValue(appids[j] + (obj.type === "Gift" ? "gift" : "guestpass"), true);
+									}
+
+									break;
+								}
+							}
+						}
+					}
+
+					if (!is_package && obj.actions) {
 						var appid = get_appid(obj.actions[0].link);
-						setValue(appid + (obj.type === "Gift" ? "gift" : "guestpass"), true);
+						if (appid) setValue(appid + (obj.type === "Gift" ? "gift" : "guestpass"), true);
 					}
 				});
 			}
