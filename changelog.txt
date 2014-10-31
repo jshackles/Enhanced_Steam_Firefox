@@ -1,5 +1,6 @@
 v7.1
 -----
+: Fixed a bug in regional price comparisons introduced by a change in the API
 
 
 v7.0

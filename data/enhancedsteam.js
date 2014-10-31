@@ -3287,7 +3287,6 @@ function show_regional_pricing() {
 			}
 			var subid_info = [];
 			var subid_array = [];
-			var subids_csv;
 
 			function formatPriceData(sub_info,country,converted_price) {
 				var flag_div = "<div class=\"es_flag\" style='background-image:url( " + self.options.img_flags + " )'></div>";
@@ -3337,7 +3336,6 @@ function show_regional_pricing() {
 				}
 			});
 			if(subid_array.length>0){
-				subids_csv=subid_array.join();
 				$.each(countries,function(index,country){
 					switch (country) {
 						case "EU1":
@@ -3350,15 +3348,15 @@ function show_regional_pricing() {
 							cc=country;
 							break;
 					}
-					currency_deferred.push(
-						$.ajax({
-							url:api_url,
-							data:{
-								packageids:subids_csv,
-								cc:cc
-							}
-						}).done(function(data){
-							$.each(subid_info,function(subid_index,package_info){
+					$.each(subid_info,function(subid_index,package_info){
+						currency_deferred.push(
+							$.ajax({
+								url:api_url,
+								data:{
+									packageids:package_info["subid"],
+									cc:cc
+								}
+							}).done(function(data){
 								$.each(data,function(data_subid){
 									if(package_info){
 										if(package_info["subid"]===data_subid){
@@ -3370,9 +3368,9 @@ function show_regional_pricing() {
 										}
 									}
 								});
-							});
-						})
-					);
+							})
+						);
+					});
 				});
 				var format_deferred=[];
 				var formatted_regional_price_array=[];
