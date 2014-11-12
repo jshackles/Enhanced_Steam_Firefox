@@ -2743,7 +2743,7 @@ function bind_ajax_content_highlighting() {
 				var node = mutation.addedNodes[i];
 				// Check the node is what we want, and not some unrelated DOM change.
 				if (node.classList && node.classList.contains("tab_item")) {
-					runInPageContext("function() { GDynamicStore.DecorateDynamicItems( $('.tab_item') ) }");
+					runInPageContext("function() { GDynamicStore.DecorateDynamicItems( jQuery('.tab_item') ) }");
 					start_highlighting_node(node);
 					check_early_access(node, "ea_231x87.png", 0, ":last");
 				}
