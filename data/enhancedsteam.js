@@ -2707,14 +2707,6 @@ function hide_greenlight_banner() {
     }
 }
 
-function fix_community_hub_links() {
-    element = document.querySelector( '.apphub_OtherSiteInfo a' );
-			
-	if( element && element.href.charAt( 26 ) === '/' ) {
-		element.href = element.href.replace( /\/\/app\//, '/app/' ) + '/';
-	}
-}
-
 function display_purchase_date() {
     if ($(".game_area_already_owned").length > 0) {
         var appname = $(".apphub_AppName").text();
@@ -5255,7 +5247,6 @@ $(document).ready(function(){
 							add_steamreview_userscore(appid);
 							display_purchase_date();
 
-							fix_community_hub_links();
 							add_widescreen_certification(appid);
 							add_hltb_info(appid);
 							add_pcgamingwiki_link(appid);
