@@ -1,6 +1,7 @@
 v7.1
 -----
 + Added a box to search pages that lets you hide games you own, on your wishlist, or in cart
++ Added ACRTAG warning messages to sub pages
 
 
 v7.0.1

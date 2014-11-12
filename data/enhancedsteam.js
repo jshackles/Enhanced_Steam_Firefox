@@ -5164,6 +5164,7 @@ $(document).ready(function(){
 							subscription_savings_check();
 							show_pricing_history(subid, "sub");
 							add_steamdb_links(subid, "sub");
+							add_acrtag_warning();
 
 							show_regional_pricing();
 							break;
