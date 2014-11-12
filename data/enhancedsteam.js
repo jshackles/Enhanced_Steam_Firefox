@@ -294,18 +294,24 @@ function is_signed_in() {
 
 // colors the tile for owned games
 function highlight_owned(node) {
-	if (highlight_owned_bool) {
-		node.classList.add("es_highlight_owned");
-    	highlight_node(node, ownedColor);
-    }
+	node.classList.add("es_highlight_owned");
+
+	if (getValue("hide_owned")) { hide_node(node); } else {
+		if (highlight_owned_bool) { highlight_node(node, ownedColor); }	
+	}
 }
 
 // colors the tile for wishlist games
 function highlight_wishlist(node) {
-	if (highlight_wishlist_bool) {
-		node.classList.add("es_highlight_wishlist");
-		highlight_node(node, wishlistColor);
-	}
+	node.classList.add("es_highlight_wishlist");
+
+	if (getValue("hide_wishlist")) { hide_node(node); } else {
+		if (highlight_wishlist_bool) { highlight_node(node, wishlistColor); }
+	}	
+}
+
+function highlight_cart(node) {
+	if (getValue("hide_cart")) { hide_node(node); }
 }
 
 function hexToRgb(hex) {
@@ -366,8 +372,12 @@ function highlight_node(node, color) {
 }
 
 function hide_node(node) {
-    if (node.classList.contains("search_result_row") || node.classList.contains("tab_row") || node.classList.contains("game_area_dlc_row")) {
-		$(node).css("display", "none");
+	$(node).css("display", "none");
+
+	if (node.classList.contains("search_result_row")) {
+		if ($(document).height() <= $(window).height()) {
+			load_search_results();
+		}
 	}
 }
 
@@ -2399,6 +2409,58 @@ function endless_scrolling() {
 	}
 }
 
+function add_hide_button_to_search() {
+	$("#advsearchform").find(".rightcol").prepend("<div class='block'><div class='block_header'><div>" + localized_strings[language].hide + "</div></div><div class='block_content block_content_inner'><div class='tab_filter_control' id='es_owned_games'><div class='tab_filter_control_checkbox'></div><span class='tab_filter_control_label'>" + localized_strings[language].options.owned + "</span></div><div class='tab_filter_control' id='es_wishlist_games'><div class='tab_filter_control_checkbox'></div><span class='tab_filter_control_label'>" + localized_strings[language].options.wishlist + "</span></div><div class='tab_filter_control' id='es_cart_games'><div class='tab_filter_control_checkbox'></div><span class='tab_filter_control_label'>" + localized_strings[language].options.cart + "</span></div></div></div>")
+
+	if (getValue("hide_owned")) {
+		$("#es_owned_games").addClass("checked");
+	}
+
+	if (getValue("hide_wishlist")) {
+		$("#es_wishlist_games").addClass("checked");
+	}
+
+	if (getValue("hide_cart")) {
+		$("#es_cart_games").addClass("checked");
+	}
+
+	$("#es_owned_games").click(function() {
+		if ($("#es_owned_games").hasClass("checked")) {
+			$("#es_owned_games").removeClass("checked");
+			$(".ds_owned").css("display", "block");
+			setValue("hide_owned", false);
+		} else {
+			$("#es_owned_games").addClass("checked");
+			$(".ds_owned").css("display", "none");
+			setValue("hide_owned", true);
+		}
+	});
+
+	$("#es_wishlist_games").click(function() {
+		if ($("#es_wishlist_games").hasClass("checked")) {
+			$("#es_wishlist_games").removeClass("checked");
+			$(".ds_wishlist").css("display", "block");
+			setValue("hide_wishlist", false);
+		} else {
+			$("#es_wishlist_games").addClass("checked");
+			$(".ds_wishlist").css("display", "none");
+			setValue("hide_wishlist", true);
+		}
+	});
+
+	$("#es_cart_games").click(function() {
+		if ($("#es_cart_games").hasClass("checked")) {
+			$("#es_cart_games").removeClass("checked");
+			$(".ds_incart").css("display", "block");
+			setValue("hide_cart", false);
+		} else {
+			$("#es_cart_games").addClass("checked");
+			$(".ds_incart").css("display", "none");
+			setValue("hide_cart", true);
+		}
+	});
+}
+
 function add_popular_tab() {
 	$(".home_tabs_row").find(".home_tab:last").after("<div class='home_tab' id='es_popular'><div class='tab_content'>" + localized_strings[language].popular + "</div></div>");
 	var tab_html = "<div id='tab_popular_content' class='tab_content' style='display: none;'>";
@@ -2754,7 +2816,7 @@ function start_highlights_and_tags(){
 		"div.special",			// new homepage specials
 		"div.curated_app_item"	// curated app items!
 	];
-		
+
 	setTimeout(function() {
 		$.each(selectors, function (i, selector) {
 			$.each($(selector), function(j, node){
@@ -2770,7 +2832,9 @@ function start_highlights_and_tags(){
 					highlight_wishlist(node_to_highlight);
 				}
 
-				var appid = get_appid(node.href || $(node).find("a").attr("href")) || get_appid_wishlist(node.id);
+				if ($(node).find(".ds_incart_flag").length > 0) {
+					highlight_cart(node_to_highlight);
+				}
 			});
 		});
 	}, 500);
@@ -2938,6 +3002,10 @@ function start_highlighting_node(node) {
 
 	if ($(node).find(".ds_wishlist_flag").length > 0) {
 		highlight_wishlist(node_to_highlight);
+	}
+
+	if ($(node).find(".ds_incart_flag").length > 0) {
+		higlight_cart(node_to_highlight);
 	}
 
 	var appid = get_appid(node.href || $(node).find("a")[0].href) || get_appid_wishlist(node.id);
@@ -5119,6 +5187,7 @@ $(document).ready(function(){
 
 						case /^\/search\/.*/.test(window.location.pathname):
 							endless_scrolling();
+							add_hide_button_to_search();
 							break;
 
 						case /^\/sale\/.*/.test(window.location.pathname):
