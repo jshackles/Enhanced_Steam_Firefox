@@ -8,7 +8,6 @@ v7.1
 : Fixed badge page filtering and sort options to work with pagination
 : Fixed a bug in market total calculations introduced by a change in the API
 
-
 v7.0.1
 -----
 : Fixed an issue where inventory price info was in USD regardless of the user's currency
