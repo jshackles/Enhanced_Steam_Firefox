@@ -4964,6 +4964,27 @@ function add_total_drops_count() {
 			booster_games = 0,
 			game_tiles = [];
 
+		function add_total_drops_count_calculations(games) {
+			$(games).each(function(i, obj) {
+				var obj_count = obj.find(".progress_info_bold")[0].innerHTML.match(/\d+/);
+				if (obj_count) {
+					drops_count += parseInt(obj_count[0]);
+					drops_games = drops_games + 1;
+				}
+			});
+
+			$(".profile_xp_block_right").html("<span id='es_calculations' style='color: #fff;'>" + localized_strings[language].card_drops_remaining.replace("__drops__", drops_count) + "<br>" + localized_strings[language].games_with_drops.replace("__dropsgames__", drops_games) + "</span>");
+
+			get_http("http://steamcommunity.com/my/ajaxgetboostereligibility/", function(txt) {
+				var eligible = $.parseHTML(txt);
+				$(eligible).find(".booster_eligibility_games").children().each(function(i, obj) {
+					booster_games += 1;
+				});
+
+				$("#es_calculations").append("<br>" + localized_strings[language].games_with_booster.replace("__boostergames__", booster_games));
+			});
+		}
+
 		if ($(".pagebtn").length > 0) {
 			if (window.location.href.match(/\/$/) || window.location.href.match(/p\=1$/)) {
 				$(".profile_xp_block_right").html("<span id='es_calculations' style='color: #fff;'>" + localized_strings[language].drop_calc + "</span>").css("cursor", "pointer");
@@ -5020,27 +5041,6 @@ function add_total_drops_count() {
 				}
 			});
 			add_total_drops_count_calculations(game_tiles);
-		}
-
-		function add_total_drops_count_calculations(games) {
-			$(games).each(function(i, obj) {
-				var obj_count = obj.find(".progress_info_bold")[0].innerHTML.match(/\d+/);
-				if (obj_count) {
-					drops_count += parseInt(obj_count[0]);
-					drops_games = drops_games + 1;
-				}
-			});
-
-			$(".profile_xp_block_right").html("<span id='es_calculations' style='color: #fff;'>" + localized_strings[language].card_drops_remaining.replace("__drops__", drops_count) + "<br>" + localized_strings[language].games_with_drops.replace("__dropsgames__", drops_games) + "</span>");
-
-			get_http("http://steamcommunity.com/my/ajaxgetboostereligibility/", function(txt) {
-				var eligible = $.parseHTML(txt);
-				$(eligible).find(".booster_eligibility_games").children().each(function(i, obj) {
-					booster_games += 1;
-				});
-
-				$("#es_calculations").append("<br>" + localized_strings[language].games_with_booster.replace("__boostergames__", booster_games));
-			});
 		}
 
 		if ($(".badge_details_set_favorite").find(".btn_grey_black").length > 0) { $(".badge_details_set_favorite").append("<div class='btn_grey_black btn_small_thin' id='es_faq_link'><span>" + localized_strings[language].faqs + "</span></div>"); }
