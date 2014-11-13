@@ -12,6 +12,31 @@ if (cookie.match(/language=([a-z]{3})/i)) {
 }
 if (localized_strings[language] === undefined) { language = "eng"; }
 
+// Check if the user is signed in
+var is_signed_in = false;
+var signed_in_promise = (function () {
+	var deferred = new $.Deferred();
+	if ($("#global_actions").find(".playerAvatar").length > 0) {
+		var user_name = $("#global_actions").find(".playerAvatar")[0].outerHTML.match(/\/id\/(.+?)"/);
+		if (user_name) {			
+			if (getValue("steamID")) {
+				is_signed_in = getValue("steamID");
+				deferred.resolve();
+			} else {
+				get_http("http://steamcommunity.com/id/" + user_name[1], function(txt) {
+					is_signed_in = txt.match(/steamid"\:"(.+)","personaname/)[1];
+					setValue("steamID", is_signed_in);
+					deferred.resolve();
+				});
+			}
+		} else {
+			deferred.resolve();
+		}
+	} else {
+		deferred.resolve();
+	}	
+	return deferred.promise();
+})();
 
 // Run script in the context of the current tab
 function runInPageContext(fun){
@@ -279,17 +304,6 @@ function get_appid_wishlist(t) {
 function get_gamecard(t) {
     if (t && t.match(/(?:id|profiles)\/.+\/gamecards\/(\d+)/)) return RegExp.$1;
 	else return null;
-}
-
-// check if the user is signed in
-function is_signed_in() {
-    var isSignedIn, signedInChecked;
-	if (!signedInChecked) {
-		var steamLogin = getCookie("steamLogin");
-		if (steamLogin) isSignedIn = steamLogin.replace(/%.*/, "").match(/^\d+/);
-		signedInChecked = true;
-	}
-	return isSignedIn;
 }
 
 // colors the tile for owned games
@@ -960,7 +974,7 @@ function add_header_links() {
 		community = community.substr(0, (insertAt.index + insertAt[0].length)) + '<a class="submenuitem" href="http://forums.steampowered.com/forums/" target="_blank">' + localized_strings[language].forums + '</a>' + community.substr(insertAt.index + insertAt[0].length);
 		$("#supernav").find("a[href='http://steamcommunity.com/']").attr("data-tooltip-content", community);
 
-		if (is_signed_in()) {
+		if (is_signed_in) {
 			var user = $("#supernav").find("a[href$='/home/']").attr("data-tooltip-content");
 			var insertAt = user.match(/\/home\/">(.+)<\/a>/);
 			user = user.substr(0, (insertAt.index + insertAt[0].length)) + '<a class="submenuitem" href="http://steamcommunity.com/my/games/">' + localized_strings[language].games + '</a>' + user.substr(insertAt.index + insertAt[0].length);
@@ -2833,11 +2847,11 @@ function start_highlights_and_tags(){
 }
 
 function start_friend_activity_highlights() {
-	var steamID = is_signed_in()[0];
+	var steamID = is_signed_in;
 
 	var owned_promise = (function () {
 		var deferred = new $.Deferred();
-		if (is_signed_in() && window.location.protocol != "https:") {
+		if (is_signed_in && window.location.protocol != "https:") {
 			var expire_time = parseInt(Date.now() / 1000, 10) - 7 * 60 * 60 * 24; // One week ago
 			var last_updated = getValue("owned_games_time") || expire_time - 1;
 
@@ -2870,7 +2884,7 @@ function start_friend_activity_highlights() {
 
 	var wishlist_promise = (function () {
 		var deferred = new $.Deferred();
-		if (is_signed_in() && window.location.protocol != "https:") {
+		if (is_signed_in && window.location.protocol != "https:") {
 			var expire_time = parseInt(Date.now() / 1000, 10) - 1 * 60 * 60 ; // One hour ago
 			var last_updated = getValue("wishlist_games_time") || expire_time - 1;
 
@@ -5252,8 +5266,7 @@ $(document).ready(function(){
 		region8 = data[34];
 		region9 = data[35];
 
-		is_signed_in();
-
+		signed_in_promise.done(function(){
 		localization_promise.done(function(){
 			if (startsWith(window.location.pathname, "/api")) return;
 			if (startsWith(window.location.pathname, "/login")) return;
@@ -5469,6 +5482,7 @@ $(document).ready(function(){
 					}
 					break;
 			}
+		});
 		});
 	});
 });
