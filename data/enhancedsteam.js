@@ -4446,28 +4446,35 @@ function add_gamelist_filter() {
 
 function add_gamelist_achievements() {
 	if (showallachievements) {
-		if (window.location.href.match(/\/games\?tab=all/)) {
+		if (window.location.href.match(/\/games\/\?tab=all/)) {
 			$(".gameListRow").each(function(index, value) {
 				var appid = get_appid_wishlist(value.id);
-				$(value).find(".bottom_controls").find("img").each(function () {
-					if ($(this).attr("src").indexOf("http://cdn.steamcommunity.com/public/images/skin_1/ico_stats.gif") == 0) {
-						if (!($(value).html().match(/<h5><\/h5>/))) {
-							$(value).find(".gameListRowItemName").append("<div class='recentAchievements' id='es_app_" + escapeHTML(appid) + "' style='padding-top: 14px; padding-right: 4px; width: 205px; float: right; font-size: 10px; font-weight: normal;'>");
-							$("#es_app_" + appid).html("Loading achievements...");
-							$("#es_app_" + appid).load($(".profile_small_header_texture a")[0].href + '/stats/' + appid + ' #topSummaryAchievements', function(response, status, xhr) {							
-								var BarFull = $("#es_app_" + appid).html().match(/achieveBarFull\.gif" border="0" height="12" width="([0-9]|[1-9][0-9]|[1-9][0-9][0-9])"/)[1];
-								var BarEmpty = $("#es_app_" + appid).html().match(/achieveBarEmpty\.gif" border="0" height="12" width="([0-9]|[1-9][0-9]|[1-9][0-9][0-9])"/)[1];
-								BarFull = BarFull * .58;
-								BarEmpty = BarEmpty * .58;
-								var html = $("#es_app_" + appid).html();
-								html = html.replace(/achieveBarFull\.gif" border="0" height="12" width="([0-9]|[1-9][0-9]|[1-9][0-9][0-9])"/, "achieveBarFull.gif\" border='0' height='12' width=\"" + escapeHTML(BarFull.toString()) + "\"");
-								html = html.replace(/achieveBarEmpty\.gif" border="0" height="12" width="([0-9]|[1-9][0-9]|[1-9][0-9][0-9])"/, "achieveBarEmpty.gif\" border='0' height='12' width=\"" + escapeHTML(BarEmpty.toString()) + "\"");
-								html = html.replace("::", ":");
-								$("#es_app_" + appid).html(html);
+				if ($(value).html().match(/ico_stats.png/)) {
+					if (!($(value).html().match(/<h5><\/h5>/))) {
+						$(value).find(".gameListRowItemName").append("<div class='recentAchievements' id='es_app_" + escapeHTML(appid) + "' style='padding-top: 14px; padding-right: 4px; width: 205px; float: right; font-size: 10px; font-weight: normal;'>");
+						$("#es_app_" + appid).html(localized_strings[language].loading);
+						get_http($(".profile_small_header_texture a")[0].href + '/stats/' + appid, function (txt) {
+							txt = txt.replace(/[ ]src=/g," data-src=");
+							var parsedhtml = $.parseHTML(txt);
+							$("#es_app_" + appid).html($(parsedhtml).find("#topSummaryAchievements"));
+							$("#es_app_" + appid).find("img").each(function() {
+								var src = $(this).attr("data-src");
+								$(this).attr("src", src);
 							});
-						}
+							var BarFull,
+								BarEmpty;
+							BarFull = $("#es_app_" + appid).html().match(/achieveBarFull\.gif" border="0" height="12" width="([0-9]|[1-9][0-9]|[1-9][0-9][0-9])"/)[1];
+							BarEmpty = $("#es_app_" + appid).html().match(/achieveBarEmpty\.gif" border="0" height="12" width="([0-9]|[1-9][0-9]|[1-9][0-9][0-9])"/)[1];
+							BarFull = BarFull * .58;
+							BarEmpty = BarEmpty * .58;
+							var html = $("#es_app_" + appid).html();
+							html = html.replace(/achieveBarFull\.gif" border="0" height="12" width="([0-9]|[1-9][0-9]|[1-9][0-9][0-9])"/, "achieveBarFull.gif\" border='0' height='12' width=\"" + escapeHTML(BarFull.toString()) + "\"");
+							html = html.replace(/achieveBarEmpty\.gif" border="0" height="12" width="([0-9]|[1-9][0-9]|[1-9][0-9][0-9])"/, "achieveBarEmpty.gif\" border='0' height='12' width=\"" + escapeHTML(BarEmpty.toString()) + "\"");
+							html = html.replace("::", ":");
+							$("#es_app_" + appid).html(html);
+						});
 					}
-				});
+				}
 			});
 		}
 	}
