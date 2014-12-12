@@ -8,7 +8,6 @@ v7.2
 + Added an option to show "Compare" links on friend activity page (disabled by default)
 : Fixed a bug in currency detection for booster pack prices
 
-
 v7.1.1
 -----
 : Fixed badge page sorting options to work with pagination
