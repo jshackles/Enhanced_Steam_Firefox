@@ -147,12 +147,6 @@
             "title": "Show External Profile Links"
         },
         {
-            "type": "bool",
-            "name": "showsteamrepapi",
-            "value": true,
-            "title": "Show SteamRep status on profile pages"
-        },
-        {
             "type": "menulist",
             "name": "showprofilelinks_display",
             "title": "Profile Link Images",
@@ -171,6 +165,18 @@
                     "label": "None"
                 }
             ]
+        },
+        {
+            "type": "bool",
+            "name": "showsteamrepapi",
+            "value": true,
+            "title": "Show SteamRep status on profile pages"
+        },
+        {
+            "type": "bool",
+            "name": "showcomparelinks",
+            "value": false,
+            "title": "Show \"Compare\" links for achievements on friend activity feed"
         },
         {
             "type": "bool",

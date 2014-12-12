@@ -3289,16 +3289,18 @@ function highlight_market_items() {
 }
 
 function add_achievement_comparison_link(node) {
-    if (!($(node).html().match(/es_achievement_compare/))) {
-		var links = $(node).find("a");
-		var appid = get_appid(links[2].href);
-		get_http(links[0].href + "/stats/" + appid, function(txt) {
-			var html = txt.match(/<a href="(.+)compare">/);
-			if (html) {
-				$(node).find("span:not(.nickname_block,.nickname_name)").css("margin-top", "0px");
-				$(node).find("span:not(.nickname_block,.nickname_name)").append("<br><a href='http://www.steamcommunity.com" + escapeHTML(html[1]) + "compare' class='es_achievement_compare' target='_blank' style='font-size: 10px; float: right; margin-right: 6px;'>(" + escapeHTML(localized_strings[language].compare) + ")</a>");
-			}
-		});
+	if (showcomparelinks === true) {
+		if (!($(node).html().match(/es_achievement_compare/))) {
+			var links = $(node).find("a");
+			var appid = get_appid(links[2].href);
+			get_http(links[0].href + "/stats/" + appid, function(txt) {
+				var html = txt.match(/<a href="(.+)compare">/);
+				if (html) {
+					$(node).find("span:not(.nickname_block,.nickname_name)").css("margin-top", "0px");
+					$(node).find("span:not(.nickname_block,.nickname_name)").append("<br><a href='http://www.steamcommunity.com" + escapeHTML(html[1]) + "compare' class='es_achievement_compare' target='_blank' style='font-size: 10px; float: right; margin-right: 6px;'>(" + escapeHTML(localized_strings[language].compare) + ")</a>");
+				}
+			});
+		}
 	}
 }
 
@@ -5373,6 +5375,7 @@ var highlight_owned_bool,
 	showsteamchartinfo,
 	showregionalprice,
 	showprofilelinks_display,
+	showcomparelinks,
 	showallachievements,
 	showlanguagewarninglanguage,
 	showlanguagewarning,
@@ -5406,7 +5409,7 @@ $(document).ready(function(){
 		showcustombg = data[10];
 		changegreenlightbanner = data[11];
 		showprofilelinks = data[12];
-		showsteamrepapi = data[36];
+		showsteamrepapi = data[37];
 		hideaboutmenu = data[13];
 		showmarkethistory = data[14];
 		showhltb = data[15];
@@ -5415,6 +5418,7 @@ $(document).ready(function(){
 		showsteamchartinfo = data[18];
 		showregionalprice = data[19];
 		showprofilelinks_display = data[20];
+		showcomparelinks = data[38];
 		showallachievements = data[21];
 		showlanguagewarninglanguage = data[22];
 		showlanguagewarning = data[23];
