@@ -147,6 +147,12 @@
             "title": "Show External Profile Links"
         },
         {
+            "type": "bool",
+            "name": "showsteamrepapi",
+            "value": true,
+            "title": "Show SteamRep status on profile pages"
+        },
+        {
             "type": "menulist",
             "name": "showprofilelinks_display",
             "title": "Profile Link Images",

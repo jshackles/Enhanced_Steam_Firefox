@@ -1711,6 +1711,21 @@ function add_app_badge_progress(appid) {
 	}
 }
 
+function add_steamrep_api() {
+	if (showsteamrepapi === true) {
+		if ($("#reportAbuseModal").length > 0) { var steamID = document.getElementsByName("abuseID")[0].value; }
+		if (steamID === undefined && document.documentElement.outerHTML.match(/steamid"\:"(.+)","personaname/)) { var steamID = document.documentElement.outerHTML.match(/steamid"\:"(.+)","personaname/)[1]; }
+		get_http("http://api.enhancedsteam.com/steamrep/?steam64=" + steamID, function (txt) {
+			if (txt == "") return;
+			if ($(".profile_in_game").length == 0) {
+				$(".profile_rightcol").prepend(txt);
+			} else {
+				$(".profile_rightcol .profile_in_game:first").after(txt);
+			}
+		});
+	}
+}
+
 // adds metacritic user score
 function add_metracritic_userscore() {
 	if (showmcus === true) {
@@ -5294,6 +5309,7 @@ var highlight_owned_bool,
 	showcustombg,
 	changegreenlightbanner,
 	showprofilelinks,
+	showsteamrepapi,
 	hideaboutmenu,
 	showmarkethistory,
 	showhltb,
@@ -5335,6 +5351,7 @@ $(document).ready(function(){
 		showcustombg = data[10];
 		changegreenlightbanner = data[11];
 		showprofilelinks = data[12];
+		showsteamrepapi = data[36];
 		hideaboutmenu = data[13];
 		showmarkethistory = data[14];
 		showhltb = data[15];
@@ -5544,6 +5561,7 @@ $(document).ready(function(){
 							add_supporter_badges();
 							change_user_background();
 							fix_profile_image_not_found();
+							add_steamrep_api();
 							break;
 
 						case /^\/(?:sharedfiles|workshop)\/.*/.test(window.location.pathname):
