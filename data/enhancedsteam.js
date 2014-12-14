@@ -2466,25 +2466,27 @@ function is_element_in_viewport($elem) {
 }
 
 function endless_scrolling() {
-	if (contscroll == true) {		
-		var result_count;
-		$(document.body).append('<link rel="stylesheet" type="text/css" href="http://store.akamai.steamstatic.com/public/css/v6/home.css">');
-		$(".search_pagination_right").css("display", "none");
-		if ($(".search_pagination_left").text().trim().match(/(\d+)$/)) {
-			result_count = $(".search_pagination_left").text().trim().match(/(\d+)$/)[0];
-			$(".search_pagination_left").text(result_count + " Results");
-		}
-
-		$(window).scroll(function() {
-			// if the pagination element is in the viewport, continue loading
-			if (is_element_in_viewport($(".search_pagination_left"))) {
-				if (result_count > $('.search_result_row').length) {
-					load_search_results();
-				} else {
-					$(".search_pagination_left").text('All ' + result_count + ' results displayed');
-				}
+	if (contscroll == true) {
+		if (!(window.location.href.match(/auction=1/))) {
+			var result_count;
+			$(document.body).append('<link rel="stylesheet" type="text/css" href="http://store.akamai.steamstatic.com/public/css/v6/home.css">');
+			$(".search_pagination_right").css("display", "none");
+			if ($(".search_pagination_left").text().trim().match(/(\d+)$/)) {
+				result_count = $(".search_pagination_left").text().trim().match(/(\d+)$/)[0];
+				$(".search_pagination_left").text(result_count + " Results");
 			}
-		});
+
+			$(window).scroll(function() {
+				// if the pagination element is in the viewport, continue loading
+				if (is_element_in_viewport($(".search_pagination_left"))) {
+					if (result_count > $('.search_result_row').length) {
+						load_search_results();
+					} else {
+						$(".search_pagination_left").text('All ' + result_count + ' results displayed');
+					}
+				}
+			});
+		}
 	}
 }
 

@@ -1,5 +1,6 @@
 v7.3
 -----
+: Fixed a bug with continuous scrolling on the auction page search results in Firefox
 
 
 v7.2
