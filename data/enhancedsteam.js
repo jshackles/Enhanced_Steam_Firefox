@@ -2170,7 +2170,8 @@ function inventory_market_helper(response) {
 			}
 			if (show1clickgoo === true) {
 				$("#es_quickgrind").remove();
-				$("#iteminfo" + item + "_item_scrap_actions").find("div:last").before("<div><a class='btn_small btn_green_white_innerfade' id='es_quickgrind' appid='" + appid + "'assetid='" + assetID + "'><span>1-Click turn into Gems...</span></div>");
+				var turn_word = $("#iteminfo" + item + "_item_scrap_link span").text();
+				$("#iteminfo" + item + "_item_scrap_actions").find("div:last").before("<div><a class='btn_small btn_green_white_innerfade' id='es_quickgrind' appid='" + appid + "'assetid='" + assetID + "'><span>1-Click " + turn_word + "</span></div>");
 				$("#es_quickgrind").on("click", function() {
 					runInPageContext("function() { \
 						var rgAJAXParams = {\
