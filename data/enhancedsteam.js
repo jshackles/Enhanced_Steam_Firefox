@@ -2168,26 +2168,28 @@ function inventory_market_helper(response) {
 					});
 				}, 1000);
 			}
-			$("#es_quickgrind").remove();
-			$("#iteminfo" + item + "_item_scrap_actions").find("div:last").before("<div><a class='btn_small btn_green_white_innerfade' id='es_quickgrind' appid='" + appid + "'assetid='" + assetID + "'><span>1-Click turn into Gems...</span></div>");
-			$("#es_quickgrind").on("click", function() {
-				runInPageContext("function() { \
-					var rgAJAXParams = {\
-						sessionid: g_sessionID,\
-						appid: " + $(this).attr("appid") + ",\
-						assetid: " + $(this).attr("assetID") + ",\
-						contextid: 6\
-					};\
-					var strActionURL = g_strProfileURL + '/ajaxgetgoovalue/';\
-					$J.get( strActionURL, rgAJAXParams ).done( function( data ) {\
-						strActionURL = g_strProfileURL + '/ajaxgrindintogoo/';\
-						rgAJAXParams.goo_value_expected = data.goo_value;\
-						$J.post( strActionURL, rgAJAXParams).done( function( data ) {\
-							ReloadCommunityInventory();\
+			if (show1clickgoo === true) {
+				$("#es_quickgrind").remove();
+				$("#iteminfo" + item + "_item_scrap_actions").find("div:last").before("<div><a class='btn_small btn_green_white_innerfade' id='es_quickgrind' appid='" + appid + "'assetid='" + assetID + "'><span>1-Click turn into Gems...</span></div>");
+				$("#es_quickgrind").on("click", function() {
+					runInPageContext("function() { \
+						var rgAJAXParams = {\
+							sessionid: g_sessionID,\
+							appid: " + $(this).attr("appid") + ",\
+							assetid: " + $(this).attr("assetID") + ",\
+							contextid: 6\
+						};\
+						var strActionURL = g_strProfileURL + '/ajaxgetgoovalue/';\
+						$J.get( strActionURL, rgAJAXParams ).done( function( data ) {\
+							strActionURL = g_strProfileURL + '/ajaxgrindintogoo/';\
+							rgAJAXParams.goo_value_expected = data.goo_value;\
+							$J.post( strActionURL, rgAJAXParams).done( function( data ) {\
+								ReloadCommunityInventory();\
+							});\
 						});\
-					});\
-				}");
-			});
+					}");
+				});
+			}
 		}
 	}
 }
@@ -5401,7 +5403,8 @@ var highlight_owned_bool,
 	region6,
 	region7,
 	region8,
-	region9;
+	region9,
+	show1clickgoo;
 
 $(document).ready(function(){
 	// get preference values here   
@@ -5445,6 +5448,7 @@ $(document).ready(function(){
 		region7 = data[33];
 		region8 = data[34];
 		region9 = data[35];
+		show1clickgoo = data[39];
 
 		signed_in_promise.done(function(){
 		localization_promise.done(function(){

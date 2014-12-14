@@ -180,6 +180,13 @@
         },
         {
             "type": "bool",
+            "name": "show1clickgoo",
+            "value": true,
+            "title": "Show \"1-Click turn into Gems...\" button on applicable inventory items"
+        },
+        
+        {
+            "type": "bool",
             "name": "showmarkethistory",
             "value": true,
             "title": "Show Transaction Summary on Market"
