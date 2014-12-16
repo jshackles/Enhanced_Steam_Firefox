@@ -2,6 +2,10 @@ v7.3
 -----
 
 
+v7.2.2
+-----
+: Fixed several bugs introduced with newer versions of Firefox
+
 v7.2.1
 -----
 + Added the number of gems required for each game on the Booster Pack Creator dropdown
