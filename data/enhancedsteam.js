@@ -5407,272 +5407,271 @@ var highlight_owned_bool,
 	region9,
 	show1clickgoo;
 
-$(document).ready(function(){
-	// get preference values here   
-	self.port.on("get-prefs", function(data) {
-		highlight_owned_bool = data[25];
-		ownedColor = data[0];
-		highlight_wishlist_bool = data[26];
-		wishlistColor = data[1];
-		hideInstallSteam = data[2];
-		showDRM = data[3];
-		showACRTAG = data[36];
-		showmcus = data[4];
-		showdblinks = data[5];
-		showwsgf = data[6];
-		showpricehistory = data[7];
-		showappdesc = data[8];
-		showtotal = data[9];
-		showcustombg = data[10];
-		changegreenlightbanner = data[11];
-		showprofilelinks = data[12];
-		showsteamrepapi = data[37];
-		hideaboutmenu = data[13];
-		showmarkethistory = data[14];
-		showhltb = data[15];
-		showpcgw = data[16];
-		contscroll = data[17];
-		showsteamchartinfo = data[18];
-		showregionalprice = data[19];
-		showprofilelinks_display = data[20];
-		showcomparelinks = data[38];
-		showallachievements = data[21];
-		showlanguagewarninglanguage = data[22];
-		showlanguagewarning = data[23];
-		showastats = data[24];
-		region1 = data[27];
-		region2 = data[28];
-		region3 = data[29];
-		region4 = data[30];
-		region5 = data[31];
-		region6 = data[32];
-		region7 = data[33];
-		region8 = data[34];
-		region9 = data[35];
-		show1clickgoo = data[39];
 
-		signed_in_promise.done(function(){
-		localization_promise.done(function(){
-			if (startsWith(window.location.pathname, "/api")) return;
-			if (startsWith(window.location.pathname, "/login")) return;
-			if (startsWith(window.location.pathname, "/checkout")) return;
-			if (startsWith(window.location.pathname, "/join")) return;
+// get preference values here
+self.port.on("get-prefs", function(data) {
+	highlight_owned_bool = data[25];
+	ownedColor = data[0];
+	highlight_wishlist_bool = data[26];
+	wishlistColor = data[1];
+	hideInstallSteam = data[2];
+	showDRM = data[3];
+	showACRTAG = data[36];
+	showmcus = data[4];
+	showdblinks = data[5];
+	showwsgf = data[6];
+	showpricehistory = data[7];
+	showappdesc = data[8];
+	showtotal = data[9];
+	showcustombg = data[10];
+	changegreenlightbanner = data[11];
+	showprofilelinks = data[12];
+	showsteamrepapi = data[37];
+	hideaboutmenu = data[13];
+	showmarkethistory = data[14];
+	showhltb = data[15];
+	showpcgw = data[16];
+	contscroll = data[17];
+	showsteamchartinfo = data[18];
+	showregionalprice = data[19];
+	showprofilelinks_display = data[20];
+	showcomparelinks = data[38];
+	showallachievements = data[21];
+	showlanguagewarninglanguage = data[22];
+	showlanguagewarning = data[23];
+	showastats = data[24];
+	region1 = data[27];
+	region2 = data[28];
+	region3 = data[29];
+	region4 = data[30];
+	region5 = data[31];
+	region6 = data[32];
+	region7 = data[33];
+	region8 = data[34];
+	region9 = data[35];
+	show1clickgoo = data[39];
 
-			// On window load...
-			add_enhanced_steam_options();
-			add_fake_country_code_warning();
-			add_language_warning();
-			remove_install_steam_button();
-			remove_about_menu();
-			add_header_links();
-			process_early_access();
+	signed_in_promise.done(function(){
+	localization_promise.done(function(){
+		if (startsWith(window.location.pathname, "/api")) return;
+		if (startsWith(window.location.pathname, "/login")) return;
+		if (startsWith(window.location.pathname, "/checkout")) return;
+		if (startsWith(window.location.pathname, "/join")) return;
 
-			switch (window.location.host) {
-				case "store.steampowered.com":
-					switch (true) {
-						case /^\/cart\/.*/.test(window.location.pathname):
-							add_empty_cart_button();
-							break;
+		// On window load...
+		add_enhanced_steam_options();
+		add_fake_country_code_warning();
+		add_language_warning();
+		remove_install_steam_button();
+		remove_about_menu();
+		add_header_links();
+		process_early_access();
 
-						case /^\/app\/.*/.test(window.location.pathname):
-							var appid = get_appid(window.location.host + window.location.pathname);
-							add_app_page_wishlist_changes(appid);
-							display_coupon_message(appid);
-							show_pricing_history(appid, "app");
-							dlc_data_from_site(appid);
+		switch (window.location.host) {
+			case "store.steampowered.com":
+				switch (true) {
+					case /^\/cart\/.*/.test(window.location.pathname):
+						add_empty_cart_button();
+						break;
 
-							drm_warnings("app");
-							add_metracritic_userscore();
-							add_steamreview_userscore(appid);
-							display_purchase_date();
+					case /^\/app\/.*/.test(window.location.pathname):
+						var appid = get_appid(window.location.host + window.location.pathname);
+						add_app_page_wishlist_changes(appid);
+						display_coupon_message(appid);
+						show_pricing_history(appid, "app");
+						dlc_data_from_site(appid);
 
-							add_widescreen_certification(appid);
-							add_hltb_info(appid);
-							add_pcgamingwiki_link(appid);
-							add_steamcardexchange_link(appid);
-							add_app_page_highlights();
-							add_steamdb_links(appid, "app");
-							add_familysharing_warning(appid);
-							add_dlc_page_link(appid);
-							add_4pack_breakdown();
-							add_steamchart_info(appid);
-							add_app_badge_progress(appid);
-							add_dlc_checkboxes();
-							fix_achievement_icon_size();
-							add_astats_link(appid);
+						drm_warnings("app");
+						add_metracritic_userscore();
+						add_steamreview_userscore(appid);
+						display_purchase_date();
 
-							show_regional_pricing();
-							add_acrtag_warning();
-							add_review_toggle_button();
-							get_playfire_rewards(appid);
+						add_widescreen_certification(appid);
+						add_hltb_info(appid);
+						add_pcgamingwiki_link(appid);
+						add_steamcardexchange_link(appid);
+						add_app_page_highlights();
+						add_steamdb_links(appid, "app");
+						add_familysharing_warning(appid);
+						add_dlc_page_link(appid);
+						add_4pack_breakdown();
+						add_steamchart_info(appid);
+						add_app_badge_progress(appid);
+						add_dlc_checkboxes();
+						fix_achievement_icon_size();
+						add_astats_link(appid);
 
-							customize_app_page();
-							break;
+						show_regional_pricing();
+						add_acrtag_warning();
+						add_review_toggle_button();
+						get_playfire_rewards(appid);
 
-						case /^\/sub\/.*/.test(window.location.pathname):
-							var subid = get_subid(window.location.host + window.location.pathname);
-							drm_warnings("sub");
-							subscription_savings_check();
-							show_pricing_history(subid, "sub");
-							add_steamdb_links(subid, "sub");
-							add_acrtag_warning();
+						customize_app_page();
+						break;
 
-							show_regional_pricing();
-							break;
+					case /^\/sub\/.*/.test(window.location.pathname):
+						var subid = get_subid(window.location.host + window.location.pathname);
+						drm_warnings("sub");
+						subscription_savings_check();
+						show_pricing_history(subid, "sub");
+						add_steamdb_links(subid, "sub");
+						add_acrtag_warning();
 
-						case /^\/agecheck\/.*/.test(window.location.pathname):
-							send_age_verification();
-							break;
+						show_regional_pricing();
+						break;
 
-						case /^\/dlc\/.*/.test(window.location.pathname):
-							dlc_data_for_dlc_page();
-							break;
+					case /^\/agecheck\/.*/.test(window.location.pathname):
+						send_age_verification();
+						break;
 
-						case /^\/account\/.*/.test(window.location.pathname):
-							account_total_spent();
-							return;
-							break;
+					case /^\/dlc\/.*/.test(window.location.pathname):
+						dlc_data_for_dlc_page();
+						break;
 
-						case /^\/steamaccount\/addfunds/.test(window.location.pathname):
-							add_custom_wallet_amount();
-							break;
+					case /^\/account\/.*/.test(window.location.pathname):
+						account_total_spent();
+						return;
+						break;
 
-						case /^\/search\/.*/.test(window.location.pathname):
-							endless_scrolling();
-							add_hide_button_to_search();
-							break;
+					case /^\/steamaccount\/addfunds/.test(window.location.pathname):
+						add_custom_wallet_amount();
+						break;
 
-						case /^\/sale\/.*/.test(window.location.pathname):
-							show_regional_pricing();
-							break;
+					case /^\/search\/.*/.test(window.location.pathname):
+						endless_scrolling();
+						add_hide_button_to_search();
+						break;
 
-						// Storefront-front only
-						case /^\/$/.test(window.location.pathname):
-							add_popular_tab();
-							add_allreleases_tab();
-							add_carousel_descriptions();
-							show_regional_pricing();
-							window.setTimeout(function() { customize_home_page(); }, 1000);
-							break;
-					}
+					case /^\/sale\/.*/.test(window.location.pathname):
+						show_regional_pricing();
+						break;
 
-					/* Highlights & data fetching */
-					start_highlights_and_tags();
+					// Storefront-front only
+					case /^\/$/.test(window.location.pathname):
+						add_popular_tab();
+						add_allreleases_tab();
+						add_carousel_descriptions();
+						show_regional_pricing();
+						window.setTimeout(function() { customize_home_page(); }, 1000);
+						break;
+				}
 
-					// Storefront homepage tabs.
-					bind_ajax_content_highlighting();    
-					break;
+				/* Highlights & data fetching */
+				start_highlights_and_tags();
 
-				case "steamcommunity.com":
+				// Storefront homepage tabs.
+				bind_ajax_content_highlighting();    
+				break;
 
-					add_wallet_balance_to_header();
+			case "steamcommunity.com":
 
-					switch (true) {
-						case /^\/(?:id|profiles)\/.+\/wishlist/.test(window.location.pathname):
-							appdata_on_wishlist();
-							fix_wishlist_image_not_found();
-							add_empty_wishlist_buttons();
-							add_wishlist_filter();
-							add_wishlist_discount_sort();
-							add_wishlist_total();
-							add_wishlist_ajaxremove();
-							add_wishlist_notes();
+				add_wallet_balance_to_header();
 
-							start_highlights_and_tags();
-							break;
+				switch (true) {
+					case /^\/(?:id|profiles)\/.+\/wishlist/.test(window.location.pathname):
+						appdata_on_wishlist();
+						fix_wishlist_image_not_found();
+						add_empty_wishlist_buttons();
+						add_wishlist_filter();
+						add_wishlist_discount_sort();
+						add_wishlist_total();
+						add_wishlist_ajaxremove();
+						add_wishlist_notes();
 
-						case /^\/(?:id|profiles)\/.+\/\b(home|myactivity|status)\b/.test(window.location.pathname):
-							start_friend_activity_highlights();
+						start_highlights_and_tags();
+						break;
+
+					case /^\/(?:id|profiles)\/.+\/\b(home|myactivity|status)\b/.test(window.location.pathname):
+						start_friend_activity_highlights();
+						bind_ajax_content_highlighting();
+						break;
+
+					case /^\/(?:id|profiles)\/.+\/edit/.test(window.location.pathname):    					
+						add_es_background_selection();
+						break;
+
+					case /^\/(?:id|profiles)\/.+\/inventory/.test(window.location.pathname):
+						bind_ajax_content_highlighting();
+						inventory_market_prepare();
+						hide_empty_inventory_tabs();
+						break;
+
+					case /^\/(?:id|profiles)\/(.+)\/games/.test(window.location.pathname):
+						totaltime();
+						totalsize();
+						add_gamelist_achievements();
+						add_gamelist_sort();
+						add_gamelist_filter();
+						break;
+
+					case /^\/(?:id|profiles)\/.+\/badges/.test(window.location.pathname):
+						add_badge_completion_cost();
+						add_total_drops_count();
+						add_cardexchange_links();
+						add_badge_filter();
+						add_badge_sort();
+						add_badge_view_options();
+						break;
+
+					case /^\/(?:id|profiles)\/.+\/stats/.test(window.location.pathname):
+						add_achievement_sort();
+						break;
+
+					case /^\/(?:id|profiles)\/.+\/gamecard/.test(window.location.pathname):
+						var gamecard = get_gamecard(window.location.pathname);
+						add_cardexchange_links(gamecard);
+						add_gamecard_market_links(gamecard);
+						add_gamecard_foil_link();
+						break;
+
+					case /^\/(?:id|profiles)\/.+\/friendsthatplay/.test(window.location.pathname):
+						add_friends_that_play();
+						break;
+
+					case /^\/(?:id|profiles)\/.+\/tradeoffers/.test(window.location.pathname):
+						add_decline_button();
+						break;
+
+					case /^\/(?:id|profiles)\/.+/.test(window.location.pathname):
+						add_community_profile_links();
+						add_wishlist_profile_link();
+						add_supporter_badges();
+						change_user_background();
+						fix_profile_image_not_found();
+						add_steamrep_api();
+						break;
+
+					case /^\/(?:sharedfiles|workshop)\/.*/.test(window.location.pathname):
+						hide_greenlight_banner();
+						break;
+
+					case /^\/market\/.*/.test(window.location.pathname):
+						load_inventory().done(function() {
+							highlight_market_items();
 							bind_ajax_content_highlighting();
-							break;
+						});
+						add_market_total();
+						add_active_total();
+						break;
 
-						case /^\/(?:id|profiles)\/.+\/edit/.test(window.location.pathname):    					
-							add_es_background_selection();
-							break;
+					case /^\/app\/.*/.test(window.location.pathname):
+						var appid = get_appid(window.location.host + window.location.pathname);
+						add_steamdb_links(appid, "gamehub");
+						break;
 
-						case /^\/(?:id|profiles)\/.+\/inventory/.test(window.location.pathname):
-							bind_ajax_content_highlighting();
-							inventory_market_prepare();
-							hide_empty_inventory_tabs();
-							break;
+					case /^\/games\/.*/.test(window.location.pathname):
+						var appid = document.querySelector( 'a[href*="http://steamcommunity.com/app/"]' );
+						appid = appid.href.match( /(\d)+/g );
+						add_steamdb_links(appid, "gamegroup");
+						break;
 
-						case /^\/(?:id|profiles)\/(.+)\/games/.test(window.location.pathname):
-							totaltime();
-							totalsize();
-							add_gamelist_achievements();
-							add_gamelist_sort();
-							add_gamelist_filter();
-							break;
+					case /^\/tradingcards\/boostercreator/.test(window.location.pathname):
+						add_booster_prices();
+						break;
 
-						case /^\/(?:id|profiles)\/.+\/badges/.test(window.location.pathname):
-							add_badge_completion_cost();
-							add_total_drops_count();
-							add_cardexchange_links();
-							add_badge_filter();
-							add_badge_sort();
-							add_badge_view_options();
-							break;
-
-						case /^\/(?:id|profiles)\/.+\/stats/.test(window.location.pathname):
-							add_achievement_sort();
-							break;
-
-						case /^\/(?:id|profiles)\/.+\/gamecard/.test(window.location.pathname):
-							var gamecard = get_gamecard(window.location.pathname);
-							add_cardexchange_links(gamecard);
-							add_gamecard_market_links(gamecard);
-							add_gamecard_foil_link();
-							break;
-
-						case /^\/(?:id|profiles)\/.+\/friendsthatplay/.test(window.location.pathname):
-							add_friends_that_play();
-							break;
-
-						case /^\/(?:id|profiles)\/.+\/tradeoffers/.test(window.location.pathname):
-							add_decline_button();
-							break;
-
-						case /^\/(?:id|profiles)\/.+/.test(window.location.pathname):
-							add_community_profile_links();
-							add_wishlist_profile_link();
-							add_supporter_badges();
-							change_user_background();
-							fix_profile_image_not_found();
-							add_steamrep_api();
-							break;
-
-						case /^\/(?:sharedfiles|workshop)\/.*/.test(window.location.pathname):
-							hide_greenlight_banner();
-							break;
-
-						case /^\/market\/.*/.test(window.location.pathname):
-							load_inventory().done(function() {
-								highlight_market_items();
-								bind_ajax_content_highlighting();
-							});
-							add_market_total();
-							add_active_total();
-							break;
-
-						case /^\/app\/.*/.test(window.location.pathname):
-							var appid = get_appid(window.location.host + window.location.pathname);
-							add_steamdb_links(appid, "gamehub");
-							break;
-
-						case /^\/games\/.*/.test(window.location.pathname):
-							var appid = document.querySelector( 'a[href*="http://steamcommunity.com/app/"]' );
-							appid = appid.href.match( /(\d)+/g );
-							add_steamdb_links(appid, "gamegroup");
-							break;
-
-						case /^\/tradingcards\/boostercreator/.test(window.location.pathname):
-							add_booster_prices();
-							break;
-
-					}
-					break;
-			}
-		});
-		});
+				}
+				break;
+		}
+	});
 	});
 });
