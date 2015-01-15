@@ -1,9 +1,12 @@
 v7.3
 -----
+
+
+v7.2.3
+-----
 : Fixed a bug in the feature that displays a game's purchase date
 - Removed wishlist links on user profile pages
 - Removed "badge progress" section on app pages
-
 
 v7.2.2
 -----
