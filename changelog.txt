@@ -1,5 +1,7 @@
 v7.3
 -----
+- Removed wishlist links on user profile pages
+- Removed "badge progress" section on app pages
 
 
 v7.2.2
