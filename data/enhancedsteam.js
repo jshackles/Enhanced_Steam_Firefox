@@ -1427,7 +1427,7 @@ function add_hltb_info(appid) {
 
 function add_pcgamingwiki_link(appid) {
 	if (showpcgw == true) {
-		$('#demo_block').prepend('<a class="btnv6_blue_hoverfade btn_medium pcgw_btn" target="_blank" href=http://pcgamingwiki.com/api/appid.php?appid="' + appid + '" style="display: block; margin-bottom: 6px;"><span><i class="ico16" style="background-image:url(' + self.options.img_pcgw + ')"></i>&nbsp;&nbsp; ' + localized_strings[language].wiki_article.replace("__pcgw__","PCGamingWiki") + '</span></a>');
+		$('#demo_block').prepend('<a class="btnv6_blue_hoverfade btn_medium pcgw_btn" target="_blank" href=http://pcgamingwiki.com/api/appid.php?appid=' + appid + ' style="display: block; margin-bottom: 6px;"><span><i class="ico16" style="background-image:url(' + self.options.img_pcgw + ')"></i>&nbsp;&nbsp; ' + localized_strings[language].wiki_article.replace("__pcgw__","PCGamingWiki") + '</span></a>');
 	}
 }
 
