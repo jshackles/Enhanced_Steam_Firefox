@@ -336,6 +336,44 @@ function highlight_nondiscounts(node) {
 	if (getValue("hide_nondiscounts")) { $(node).css("display", "none"); }
 }
 
+function highlight_notinterested(node) {
+	var notinterested_promise = (function () {
+		var deferred = new $.Deferred();
+		if (is_signed_in && window.location.protocol != "https:") {
+			var expire_time = parseInt(Date.now() / 1000, 10) - 1 * 60 * 60; // One hour ago
+			var last_updated = getValue("dynamiclist_time") || expire_time - 1;
+
+			if (last_updated < expire_time) {
+				get_http("http://store.steampowered.com/dynamicstore/userdata/", function(txt) {
+					var data = JSON.parse(txt);
+					if (data["rgIgnoredApps"]) {
+						setValue("ignored_apps", data["rgIgnoredApps"].toString());
+					}
+					setValue("dynamiclist_time", parseInt(Date.now() / 1000, 10));
+					deferred.resolve();
+				});
+			} else {
+				deferred.resolve();
+			}
+		} else {
+			deferred.resolve();
+		}
+		return deferred.promise();
+	})();
+
+	$.when.apply($, [notinterested_promise]).done(function() {
+		if (getValue("hide_notinterested")) {
+			var notinterested = getValue("ignored_apps").split(",");
+			if ($(node).hasClass("search_result_row")) {
+				var appid = get_appid(node.href);
+				if ($.inArray(appid, notinterested) !== -1) {
+					$(node).css("display", "none");
+				}
+			}
+		}
+	});
+}
+
 function hexToRgb(hex) {
 	var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
 	return result ? {
@@ -2489,7 +2527,7 @@ function endless_scrolling() {
 }
 
 function add_hide_button_to_search() {
-	$("#advsearchform").find(".rightcol").prepend("<div class='block' id='es_hide_menu'><div class='block_header'><div>" + localized_strings[language].hide + "</div></div><div class='block_content block_content_inner'><div class='tab_filter_control' id='es_owned_games'><div class='tab_filter_control_checkbox'></div><span class='tab_filter_control_label'>" + localized_strings[language].options.owned + "</span></div><div class='tab_filter_control' id='es_wishlist_games'><div class='tab_filter_control_checkbox'></div><span class='tab_filter_control_label'>" + localized_strings[language].options.wishlist + "</span></div><div class='tab_filter_control' id='es_cart_games'><div class='tab_filter_control_checkbox'></div><span class='tab_filter_control_label'>" + localized_strings[language].options.cart + "</span></div><div class='tab_filter_control' id='es_notdiscounted'><div class='tab_filter_control_checkbox'></div><span class='tab_filter_control_label'>" + localized_strings[language].notdiscounted + "</span></div></div></div>");
+	$("#advsearchform").find(".rightcol").prepend("<div class='block' id='es_hide_menu'><div class='block_header'><div>" + localized_strings[language].hide + "</div></div><div class='block_content block_content_inner'><div class='tab_filter_control' id='es_owned_games'><div class='tab_filter_control_checkbox'></div><span class='tab_filter_control_label'>" + localized_strings[language].options.owned + "</span></div><div class='tab_filter_control' id='es_wishlist_games'><div class='tab_filter_control_checkbox'></div><span class='tab_filter_control_label'>" + localized_strings[language].options.wishlist + "</span></div><div class='tab_filter_control' id='es_cart_games'><div class='tab_filter_control_checkbox'></div><span class='tab_filter_control_label'>" + localized_strings[language].options.cart + "</span></div><div class='tab_filter_control' id='es_notdiscounted'><div class='tab_filter_control_checkbox'></div><span class='tab_filter_control_label'>" + localized_strings[language].notdiscounted + "</span></div><div class='tab_filter_control' id='es_notinterested'><div class='tab_filter_control_checkbox'></div><span class='tab_filter_control_label'>" + localized_strings[language].notinterested + "</span></div></div></div>");
 
 	if (getValue("hide_owned")) {
 		$("#es_owned_games").addClass("checked");
@@ -2507,6 +2545,10 @@ function add_hide_button_to_search() {
 		$("#es_notdiscounted").addClass("checked");
 	}
 
+	if (getValue("hide_notinterested")) {
+		$("#es_notinterested").addClass("checked");
+	}
+
 	function add_hide_buttons_to_search_click() {
 		$(".search_result_row").each(function() {
 			$(this).css("display", "block");
@@ -2514,6 +2556,7 @@ function add_hide_button_to_search() {
 			if ($("#es_wishlist_games").is(".checked") && $(this).is(".ds_wishlist")) { $(this).css("display", "none"); }
 			if ($("#es_cart_games").is(".checked") && $(this).is(".ds_incart")) { $(this).css("display", "none"); }
 			if ($("#es_notdiscounted").is(".checked") && $(this).find(".search_discount").children("span").length == 0) { $(this).css("display", "none"); }
+			if ($("#es_notinterested").is(".checked")) { highlight_notinterested(this); }
 		});
 	}
 
@@ -2557,6 +2600,17 @@ function add_hide_button_to_search() {
 		} else {
 			$("#es_notdiscounted").addClass("checked");
 			setValue("hide_nondiscounts", true);
+		}
+		add_hide_buttons_to_search_click();
+	});
+
+	$("#es_notinterested").click(function() {
+		if ($("#es_notinterested").hasClass("checked")) {
+			$("#es_notinterested").removeClass("checked");
+			setValue("hide_notinterested", false);
+		} else {
+			$("#es_notinterested").addClass("checked");
+			setValue("hide_notinterested", true);
 		}
 		add_hide_buttons_to_search_click();
 	});
@@ -2932,6 +2986,8 @@ function start_highlights_and_tags(){
 				if ($(node).hasClass("search_result_row") && $(node).find(".search_discount").not(":has('span')").length > 0) {
 					highlight_nondiscounts(node_to_highlight);
 				}
+
+				highlight_notinterested(node_to_highlight);
 			});
 		});
 	}, 500);
@@ -3014,8 +3070,8 @@ function start_highlighting_node(node) {
 	if ($(node).hasClass("search_result_row") && $(node).find(".search_discount").not(":has('span')").length > 0) {		
 		highlight_nondiscounts(node_to_highlight);
 	}
-
-	var appid = get_appid(node.href || $(node).find("a")[0].href) || get_appid_wishlist(node.id);
+	
+	highlight_notinterested(node);
 }
 
 // Allows the user to intuitively remove an item from their wishlist on the app page
