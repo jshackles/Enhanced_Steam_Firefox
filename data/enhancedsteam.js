@@ -1121,6 +1121,21 @@ function fix_profile_image_not_found() {
 	}	
 }
 
+function add_wishlist_profile_link() {
+	if ($("#reportAbuseModal").length > 0) { var steamID = document.getElementsByName("abuseID")[0].value; }
+	if (steamID === undefined && document.documentElement.outerHTML.match(/steamid"\:"(.+)","personaname/)) { var steamID = document.documentElement.outerHTML.match(/steamid"\:"(.+)","personaname/)[1]; }
+
+	$(".profile_item_links").find(".profile_count_link:first").after("<div class='profile_count_link' id='es_wishlist_link'><a href='http://steamcommunity.com/profiles/" + steamID + "/wishlist'><span class='count_link_label'>" + localized_strings[language].wishlist + "</span>&nbsp;<span class='profile_count_link_total' id='es_wishlist_count'></span></a></div>");
+
+	// Get count of wishlisted items
+	get_http("http://steamcommunity.com/profiles/" + steamID + "/wishlist", function(txt) {
+		var html = $.parseHTML(txt);
+		var count = ($(html).find(".wishlistRow").length);
+
+		if (count) { $("#es_wishlist_count").text(count); } else { $('#es_wishlist_link').remove(); }
+	});	
+}
+
 // Adds supporter badges to supporter's profiles
 function add_supporter_badges() {
 	if ($("#reportAbuseModal").length > 0) { var steamID = document.getElementsByName("abuseID")[0].value; }
@@ -1620,6 +1635,79 @@ function dlc_data_for_dlc_page() {
 			$("#dlc_purchaseAll").after(buttoncode);
 		}
 	}, 500);
+}
+
+function add_app_badge_progress(appid) {
+	if ($(".icon").find('img[src$="/ico_cards.png"]').length > 0) {
+		$("#category_block").after("<div class='block'><div class='block_header'><h4>Badge Progress</h4></div><div class='block_content_inner'><link rel='stylesheet' type='text/css' href='http://cdn.steamcommunity.com/public/css/skin_1/badges.css'><div class='es_badge_progress'></div><div class='es_foil_badge_progress'></div></div>");
+		$(".es_badge_progress").load("http://steamcommunity.com/my/gamecards/" + appid + "/ .badge_current", function(responseText) {
+			if ($(responseText).find(".friendPlayerLevelNum").length != 1) {
+				var card_num_owned = $(responseText).find(".badge_detail_tasks .owned").length;
+				var card_num_total = $(responseText).find(".badge_detail_tasks .badge_card_set_card").length;
+				var progress_text_length = $(responseText).find(".gamecard_badge_progress").text().trim().length;
+				var next_level_empty_badge = $(responseText).find(".gamecard_badge_progress .badge_info").length;
+				var show_card_num;
+				var badge_completed;
+				if(progress_text_length>0&&next_level_empty_badge==0){
+					badge_completed=true;
+				}
+				if((card_num_owned>0&&progress_text_length==0)||(card_num_owned>0&&!badge_completed)){
+					show_card_num=true;
+				}
+				if (badge_completed){
+					$(".es_badge_progress").after("<div class='game_area_details_specs'><div class='icon'><img src='http://store.akamai.steamstatic.com/public/images/v6/ico/ico_cards.png' width=24 height=16 border=0 align=top></div><a href='http://steamcommunity.com/my/gamecards/" + appid + "/' class='name'>" + localized_strings[language].view_badge + "</a></div>");
+				} else {
+					$(".es_badge_progress").after("<div class='game_area_details_specs'><div class='icon'><img src='http://store.akamai.steamstatic.com/public/images/v6/ico/ico_cards.png' width=24 height=16 border=0 align=top></div><a href='http://steamcommunity.com/my/gamecards/" + appid + "/' class='name'>" + localized_strings[language].badge_progress + "</a></div>");
+				}
+				if(show_card_num){
+					$(".es_badge_progress").after("<div style='padding-top: 2px; padding-bottom: 10px; margin-left: 44px; color: #67c1f5;'>" + localized_strings[language].cards_owned.replace("__owned__", card_num_owned).replace("__possible__", card_num_total) + "</div>");
+				}
+				$(".es_badge_progress").after("<div style='padding-top: 10px; padding-bottom: 10px; margin-left: 44px; color: #67c1f5;'>" + $(responseText).find(".progress_info_bold").text() + "</div>");
+				$(".es_badge_progress").after("<div style=\"clear: both\"></div>");
+				$(".es_badge_progress .badge_info_description").css({"width":"275px"});
+				$(".es_badge_progress .badge_empty_circle").css({"margin":"0px 46px 14px 8px","border-radius":"46px"});
+				$(".es_badge_progress .badge_empty_right div:last-child").remove();
+				$(".es_badge_progress .badge_empty_right").append("<div class=\"badge_empty_name\">" + escapeHTML(localized_strings[language].badge_not_unlocked) + "</div>").append("<div style=\"clear: both\"></div>");
+			} else {
+				$(".es_badge_progress").remove();
+			}
+		});
+		$(".es_foil_badge_progress").load("http://steamcommunity.com/my/gamecards/" + appid + "/?border=1 .badge_current", function(responseText) {
+			if ($(responseText).find(".friendPlayerLevelNum").length != 1) {
+				var card_num_owned = $(responseText).find(".badge_detail_tasks .owned").length;
+				var card_num_total = $(responseText).find(".badge_detail_tasks .badge_card_set_card").length;
+				var progress_text_length = $(responseText).find(".gamecard_badge_progress").text().trim().length;
+				var next_level_empty_badge = $(responseText).find(".gamecard_badge_progress .badge_info").length;
+				var show_card_num;
+				var badge_completed;
+				if(progress_text_length>0&&next_level_empty_badge==0){
+					badge_completed=true;
+				}
+				if((card_num_owned>0&&progress_text_length==0)||(card_num_owned>0&&!badge_completed)){
+					show_card_num=true;
+				}
+				if ($(responseText).find(".badge_empty_circle").length != 1||card_num_owned>0) {
+					$(".es_foil_badge_progress .badge_info_description").css({"width":"275px"});
+					$(".es_foil_badge_progress .badge_empty_circle").css({"margin":"0px 46px 14px 8px","border-radius":"46px"});
+					$(".es_foil_badge_progress .badge_empty_right div:last-child").remove();
+					$(".es_foil_badge_progress .badge_empty_right").append("<div class=\"badge_empty_name\">" + escapeHTML(localized_strings[language].badge_not_unlocked) + "</div>")
+					if (badge_completed){
+						$(".es_foil_badge_progress").after("<div class='game_area_details_specs'><div class='icon'><img src='http://store.akamai.steamstatic.com/public/images/v6/ico/ico_cards.png' width=24 height=16 border=0 align=top></div><a href='http://steamcommunity.com/my/gamecards/" + appid + "/' class='name'>" + localized_strings[language].view_badge_foil + "</a><div>");
+					} else {
+						$(".es_foil_badge_progress").after("<div class='game_area_details_specs'><div class='icon'><img src='http://store.akamai.steamstatic.com/public/images/v6/ico/ico_cards.png' width=24 height=16 border=0 align=top></div><a href='http://steamcommunity.com/my/gamecards/" + appid + "/' class='name'>" + localized_strings[language].badge_foil_progress + "</a><div>");
+					}
+					if(show_card_num){
+						$(".es_foil_badge_progress").after("<div style='padding-top: 2px; padding-bottom: 10px; margin-left: 44px; color: #67c1f5;'>" + localized_strings[language].cards_owned.replace("__owned__", card_num_owned).replace("__possible__", card_num_total) + "</div>");
+					}
+					$(".es_foil_badge_progress").after("<div style=\"clear: both\"></div>");
+				} else {
+					$(".es_foil_badge_progress").remove();
+				}
+			} else {
+				$(".es_foil_badge_progress").remove();
+			}
+		});
+	}
 }
 
 function add_steamrep_api() {
@@ -5404,6 +5492,7 @@ self.port.on("get-prefs", function(data) {
 						add_dlc_page_link(appid);
 						add_4pack_breakdown();
 						add_steamchart_info(appid);
+						add_app_badge_progress(appid);
 						add_dlc_checkboxes();
 						fix_achievement_icon_size();
 						add_astats_link(appid);
@@ -5541,6 +5630,7 @@ self.port.on("get-prefs", function(data) {
 
 					case /^\/(?:id|profiles)\/.+/.test(window.location.pathname):
 						add_community_profile_links();
+						add_wishlist_profile_link();
 						add_supporter_badges();
 						change_user_background();
 						fix_profile_image_not_found();
