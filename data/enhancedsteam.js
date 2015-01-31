@@ -1091,7 +1091,6 @@ function add_community_profile_links() {
     	switch (showprofilelinks_display) {
     		case 0:
     			ico_steamrep = self.options.img_ico_steamrep;
-    			ico_steamtrades = self.options.img_ico_steamtrades;
     			ico_steamgifts = self.options.img_ico_steamgifts;
     			ico_achievementstats = self.options.img_ico_achievementstats;
     			ico_backpacktf = self.options.img_ico_backpacktf;
@@ -1099,7 +1098,6 @@ function add_community_profile_links() {
     			break;
     		case 1:
     			ico_steamrep = self.options.img_ico_steamrep_col;
-    			ico_steamtrades = self.options.img_ico_steamtrades_col;
     			ico_steamgifts = self.options.img_ico_steamgifts_col;
     			ico_achievementstats = self.options.img_ico_achievementstats_col;
     			ico_backpacktf = self.options.img_ico_backpacktf_col;
@@ -1112,9 +1110,7 @@ function add_community_profile_links() {
     	if (showprofilelinks_display != 2) { htmlstr += '<img src="' + ico_steamrep + '" class="profile_link_icon">'; }
     	htmlstr += '<div class="profile_count_link"><a href="http://steamdb.info/calculator/?player=' + steamID + '" target="_blank"><span class="count_link_label">SteamDB</span>&nbsp;<span class="profile_count_link_total">';
     	if (showprofilelinks_display != 2) { htmlstr += '<img src="' + ico_steamdb + '" class="profile_link_icon">'; }
-    	htmlstr += '<div class="profile_count_link"><a href="http://www.steamtrades.com/user/id/' + steamID + '" target="_blank"><span class="count_link_label">SteamTrades</span>&nbsp;<span class="profile_count_link_total">';
-    	if (showprofilelinks_display != 2) { htmlstr += '<img src="' + ico_steamtrades + '" class="profile_link_icon">'; }
-    	htmlstr += '<div class="profile_count_link"><a href="http://www.steamgifts.com/user/id/' + steamID + '" target="_blank"><span class="count_link_label">SteamGifts</span>&nbsp;<span class="profile_count_link_total">';
+    	htmlstr += '<div class="profile_count_link"><a href="http://www.steamgifts.com/go/user/' + steamID + '" target="_blank"><span class="count_link_label">SteamGifts</span>&nbsp;<span class="profile_count_link_total">';
     	if (showprofilelinks_display != 2) { htmlstr += '<img src="' + ico_steamgifts + '" class="profile_link_icon">'; }
     	htmlstr += '<div class="profile_count_link"><a href="http://www.achievementstats.com/index.php?action=profile&playerId=' + steamID + '" target="_blank"><span class="count_link_label">Achievement Stats</span>&nbsp;<span class="profile_count_link_total">';
     	if (showprofilelinks_display != 2) { htmlstr += '<img src="' + ico_achievementstats + '" class="profile_link_icon">'; }
