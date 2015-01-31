@@ -2323,7 +2323,7 @@ function drm_warnings(type) {
         var drm;
 
         var text = $("#game_area_description").html();
-			text += $("#game_area_sys_req").html();
+			text += $(".game_area_sys_req").html();
 			text += $("#game_area_legal").html();
 			text += $(".game_details").html();
 			text += $(".DRM_notice").html();
