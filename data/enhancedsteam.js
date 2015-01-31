@@ -1,4 +1,4 @@
-// Enhanced Steam v7.3
+// Enhanced Steam v7.4
 var language;
 
 var total_requests = 0;
