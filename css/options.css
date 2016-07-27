@@ -1,0 +1,255 @@
+body {
+	background: #000000; /* fallback */
+	background: -webkit-linear-gradient(top,  #000000 0%,#0b1821 100%); /* Chrome10+,Safari5.1+ */
+	background: linear-gradient(to bottom, #000000 0%, #0b1821 100%); /* Standard */
+	margin-left: 0px;
+	color: #efffef;
+	font-family:"Arial", sans-serif;
+}
+
+#side_bar {
+	position: fixed;
+	text-align:center;
+	font-family:"Arial";
+	font-size:18px;
+	margin-top: 90px;
+	width: 170px;
+	top: 0px;
+	bottom: 0px;
+	border-right: 1px solid #4D4B48;
+}
+#side_bar a { color: #b8b6b4; text-decoration: none; }
+#side_bar a:hover { color: #efffef; text-decoration: none; }
+
+#header {
+	position: fixed;
+	top: 0px;
+	width: 100%;
+	background-image: url( ../img/header_bg.jpg );
+	border-bottom: 1px solid #4D4B48;
+}
+
+#header_logo {
+	margin-left: 170px;
+	float:left;
+}
+
+.notification {
+	float:right;
+	font-size: 2em;
+	font-weight: bold;
+	padding:24px;
+	display:none;
+}
+
+#saved {
+	color:#8BC53F;
+}
+
+#reset_note {
+	color:#CF6A32;
+}
+
+.tab_row {
+	position: relative;
+	height: 25px;
+	width: 95%;
+	margin-left: 5%;
+	border: 1px solid black;
+	background-color: #4d4b49;
+	border-top-left-radius: 6px;
+	border-bottom-left-radius: 6px;
+	display:block;
+}
+
+.selected {
+	width: 100%;
+	margin-left: 0%;
+	border: 1px solid #8bb9e0;
+	border-top-left-radius: 6px;
+	border-bottom-left-radius: 6px;
+}
+
+.selected::after {    
+	content: '';
+	width: 0; 
+	height: 0;
+	display: block;
+	border-top: 14px solid transparent;
+	border-bottom: 14px solid transparent;	
+	border-right:14px solid black;
+	margin-left: 157px;
+	margin-top: -24px;
+}
+
+.tab_row:hover {
+	border: 1px solid #8bb9e0;
+}
+
+.content {
+	margin-top:100px;
+	margin-left: 130px;
+	margin-bottom: 40px;
+	text-align:left;
+	padding-left:51px;
+}
+#footer {
+	position:fixed;
+	bottom: 0;
+	text-align:right;
+	right:15px;
+}
+
+.btn,.colorbutton,.textbox {
+	background-image: url( ../img/btn_gradient.png );
+	background-repeat: repeat-x;
+	background-color: #262626;
+	
+	border: 1px solid #8bc53f;
+	color: #8bc53f;
+	
+	height: 21px;
+	margin-left:3px;
+	font-size: 11px;
+	text-align: center;
+	
+	cursor: pointer;
+}
+
+.btn {
+	padding:1px 22px;
+}
+
+.colorbutton {
+	width: 50px;
+	height: 21px;
+	
+	cursor: pointer;
+}
+.textbox {
+	cursor:auto;
+	width:auto;
+	text-align:left;
+}
+select, textarea, input[type=text] {
+	background-color: #262626;
+	color: #B8B6B4;
+	border: 1px solid #8bc53f;
+	padding: 5px;
+	margin-left:10px;
+	font-family:"Arial" sans-serif;
+}
+textarea {
+	width: 850px;
+}
+ul {
+	list-style:none;
+	padding:0;
+}
+li {
+	padding-left:10px;
+	padding-bottom:5px;
+}
+#region_selects li {
+	padding-bottom:0px;
+}
+.header {
+	font-weight: bold;
+	margin-bottom:2px;
+	margin-top:5px;
+	padding:0;
+	font-size: medium;
+}
+.settings_color, .settings_check {
+	display:inline-block;
+}
+.settings_check {
+	width:365px;
+}
+.settings_color {
+	padding-bottom:3px;
+}
+.help {
+	height:18px;
+	width:18px;
+	display:inline-block;
+	background:url('../img/questionmark.png') no-repeat center;
+	background-size:18px 18px;
+	margin-left:4px;
+	vertical-align:text-bottom;
+}
+#store_stores {
+	padding:3px 10px 3px 0;
+	border:1px solid #8BC53F;
+	display:inline-block;
+	margin-left:25px;
+}
+#profile_link_text {
+	margin-left:13px;
+	display:inline-block;
+}
+#profile_links {
+	margin-left:15px;
+	margin-top:10px;
+}
+a {
+	cursor:pointer;
+	text-decoration:underline;
+	color:#8BC53F;
+}
+a:hover {
+	color:#ade269;
+}
+.site_icon {
+	width:16px;
+	height:16px;
+	margin:0 4px 0 0;
+	vertical-align: text-bottom;
+}
+#reset {
+	margin-top:5px;
+	width:auto;
+}
+#spamcommentregex_list {
+	margin-left:10px;
+	margin-bottom:5px;
+	display:none;
+}
+#show_spamcommentregex,
+#show_quickinv_diff {
+	color:#EFFFEF;
+}
+#quickinv_opt {
+	margin-left:10px;
+	margin-bottom:5px;
+	display:none;
+}
+#quickinv_diff {
+	width: 100px;
+}
+.site_icon.profile_link_icon_background {
+	background:#EBEBEB;
+	border-radius:4px;
+}
+.site_icon_col {
+	display:none;
+}
+#regional_price_li {
+	height:35px;
+}
+#api_key_block {
+	padding-left:35px;
+}
+.translation {
+	margin-left:10px;
+}
+.language {
+	padding-right:8px;
+}
+.select2-search-choice-close {
+	display: inline-block;
+	position: static;
+}
+.credits li {
+	font-size: medium;
+}
