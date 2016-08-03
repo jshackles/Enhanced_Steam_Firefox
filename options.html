@@ -199,6 +199,7 @@
 					</select>
 				</li>
 				<li class="header" id="store_general" data-locale-text="options.general">General</li>
+				<li><input type="checkbox" id="version_show" data-setting="version_show"><label for="version_show" id="version_show_text" data-locale-text="options.version_show">Show change log when Enhanced Steam updates</label></li>
 				<li><input type="checkbox" id="replaceaccountname" data-setting="replaceaccountname"><label for="replaceaccountname" id="store_replace_account_name" data-locale-text="options.replace_account_name">Replace account name with community name</label></li>
 				<li><input type="checkbox" id="showfakeccwarning" data-setting="showfakeccwarning"><label for="showfakeccwarning" id="header_showfakeccwarning_text" data-locale-text="options.show_regionwarning">Show warning if browsing in non-account region</label></li>
 				<li><input type="checkbox" id="send_age_info" data-setting="send_age_info"><label for="send_age_info" id="send_age_info_text" data-locale-text="options.send_age_info">Automatically send age verification when requested</label></li>
@@ -216,6 +217,7 @@
 				<li><input type="checkbox" id="show_alternative_linux_icon" data-setting="show_alternative_linux_icon"><label for="show_alternative_linux_icon" id="show_alternative_linux_icon_text" data-locale-text="options.show_alternative_linux_icon">Show alternative Linux icon</label>
 				<li><input type="checkbox" id="skip_got_steam" data-setting="skip_got_steam"><label for="skip_got_steam" id="skip_got_steam_text" data-locale-text="options.skip_got_steam">Skip the 'Got Steam?' window</label>
 				<li class="header" id="store_general_thirdparty">Options for information from 3rd party sites</li>
+				<li><input type="checkbox" id="show_keylol_links" data-setting="show_keylol_links"><label for="show_keylol_links" id="store_keylol_text">Show Keylol links on app pages</label></li>
 				<li><input type="checkbox" id="showmcus" data-setting="showmcus"><label for="showmcus" id="store_metacritic_text" data-locale-text="options.metacritic">Show Metacritic user scores</label></li>
 				<li><input type="checkbox" id="showhltb" data-setting="showhltb"><label for="showhltb" id="store_hltb_text" data-locale-text="options.hltb">Show HowLongToBeat.com information</label></li>
 				<li><input type="checkbox" id="showsteamdb" data-setting="showsteamdb"><label for="showsteamdb" id="store_steamdb_text" data-locale-text="options.steamdb">Show SteamDB links</label></li>
@@ -387,6 +389,9 @@
 					</li>
 				<div id="profile_link_text" data-locale-text="options.profile_links">Show profile links to</div>:
 				<ul id="profile_links">
+					<li>
+						<input type="checkbox" id="profile_steamrepcn" data-setting="profile_steamrepcn"><label for="profile_steamrepcn"><img src="img/ico/srcn.png" class="site_icon" />SteamrepCN</label>
+					</li>
 					<li>
 						<input type="checkbox" id="profile_steamrep" data-setting="profile_steamrep"><label for="profile_steamrep"><img src="img/ico/steamrep.png" class="site_icon site_icon_gray" /><img src="img/ico/steamrep_col.png" class="site_icon profile_link_icon_background site_icon_col" />SteamRep</label>
 					</li>

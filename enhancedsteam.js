@@ -129,6 +129,8 @@ var signed_in_promise = (function () {
 			profile_path = profile_url.match(/\/(?:id|profiles)\/(.+?)\/$/)[0];
 		}
 
+		setValue("steamID", "true");
+
 		if (profile_path) {
 			if (getValue("steamID")) {
 				is_signed_in = getValue("steamID");
@@ -153,42 +155,43 @@ var signed_in_promise = (function () {
 
 // TODO: We should store the data in ES's storage to ensure that is in sync across Store and Community
 var dynamicstore_promise = (function () {
-	var deferred = new $.Deferred();
+	// var deferred = new $.Deferred();
 
-	if (is_signed_in) {
-		var expire_time = parseInt(Date.now() / 1000, 10) - 1 * 60 * 60 * 24, // 24 hours ago
-			last_updated = getValue("dynamicstore_time") || expire_time - 1,
-			dynamicstore_data = getValue("dynamicstore_data"),
-			dataVersion = sessionStorage.getItem("unUserdataVersion") || 0,
-			dataVersion_cache = getValue("unUserdataVersion") || 0;
+	// if (is_signed_in) {
+	// 	var expire_time = parseInt(Date.now() / 1000, 10) - 1 * 60 * 60 * 24, // 24 hours ago
+	// 		last_updated = getValue("dynamicstore_time") || expire_time - 1,
+	// 		dynamicstore_data = getValue("dynamicstore_data"),
+	// 		dataVersion = sessionStorage.getItem("unUserdataVersion") || 0,
+	// 		dataVersion_cache = getValue("unUserdataVersion") || 0;
 
-		if ((last_updated < expire_time || !dynamicstore_data || dataVersion && dataVersion !== dataVersion_cache) && window.location.protocol != "https:") {
-			var accountidtext = $('script:contains("g_AccountID")').text() || "",
-				accountid = /g_AccountID = (\d+);/.test(accountidtext) ? accountidtext.match(/g_AccountID = (\d+);/)[1] : 0;
+	// 	if ((last_updated < expire_time || !dynamicstore_data || dataVersion && dataVersion !== dataVersion_cache) && window.location.protocol != "https:") {
+	// 		var accountidtext = $('script:contains("g_AccountID")').text() || "",
+	// 			accountid = /g_AccountID = (\d+);/.test(accountidtext) ? accountidtext.match(/g_AccountID = (\d+);/)[1] : 0;
 
-			get_http("//store.steampowered.com/dynamicstore/userdata/" + (accountid ? "?id=" + accountid + "&v=" + dataVersion : "?v=" + last_updated), function(txt) {
-				var data = JSON.parse(txt);
-				if (data) {
-					setValue("dynamicstore_data", data);
-					setValue("dynamicstore_time", parseInt(Date.now() / 1000, 10));
+	// 		get_http("//store.steampowered.com/dynamicstore/userdata/" + (accountid ? "?id=" + accountid + "&v=" + dataVersion : "?v=" + last_updated), function(txt) {
+	// 			var data = JSON.parse(txt);
+	// 			if (data) {
+	// 				setValue("dynamicstore_data", data);
+	// 				setValue("dynamicstore_time", parseInt(Date.now() / 1000, 10));
 
-					deferred.resolve(data);
-				} else {
-					deferred.reject();
-				}
-			});
+	// 				deferred.resolve(data);
+	// 			} else {
+	// 				deferred.reject();
+	// 			}
+	// 		});
 
-			setValue("unUserdataVersion", dataVersion);
-		} else if (dynamicstore_data) {
-			deferred.resolve(dynamicstore_data);
-		} else {
-			deferred.reject();
-		}
-	} else {
-		deferred.reject();
-	}
+	// 		setValue("unUserdataVersion", dataVersion);
+	// 	} else if (dynamicstore_data) {
+	// 		deferred.resolve(dynamicstore_data);
+	// 	} else {
+	// 		deferred.reject();
+	// 	}
+	// } else {
+	// 	deferred.reject();
+	// }
 
-	return deferred.promise();
+	// return deferred.promise();
+	return true;
 })();
 
 // Global scope promise storage; to prevent unecessary API requests
@@ -607,6 +610,52 @@ var storePageData = (function() {
 
 	function cache_get(appid) {
 		var cached = $.parseJSON(localStorage.getItem("storePageData_" + appid));
+		if (cached && cached.expires > parseInt(Date.now() / 1000, 10)) return cached.data;
+	}
+
+	return {
+		load: load,
+		get: get
+	}
+})();
+
+var storePageDataCN = (function() {
+	var deferred = new $.Deferred();
+	var data;
+
+	function load(appid) {
+		data = cache_get(appid);
+		if (data) {
+			deferred.resolveWith(data);
+		} else {
+			var apiurl = "//api.enhancedsteam.com/storepagedatacn/?appid=" + appid;
+			get_http(apiurl, function(txt) {
+				data = JSON.parse(txt);
+				cache_set(appid, data);
+				deferred.resolveWith(data);
+			}).fail(deferred.reject);
+		}
+		return deferred.promise();
+	}
+
+	function get(api, callback) {
+		if (api && callback) deferred.done(function() {
+			if (data[api]) callback(data[api]);
+		});
+		return deferred.promise();
+	}
+
+	function cache_set(appid, data) {
+		var expires = parseInt(Date.now() / 1000, 10) + 1 * 60 * 60; // One hour from now
+		var cached = {
+			data: data,
+			expires: expires
+		};
+		localStorage.setItem("storePageDataCN_" + appid, JSON.stringify(cached));
+	}
+
+	function cache_get(appid) {
+		var cached = $.parseJSON(localStorage.getItem("storePageDataCN_" + appid));
 		if (cached && cached.expires > parseInt(Date.now() / 1000, 10)) return cached.data;
 	}
 
@@ -2014,8 +2063,15 @@ function send_age_verification() {
 	storage.get(function(settings) {
 		if (settings.send_age_info === undefined) { settings.send_age_info = true; storage.set({'send_age_info': settings.send_age_info}); }
 		if (settings.send_age_info) {
-			document.getElementsByName("ageYear")[0].value="1955";
-			document.getElementsByClassName("btnv6_blue_hoverfade")[0].click();
+
+			if ($("#ageYear").length != 0) {
+				$("#ageYear").attr("value", "1955");
+				$(".btnv6_blue_hoverfade")[0].click();
+			} else {
+				if ($(".agegate_text_container.btns a:first").attr("href") == "#") {
+					$(".agegate_text_container.btns a:first")[0].click();
+				}
+			}
 		}
 	});
 }
@@ -2038,13 +2094,13 @@ function version_check() {
 		if ((version !== settings.version) && settings.version_show) {
 			// User is loading a new version of Enhanced Steam for the first time
 			$.get(chrome.extension.getURL('changelog_new.html'), function(data) {
-				var dialog = "<div style=\"float: left; margin-right: 21px;\"><img src=\"" + chrome.extension.getURL("img/enhancedsteam.png") + "\"></div><div style=\"float: right;\">" + localized_strings.update.changes + ":<ul class=\"es_changelog\">" + data.replace(/\r?\n|\r/g, "").replace("'", "\\'") + "</ul>";
+				var dialog = "<div style=\"height:100%; display:flex; flex-direction:row;\"><div style=\"float: left; margin-right: 21px;\"><img src=\"" + chrome.extension.getURL("img/enhancedsteam.png") + "\"></div><div style=\"float: right;\">" + localized_strings.update.changes.replace(/'/g, "\\'") + ":<ul class=\"es_changelog\">" + data.replace(/\r?\n|\r/g, "").replace(/'/g, "\\'") + "</ul></div></div>";
 				runInPageContext(
 					"function() {\
-						var prompt = ShowConfirmDialog(\"" + localized_strings.update.updated.replace("__version__", version) + "\", '" + dialog + "' , '" + localized_strings.donate.replace("'", "\\'") + "', '" + localized_strings.close.replace("'", "\\'") + "', '" + localized_strings.update.dont_show.replace("'", "\\'") + "'); \
+						var prompt = ShowConfirmDialog(\"" + localized_strings.update.updated.replace("__version__", version) + "\", '" + dialog + "' , '" + localized_strings.donate.replace(/'/g, "\\'") + "', '" + localized_strings.close.replace(/'/g, "\\'") + "', '" + localized_strings.update.dont_show.replace(/'/g, "\\'") + "'); \
 						prompt.done(function(result) {\
 							if (result == 'OK') { window.location.assign('//www.enhancedsteam.com/donate/'); }\
-							if (result == 'SECONDARY') {  }\
+							if (result == 'SECONDARY') { window.postMessage({ type: 'es_sendmessage_change', information: [ true ]}, '*'); }\
 						});\
 					}"
 				);
@@ -2052,6 +2108,13 @@ function version_check() {
 			storage.set({'version': version});
 		}
 	});
+
+	window.addEventListener("message", function(event) {
+		if (event.source !== window) return;
+		if (event.data.type && (event.data.type === "es_sendmessage_change")) { 
+			storage.set({'version_show': false});
+		}
+	}, false);
 }
 
 // Add a link to options to the global menu (where is Install Steam button)
@@ -2725,13 +2788,22 @@ function add_community_profile_links() {
 		if (settings.profile_astats === undefined) { settings.profile_astats = true; storage.set({'profile_astats': settings.profile_astats}); }
 		if (settings.profile_backpacktf === undefined) { settings.profile_backpacktf = true; storage.set({'profile_backpacktf': settings.profile_backpacktf}); }
 		if (settings.profile_astatsnl === undefined) { settings.profile_astatsnl = true; storage.set({'profile_astatsnl': settings.profile_astatsnl}); }
+		if (settings.profile_steamrepcn === undefined) { settings.profile_steamrepcn = true; storage.set({'profile_steamrepcn': settings.profile_steamrepcn}); }
 		if (settings.profile_permalink === undefined) { settings.profile_permalink = true; storage.set({'profile_permalink': settings.profile_permalink}); }
 		if (settings.show_profile_link_images === undefined) { settings.show_profile_link_images = "gray"; storage.set({'show_profile_link_images': settings.show_profile_link_images}); }
 		if (settings.show_profile_link_images!="false"){if(settings.show_profile_link_images=="color"){icon_color="_col";profile_link_icon_background=" profile_link_icon_background"}}
-		if (settings.profile_api_info === undefined){ settings.profile_api_info = false; storage.set({'profile_api_info': settings.profile_api_info});}
-		if (settings.api_key == false||settings.api_key==""||settings.api_key===undefined){ settings.profile_api_info = false; storage.set({'profile_api_info': settings.profile_api_info});}
 
 		var htmlstr = '';
+
+		if ((language == "schinese" || language == "tchinese") && settings.profile_steamrepcn) {
+			if (language == "schinese") { var name = "查看信誉记录"}
+			if (language == "tchinese") { var name = "確認信譽記錄"}
+			htmlstr += '<div class="profile_count_link"><a href="//steamrepcn.com/profiles/' + steamID + '" target="_blank"><span class="count_link_label">' + name + '</span>&nbsp;<span class="profile_count_link_total">';
+			if (settings.show_profile_link_images!="false"){htmlstr += '<img src="' + chrome.extension.getURL('img/ico/srcn.png') + '" class="profile_link_icon">';}
+			else {htmlstr += '&nbsp;'}
+			htmlstr += '</span></a></div>';
+		}
+
 		if (settings.profile_steamrep) {
 			htmlstr += '<div class="profile_count_link"><a href="//steamrep.com/profiles/' + steamID + '" target="_blank"><span class="count_link_label">SteamRep</span>&nbsp;<span class="profile_count_link_total">';
 			if (settings.show_profile_link_images!="false"){htmlstr += '<img src="' + chrome.extension.getURL('img/ico/steamrep'+icon_color+'.png') + '" class="profile_link_icon'+profile_link_icon_background+'">';}
@@ -5603,36 +5675,40 @@ function add_achievement_completion_bar(appid) {
 }
 
 var ea_promise = (function() {
-	var deferred = new $.Deferred();
+	if (window.location.host == "store.steampowered.com") {
+		var deferred = new $.Deferred();
 
-	var ea_cache = getValue("ea_appids");
-	if (ea_cache) {
-		//console.info("EA cache was hit!")
-		deferred.resolve(ea_cache);
+		var ea_cache = getValue("ea_appids");
+		if (ea_cache) {
+			//console.info("EA cache was hit!")
+			deferred.resolve(ea_cache);
+		}
+
+		// Check if cache needs updating
+		var expire_time = parseInt(Date.now() / 1000, 10) - 1 * 60 * 60; // One hour ago
+		var last_updated = getValue("ea_appids_time") || expire_time - 1;
+
+		// Update cache in the background
+		if (last_updated < expire_time) {
+			//console.info("EA cache needs to be updated...");
+			// If no cache exists, pull the data from the website
+			get_http("//api.enhancedsteam.com/early_access/", function(txt) {
+				early_access_data = JSON.parse(txt);
+				setValue("ea_appids", early_access_data);
+				setValue("ea_appids_time", parseInt(Date.now() / 1000, 10));
+				
+				//console.info("EA cache update was succesful!");
+				deferred.resolve(early_access_data);
+			}).fail(function(){
+				//console.info("EA cache update failed!");
+				deferred.reject();
+			});
+		}
+
+		return deferred.promise();
+	} else {
+		return true;
 	}
-
-	// Check if cache needs updating
-	var expire_time = parseInt(Date.now() / 1000, 10) - 1 * 60 * 60; // One hour ago
-	var last_updated = getValue("ea_appids_time") || expire_time - 1;
-
-	// Update cache in the background
-	if (last_updated < expire_time) {
-		//console.info("EA cache needs to be updated...");
-		// If no cache exists, pull the data from the website
-		get_http("//api.enhancedsteam.com/early_access/", function(txt) {
-			early_access_data = JSON.parse(txt);
-			setValue("ea_appids", early_access_data);
-			setValue("ea_appids_time", parseInt(Date.now() / 1000, 10));
-			
-			//console.info("EA cache update was succesful!");
-			deferred.resolve(early_access_data);
-		}).fail(function(){
-			//console.info("EA cache update failed!");
-			deferred.reject();
-		});
-	}
-
-	return deferred.promise();
 })();
 
 // Check for Early Access titles
@@ -6470,6 +6546,57 @@ function customize_app_page() {
 
 function add_help_button(appid) {
 	$(".game_area_play_stats .already_owned_actions").after("<div class='game_area_already_owned_btn'><a class='btnv6_lightblue_blue btnv6_border_2px btn_medium' href='https://help.steampowered.com/#HelpWithGame/?appid=" + appid + "'><span>" + localized_strings.get_help + "</span></a></div>");
+}
+
+function add_chinese_name() {
+	storePageDataCN.get("chineseName", function(data) {
+		$(".breadcrumbs").find("span[itemprop='name']").append("「" + data + "」");
+		$(".apphub_AppName:first").append("「" + data + "」");
+		var title = $(document).prop('title');
+		$(document).prop('title', title + "「" + data + "」");
+	});
+}
+
+function add_keylol_link() {
+	storage.get(function(settings) {
+		if (settings.show_keylol_links === undefined) { settings.show_keylol_links = false; storage.set({'show_keylol_links': settings.show_keylol_links}); }
+		if (settings.show_keylol_links) {
+			storePageDataCN.get("link", function(data) {
+				$('#ReportAppBtn').parent().prepend('<a class="btnv6_blue_hoverfade btn_medium keylol_btn" href="' + data + '" style="display: block; margin-bottom: 6px;"><span><i class="ico16" style="background-image:url(' + chrome.extension.getURL("img/ico/keylol.png") + ')"></i>&nbsp;&nbsp; 查看其乐据点</span></a>');
+
+				storePageDataCN.get("averageRating", function(score) {
+					var html = "<div class='block game_details underlined_links es_keylol'><div style='background-image: url(" + chrome.extension.getURL("img/keylol_bg.png") + "); background-repeat: no-repeat; height: 35px; font-size: 24px; color: #8BC53F; text-align: right; font-family: Motiva Sans Light, Arial, Helvetica, sans-serif; width: 270px;'>";
+					html += "<span>" + score + "</span>";
+					html += "<span style='color: #61686d; font-size: 25px;'>/</span>"
+					html += "<span style='color: #61686d; font-size: 11px;'>10</span></div>"
+					if (language == "schinese") { var title = "阅读游戏评测"; }
+					if (language == "tchinese") { var title = "閱覽遊戲評測"; }
+					html += "<a href='" + data + "/timeline'>" + title + "</a>&nbsp;";
+					html += "<img src='http://store.akamai.steamstatic.com/public/images/ico/iconExternalLink.gif' border='0' align='bottom'>";
+					html += "</div></div>";
+					$("div.game_details:first").after(html);
+				});
+			});
+		}
+	});
+}
+
+function add_steamcn_mods() {
+	if (language == "schinese") { var heading = "第三方汉化"; }
+	if (language == "tchinese") { var heading = "第三方漢化"; }
+	$(".game_language_options").parent().append("<div class='block_title' style='margin-top: 10px;'>" + heading + ":</div><span id='es_c_mods'></span>");
+
+	storePageDataCN.get("chineseLocalizations", function(data) {
+		$.each(data, function() {
+			$("#es_c_mods").append("<a class='linkbar' href='" + this.link + "' target='_blank'>" + this.title + "</a>");
+		});
+	});
+
+	storePageDataCN.get("link", function(data) {
+		if (language == "schinese") { var link = "完整汉化情报"; }
+		if (language == "tchinese") { var link = "更多漢化信息"; }
+		$("#es_c_mods").after("<a href='" + data + "/intel' class='all_languages' target='_blank'>" + link + "</a>&nbsp;<img src='http://store.akamai.steamstatic.com/public/images/v5/ico_external_link.gif' border='0' align='bottom'>");
+	});
 }
 
 function customize_home_page() {
@@ -8987,7 +9114,7 @@ $(document).ready(function(){
 			disable_link_filter();
 			if (is_signed_in) {
 				replace_account_name();
-				launch_random_button();
+				//launch_random_button();
 				add_itad_button();
 			}
 
@@ -9006,6 +9133,10 @@ $(document).ready(function(){
 							add_empty_cart_button();
 							break;
 
+						case /\bagecheck\b/.test(path):
+							send_age_verification();
+							break;
+
 						case /^\/app\/.*/.test(path):
 							var appid = get_appid(window.location.host + path);
 							var metalink = $("#game_area_metalink").find("a").attr("href");
@@ -9016,7 +9147,7 @@ $(document).ready(function(){
 							storePageData.load(appid, metalink);
 
 							add_app_page_wishlist_changes(appid);
-							display_coupon_message(appid);
+							//display_coupon_message(appid);
 							show_pricing_history(appid, "app");
 							dlc_data_from_site(appid);
 
@@ -9025,7 +9156,7 @@ $(document).ready(function(){
 							drm_warnings("app");
 							add_metacritic_userscore();
 							add_steamreview_userscore(appid);
-							display_purchase_date();
+							//display_purchase_date();
 
 							add_widescreen_certification(appid);
 							add_hltb_info(appid);
@@ -9053,6 +9184,14 @@ $(document).ready(function(){
 							customize_app_page();
 							add_help_button(appid);
 							skip_got_steam();
+
+							if (language == "schinese" || language == "tchinese") {
+								storePageDataCN.load(appid);
+								add_chinese_name();
+								add_keylol_link();
+								add_steamcn_mods();
+							}
+
 							break;
 
 						case /^\/sub\/.*/.test(path):
@@ -9065,10 +9204,6 @@ $(document).ready(function(){
 
 							show_regional_pricing("sub");
 							skip_got_steam();
-							break;
-
-						case /^\/agecheck\/.*/.test(path):
-							send_age_verification();
 							break;
 
 						case /^\/dlc\/.*/.test(path):
@@ -9125,8 +9260,8 @@ $(document).ready(function(){
 				case "steamcommunity.com":
 
 					if (is_signed_in) {
-						add_birthday_celebration();
-						add_wallet_balance_to_header();
+						//add_birthday_celebration();
+						//add_wallet_balance_to_header();
 					}
 
 					switch (true) {

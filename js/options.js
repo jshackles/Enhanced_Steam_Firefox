@@ -95,6 +95,7 @@ var settings_defaults = {
 	"showsteamdb": true,
 	"showastatslink": true,
 	"showwsgf": true,
+	"show_keylol_links": false,
 	"show_package_info": false,
 	"show_sysreqcheck": false,
 	"show_steamchart_info": true,
@@ -107,6 +108,7 @@ var settings_defaults = {
 	
 	"hideinstallsteambutton": false,
 	"hideaboutmenu": false,
+	"version_show": true,
 	"replaceaccountname": false,
 	"showfakeccwarning": true,
 	"showlanguagewarning": true,
@@ -137,6 +139,7 @@ var settings_defaults = {
 	"disablelinkfilter": false,
 	"show1clickgoo": true,
 	"show_profile_link_images": "gray",
+	"profile_steamrepcn": true,
 	"profile_steamgifts": true,
 	"profile_steamrep": true,
 	"profile_steamdbcalc": true,
@@ -357,6 +360,15 @@ function load_translation() {
 				return current;
 			}
 
+			if (!(settings.language == "schinese" || settings.language == "tchinese")) {
+				$("#profile_steamrepcn").parent().hide();
+				$("#show_keylol_links").parent().hide();
+			} else {
+				if (settings.language == "schinese") { var title = "显示 Keylol 链接"; }
+				if (settings.language == "tchinese") { var title = "顯示Keylol連結"; }
+				$("#store_keylol_text").text(title);
+			}
+
 			// Localize elements with text
 			$("[data-locale-text]").text(function(){
 				return resolveObjPath( localized_strings, $(this).data("locale-text") );
@@ -378,17 +390,6 @@ function load_translation() {
 			$.each(localized_strings.options.lang, function(lang, lang_trl) {
 				$(".language." + lang).text(lang_trl + ":");
 			});
-			
-			// These I couldn't find in the html... not sure if I should remove them
-			/*$("#lowestprice_stores_text").text(localized_strings.stores);
-
-			$("#highlight_friends_want_color_default").text(localized_strings.theworddefault);
-			$("#tag_friends_want_color_default").text(localized_strings.theworddefault);
-			$("#tag_friends_own_color_default").text(localized_strings.theworddefault);
-			$("#tag_friends_rec_color_default").text(localized_strings.theworddefault);
-			$("#reset_countries").text(localized_strings.theworddefault);
-
-			$("#graphics_text").text(localized_strings.graphics);*/
 		});	
 	});
 }
