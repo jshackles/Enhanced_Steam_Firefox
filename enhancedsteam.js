@@ -1,4 +1,4 @@
-var version = "8.9";
+var version = "8.9.1";
 
 var console_info = ["%c Enhanced %cSteam v" + version + " by jshackles %c http://www.enhancedsteam.com ", "background: #000000;color: #7EBE45", "background: #000000;color: #ffffff", ""];
 console.log.apply(console, console_info);
@@ -4838,7 +4838,7 @@ function inventory_market_helper(response) {
 		owner_steamid = response[10],
 		is_gift = response[5] && /Gift/i.test(response[5]),
 		is_booster = hash_name && /Booster Pack/i.test(hash_name),
-		owns_inventory = (owner_steamid === is_signed_in);
+		owns_inventory = (true);
 
 	var thisItem = "#item" + global_id +"_"+ contextID +"_"+ assetID;
 	var $sideActs = $("#iteminfo" + item + "_item_actions");
