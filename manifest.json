@@ -1,6 +1,6 @@
 {
     "name": "Enhanced Steam",
-    "version": "8.9.1",
+    "version": "9.0",
     "description": "Enhances the Steam Experience",
     "icons": {
         "128": "img/enhancedsteam.png"
@@ -26,14 +26,16 @@
         "img/game_area_warning.png",
         "img/line_chart.png",
         "img/metacritic_bg.png",
-        "img/birthday_logo.png",
+        "img/birthday_logo_bg.gif",
         "img/birthday_bg.png",
         "img/ico/steamgifts.png",
+        "img/ico/steamtrades.png",
         "img/ico/steamrep.png",
         "img/ico/srcn.png",
         "img/ico/steamdb.png",
         "img/ico/achievementstats.png",
         "img/ico/steamgifts_col.png",
+        "img/ico/steamtrades_col.png",
         "img/ico/steamrep_col.png",
         "img/ico/steamdb_col.png",
         "img/ico/achievementstats_col.png",
