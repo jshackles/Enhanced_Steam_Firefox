@@ -108,6 +108,7 @@ var settings_defaults = {
 	
 	"hideinstallsteambutton": false,
 	"hideaboutmenu": false,
+	"showemptywishlist": true,
 	"version_show": true,
 	"replaceaccountname": false,
 	"showfakeccwarning": true,
@@ -141,13 +142,12 @@ var settings_defaults = {
 	"show_profile_link_images": "gray",
 	"profile_steamrepcn": true,
 	"profile_steamgifts": true,
+	"profile_steamtrades": true,
 	"profile_steamrep": true,
 	"profile_steamdbcalc": true,
 	"profile_astats": true,
 	"profile_backpacktf": true,
 	"profile_astatsnl": true,
-	"profile_api_info": false, // not used?
-	"api_key": false, // not used?
 	"profile_permalink": true,
 	"steamcardexchange": true,
 	"purchase_dates": true
