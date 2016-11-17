@@ -1,4 +1,4 @@
-var version = "9.0.1";
+var version = "9.0.2";
 
 var console_info = ["%c Enhanced %cSteam v" + version + " by jshackles %c http://www.enhancedsteam.com ", "background: #000000;color: #7EBE45", "background: #000000;color: #ffffff", ""];
 console.log.apply(console, console_info);
@@ -129,8 +129,6 @@ var signed_in_promise = (function () {
 			profile_path = profile_url.match(/\/(?:id|profiles)\/(.+?)\/$/)[0];
 		}
 
-		setValue("steamID", "true");
-
 		if (profile_path) {
 			if (getValue("steamID")) {
 				is_signed_in = getValue("steamID");
@@ -155,47 +153,46 @@ var signed_in_promise = (function () {
 
 // TODO: We should store the data in ES's storage to ensure that is in sync across Store and Community
 var dynamicstore_promise = (function () {
-	// var deferred = new $.Deferred();
+	var deferred = new $.Deferred();
 
-	// if (is_signed_in) {
-	// 	var expire_time = parseInt(Date.now() / 1000, 10) - 1 * 60 * 60 * 24, // 24 hours ago
-	// 		last_updated = getValue("dynamicstore_time") || expire_time - 1,
-	// 		dynamicstore_data = getValue("dynamicstore_data"),
-	// 		dataVersion = sessionStorage.getItem("unUserdataVersion") || 0,
-	// 		dataVersion_cache = getValue("unUserdataVersion") || 0;
+	if (is_signed_in) {
+		var expire_time = parseInt(Date.now() / 1000, 10) - 1 * 60 * 60 * 24, // 24 hours ago
+			last_updated = getValue("dynamicstore_time") || expire_time - 1,
+			dynamicstore_data = getValue("dynamicstore_data"),
+			dataVersion = sessionStorage.getItem("unUserdataVersion") || 0,
+			dataVersion_cache = getValue("unUserdataVersion") || 0;
 
-	// 	// Return data from cache if available
-	// 	if (dynamicstore_data) {
-	// 		deferred.resolve(dynamicstore_data);
-	// 	}
+		// Return data from cache if available
+		if (dynamicstore_data) {
+			deferred.resolve(dynamicstore_data);
+		}
 
-	// 	// Update data if needed
-	// 	if ((last_updated < expire_time || !dynamicstore_data || dataVersion && dataVersion !== dataVersion_cache) && window.location.protocol != "https:") {
-	// 		var accountidtext = $('script:contains("g_AccountID")').text() || "",
-	// 			accountid = /g_AccountID = (\d+);/.test(accountidtext) ? accountidtext.match(/g_AccountID = (\d+);/)[1] : 0;
+		// Update data if needed
+		if ((last_updated < expire_time || !dynamicstore_data || dataVersion && dataVersion !== dataVersion_cache) && window.location.protocol != "https:") {
+			var accountidtext = $('script:contains("g_AccountID")').text() || "",
+				accountid = /g_AccountID = (\d+);/.test(accountidtext) ? accountidtext.match(/g_AccountID = (\d+);/)[1] : 0;
 
-	// 		get_http("//store.steampowered.com/dynamicstore/userdata/" + (accountid ? "?id=" + accountid + "&v=" + dataVersion : "?v=" + expire_time), function(txt) {
-	// 			var data = JSON.parse(txt);
-	// 			if (data && data.hasOwnProperty("rgOwnedApps") && !$.isEmptyObject(data.rgOwnedApps)) {
-	// 				setValue("dynamicstore_data", data);
-	// 				setValue("dynamicstore_time", parseInt(Date.now() / 1000, 10));
+			get_http("//store.steampowered.com/dynamicstore/userdata/" + (accountid ? "?id=" + accountid + "&v=" + dataVersion : "?v=" + expire_time), function(txt) {
+				var data = JSON.parse(txt);
+				if (data && data.hasOwnProperty("rgOwnedApps") && !$.isEmptyObject(data.rgOwnedApps)) {
+					setValue("dynamicstore_data", data);
+					setValue("dynamicstore_time", parseInt(Date.now() / 1000, 10));
 
-	// 				deferred.resolve(data);
-	// 			} else {
-	// 				deferred.reject();
-	// 			}
-	// 		}).fail(function(){
-	// 			deferred.reject();
-	// 		});
+					deferred.resolve(data);
+				} else {
+					deferred.reject();
+				}
+			}).fail(function(){
+				deferred.reject();
+			});
 
-	// 		setValue("unUserdataVersion", dataVersion);
-	// 	}
-	// } else {
-	// 	deferred.reject();
-	// }
+			setValue("unUserdataVersion", dataVersion);
+		}
+	} else {
+		deferred.reject();
+	}
 
-	// return deferred.promise();
-	return true;
+	return deferred.promise();
 })();
 
 // Global scope promise storage; to prevent unecessary API requests
@@ -2151,7 +2148,7 @@ function version_check() {
 						});\
 					}"
 				);
-			});
+			}, "html");
 			storage.set({'version': version});
 		}
 	});
@@ -5045,7 +5042,7 @@ function inventory_market_helper(response) {
 		restriction = response[11],
 		is_gift = response[5] && /Gift/i.test(response[5]),
 		is_booster = hash_name && /Booster Pack/i.test(hash_name),
-		owns_inventory = (true);
+		owns_inventory = (owner_steamid === is_signed_in);
 
 	var thisItem = "#item" + global_id +"_"+ contextID +"_"+ assetID;
 	var $sideActs = $("#iteminfo" + item + "_item_actions");
@@ -5197,8 +5194,8 @@ function inventory_market_helper(response) {
 							$(thisItem).addClass("es-loading");
 
 							// Add the links with no data, so we can bind actions to them, we add the data later
-							$sideMarketActs.append("<a style='display:none' class='btn_small btn_green_white_innerfade es_market_btn' id='es_quicksell" + item + "'></a>");
-							$sideMarketActs.append("<a style='display:none' class='btn_small btn_green_white_innerfade es_market_btn' id='es_instantsell" + item + "'></a>");
+							//$sideMarketActs.append("<a style='display:none' class='btn_small btn_green_white_innerfade es_market_btn' id='es_quicksell" + item + "'></a>");
+							//$sideMarketActs.append("<a style='display:none' class='btn_small btn_green_white_innerfade es_market_btn' id='es_instantsell" + item + "'></a>");
 
 							// Check if price is stored in data
 							if ($(thisItem).hasClass("es-price-loaded")) {
@@ -9346,7 +9343,7 @@ $(document).ready(function(){
 			disable_link_filter();
 			if (is_signed_in) {
 				replace_account_name();
-				//launch_random_button();
+				launch_random_button();
 				add_itad_button();
 			}
 
@@ -9379,7 +9376,7 @@ $(document).ready(function(){
 							storePageData.load(appid, metalink);
 
 							add_app_page_wishlist_changes(appid);
-							//display_coupon_message(appid);
+							display_coupon_message(appid);
 							show_pricing_history(appid, "app");
 							dlc_data_from_site(appid);
 
@@ -9388,7 +9385,7 @@ $(document).ready(function(){
 							drm_warnings("app");
 							add_metacritic_userscore();
 							add_steamreview_userscore(appid);
-							//display_purchase_date();
+							display_purchase_date();
 
 							add_widescreen_certification(appid);
 							add_hltb_info(appid);
@@ -9492,8 +9489,8 @@ $(document).ready(function(){
 				case "steamcommunity.com":
 
 					if (is_signed_in) {
-						//add_birthday_celebration();
-						//add_wallet_balance_to_header();
+						add_birthday_celebration();
+						add_wallet_balance_to_header();
 					}
 
 					switch (true) {
@@ -9640,7 +9637,7 @@ $(document).ready(function(){
 							add_active_total();
 							minimize_active_listings();
 							add_lowest_market_price();
-							add_relist_button();
+							//add_relist_button();
 							keep_ssa_checked();
 							add_background_preview_link();
 							add_market_sort();

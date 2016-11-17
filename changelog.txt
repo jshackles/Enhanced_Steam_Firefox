@@ -1,4 +1,14 @@
-﻿v9.0.1
+﻿v9.0.2
+-----
++ Added a button to launch a random game from the Enhanced Steam menu
++ Added a store page dialog that will indicate when a coupon in your inventory applies to that game
++ Store pages for games you own will now display the date that game was purchased
++ A special Steam account birthday surprise!
++ Your wallet balance will be displayed in the header of Steamcommunity pages
+: Fixed several bugs related to older versions of Firefox
+- Removed "quick sell", "instant sell", and "relist" buttons temporarily due to a bug in Firefox 50
+
+v9.0.1
 -----
 + Home page "All New Releases" and "Popular" tabs now use the same visual format of other tabs
 : Fixed a few localization errors in the options page
