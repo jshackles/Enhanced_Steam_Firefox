@@ -1,6 +1,6 @@
 {
     "name": "Enhanced Steam",
-    "version": "9.0.2",
+    "version": "9.1",
     "description": "Enhances the Steam Experience",
     "icons": {
         "128": "img/enhancedsteam.png"
@@ -34,16 +34,9 @@
         "img/ico/srcn.png",
         "img/ico/steamdb.png",
         "img/ico/achievementstats.png",
-        "img/ico/steamgifts_col.png",
-        "img/ico/steamtrades_col.png",
-        "img/ico/steamrep_col.png",
-        "img/ico/steamdb_col.png",
-        "img/ico/achievementstats_col.png",
         "img/ico/steamcardexchange.png",
         "img/ico/backpacktf.png",
-        "img/ico/backpacktf_col.png",
         "img/ico/astatsnl.png",
-        "img/ico/astatsnl_col.png",
         "img/ico/keylol.png",
         "img/steamdb.png",
         "img/steamdb_store.png",
@@ -218,6 +211,16 @@
             ],
             "css": [
                 "css/steamcommunity.com/tradeoffer.css"
+            ]
+        },
+        {
+            "matches": [
+                "*://steamcommunity.com/id/*",
+                "*://steamcommunity.com/profiles/*"
+            ],
+            "css": [
+                "css/es_sites_links.css",
+                "css/es_sites_links-firefox.css"
             ]
         }
     ]
