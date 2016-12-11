@@ -1,4 +1,4 @@
-var version = "9.1";
+var version = "9.1.1";
 
 var console_info = ["%c Enhanced %cSteam v" + version + " by jshackles %c http://www.enhancedsteam.com ", "background: #000000;color: #7EBE45", "background: #000000;color: #ffffff", ""];
 console.log.apply(console, console_info);
@@ -2198,7 +2198,7 @@ function add_enhanced_steam_options() {
 	});
 
 	// Add ES progress indicator
-	$('#global_actions').after('<div class="es_progress_wrap"><progress id="es_progress" class="complete" value="1" max="1" title="${ localized_strings.ready.ready }"></progress></div>');
+	$('#global_actions').after(`<div class="es_progress_wrap"><progress id="es_progress" class="complete" value="1" max="1" title="${ localized_strings.ready.ready }"></progress></div>`);
 }
 
 // Display warning if browsing using non-account region
@@ -4479,8 +4479,10 @@ function add_dlc_page_link(appid) {
 
 // Fix "No image available" on apps image header
 function fix_app_image_not_found() {
-	$("img[src$='338200c5d6c4d9bdcf6632642a2aeb591fb8a5c2.gif']").attr("src", function(){
-		return "//steamcdn-a.akamaihd.net/steam/apps/" + get_appid( $(this).parent()[0].href ) + "/capsule_184x69.jpg";
+	$("img[src$='338200c5d6c4d9bdcf6632642a2aeb591fb8a5c2.gif']").attr("src", function(){		
+		var appid = get_appid($(this).parent()[0].href);
+		if (appid == 223530) { return; };
+		return "//steamcdn-a.akamaihd.net/steam/apps/" + appid + "/capsule_184x69.jpg";
 	});
 }
 
@@ -5051,6 +5053,26 @@ function inventory_market_prepare() {
 	window.addEventListener("message", function(event) {
 		if (event.source !== window) return;
 		if (event.data.type && (event.data.type === "es_sendmessage")) { inventory_market_helper(event.data.information); }
+		if (event.data.type && (event.data.type == "es_sendfee_" + assetID)) { 
+			var sell_price = event.data.information.amount - event.data.information.fees;
+			$.ajax({
+				url: "https://steamcommunity.com/market/sellitem/",
+				type: "POST",
+				data: {
+					"sessionid": event.data.sessionID,
+					"appid": event.data.global_id,
+					"contextid": event.data.contextID,
+					"assetid": event.data.assetID,
+					"amount": 1,
+					"price": sell_price
+				},
+				crossDomain: true,
+				xhrFields: { withCredentials: true }
+			}).complete(function(data){
+				$("#es_instantsell" + event.data.assetID).parent().slideUp();
+				$("#" + event.data.global_id + "_" + event.data.contextID + "_" + event.data.assetID).addClass("btn_disabled activeInfo").css("pointer-events", "none");
+			});
+		}
 	}, false);
 }
 
@@ -5217,8 +5239,8 @@ function inventory_market_helper(response) {
 							$(thisItem).addClass("es-loading");
 
 							// Add the links with no data, so we can bind actions to them, we add the data later
-							//$sideMarketActs.append("<a style='display:none' class='btn_small btn_green_white_innerfade es_market_btn' id='es_quicksell" + item + "'></a>");
-							//$sideMarketActs.append("<a style='display:none' class='btn_small btn_green_white_innerfade es_market_btn' id='es_instantsell" + item + "'></a>");
+							//$sideMarketActs.append("<a style='display:none' class='btn_small btn_green_white_innerfade es_market_btn' id='es_quicksell" + assetID + "'></a>");
+							//$sideMarketActs.append("<a style='display:none' class='btn_small btn_green_white_innerfade es_market_btn' id='es_instantsell" + assetID + "'></a>");
 
 							// Check if price is stored in data
 							if ($(thisItem).hasClass("es-price-loaded")) {
@@ -5227,11 +5249,11 @@ function inventory_market_helper(response) {
 
 								// Add Quick Sell button
 								if (price_high) {
-									$("#es_quicksell" + item).attr("price", price_high).html("<span>" + localized_strings.quick_sell.replace("__amount__", formatCurrency(price_high, currency_number_to_type(wallet_currency))) + "</span>").show().before("<br class='es-btn-spacer'>");
+									$("#es_quicksell" + assetID).attr("price", price_high).html("<span>" + localized_strings.quick_sell.replace("__amount__", formatCurrency(price_high, currency_number_to_type(wallet_currency))) + "</span>").show().before("<br class='es-btn-spacer'>");
 								}
 								// Add Instant Sell button
 								if (price_low) {
-									$("#es_instantsell" + item).attr("price", price_low).html("<span>" + localized_strings.instant_sell.replace("__amount__", formatCurrency(price_low, currency_number_to_type(wallet_currency))) + "</span>").show().before("<br class='es-btn-spacer'>");
+									$("#es_instantsell" + assetID).attr("price", price_low).html("<span>" + localized_strings.instant_sell.replace("__amount__", formatCurrency(price_low, currency_number_to_type(wallet_currency))) + "</span>").show().before("<br class='es-btn-spacer'>");
 								}
 
 								$(thisItem).removeClass("es-loading");
@@ -5263,11 +5285,11 @@ function inventory_market_helper(response) {
 												$(thisItem).addClass("es-price-loaded");
 												// Add "Quick Sell" button
 												if (price_high > price_low) {
-													$("#es_quicksell" + item).attr("price", price_high).html("<span>" + localized_strings.quick_sell.replace("__amount__", formatCurrency(price_high, currency_number_to_type(wallet_currency))) + "</span>").show().before("<br class='es-btn-spacer'>");
+													$("#es_quicksell" + assetID).attr("price", price_high).html("<span>" + localized_strings.quick_sell.replace("__amount__", formatCurrency(price_high, currency_number_to_type(wallet_currency))) + "</span>").show().before("<br class='es-btn-spacer'>");
 												}
 												// Add "Instant Sell" button
 												if (market.highest_buy_order) {
-													$("#es_instantsell" + item).attr("price", price_low).html("<span>" + localized_strings.instant_sell.replace("__amount__", formatCurrency(price_low, currency_number_to_type(wallet_currency))) + "</span>").show().before("<br class='es-btn-spacer'>");
+													$("#es_instantsell" + assetID).attr("price", price_low).html("<span>" + localized_strings.instant_sell.replace("__amount__", formatCurrency(price_low, currency_number_to_type(wallet_currency))) + "</span>").show().before("<br class='es-btn-spacer'>");
 												}
 											}
 										}).complete(function(){
@@ -5278,41 +5300,15 @@ function inventory_market_helper(response) {
 							}
 						}
 
-						// Bind actions to "Quick Sell" and "Instant Sel" buttons
-						$("#es_quicksell" + item + ", #es_instantsell" + item).on("click", function(e){
+						// Bind actions to "Quick Sell" and "Instant Sell" buttons
+						$("#es_quicksell" + assetID + ", #es_instantsell" + assetID).on("click", function(e){
 							e.preventDefault();
 
 							var sell_price = $(this).attr("price") * 100;
-
-							$("#es_sell, #es_quicksell" + item + ", #es_instantsell" + item).addClass("btn_disabled").css("pointer-events", "none");
-
+							$("#es_sell, #es_quicksell" + assetID + ", #es_instantsell" + assetID).addClass("btn_disabled").css("pointer-events", "none");
 							$sideMarketActs.find("div").first().html("<div class='es_loading' style='min-height: 66px;'><img src='//steamcommunity-a.akamaihd.net/public/images/login/throbber.gif'><span>" + localized_strings.selling + "</div>");
 
-							runInPageContext("function() { var fee = CalculateFeeAmount(" + sell_price + ", 0.10); window.postMessage({ type: 'es_sendfee_" + assetID + "', information: fee }, '*'); }");
-
-							window.addEventListener("message", function(event) {
-								if (event.source !== window) return;
-								if (event.data.type && (event.data.type == "es_sendfee_" + assetID)) { 
-									sell_price = sell_price - event.data.information.fees;
-									$.ajax({
-										url: "https://steamcommunity.com/market/sellitem/",
-										type: "POST",
-										data: {
-											"sessionid": sessionID,
-											"appid": global_id,
-											"contextid": contextID,
-											"assetid": assetID,
-											"amount": 1,
-											"price": sell_price
-										},
-										crossDomain: true,
-										xhrFields: { withCredentials: true }
-									}).complete(function(data){
-										$sideMarketActs.slideUp();
-										$(thisItem).addClass("btn_disabled activeInfo").css("pointer-events", "none");
-									});
-								}
-							}, false);
+							runInPageContext("function() { var fee_info = CalculateFeeAmount(" + sell_price + ", 0.10); window.postMessage({ type: 'es_sendfee_" + assetID + "', information: fee_info, sessionID: '" + sessionID + "', global_id: '" + global_id + "', contextID: '" + contextID + "', assetID: '" + assetID + "' }, '*'); }");
 						});
 					}
 				}
@@ -5607,7 +5603,7 @@ function keep_ssa_checked() {
 
 function add_inventory_gotopage(){
 	storage.get(function(settings) {
-		if (settings.showinvnav === undefined) { settings.showinvnav = false; storage.set({'showinvnav': settings.showinvnav}); }
+		if (settings.showinvnav === undefined) { settings.showinvnav = true; storage.set({'showinvnav': settings.showinvnav}); }
 		if (settings.showinvnav) {
 			$("#es_gotopage").remove();
 			$("#pagebtn_first").remove();
@@ -5618,17 +5614,27 @@ function add_inventory_gotopage(){
 			es_gotopage.id = "es_gotopage";
 			es_gotopage.textContent =
 				["g_ActiveInventory.GoToPage = function(page){",
-				 "	var iCurPage = this.pageCurrent;",
-				 "	var iNextPage = Math.min(Math.max(0, --page), this.pageTotal-1);",
-				 "	this.pageList[iCurPage].hide();",
-				 "	this.pageList[iNextPage].show();",
-				 "	this.pageCurrent = iNextPage;",
-				 "	this.LoadPageImages(this.pageList[iNextPage]);",
-				 "	this.PreloadPageImages(iNextPage);",
-				 "	this.UpdatePageCounts();",
+				 "  var nPageWidth = this.m_$Inventory.children('.inventory_page:first').width();",
+				 "	var iCurPage = this.m_iCurrentPage;",
+				 "	var iNextPage = Math.min(Math.max(0, --page), this.m_cPages-1);",
+				 "  var iPages = this.m_cPages",
+				 "  var _this = this;",
+				 "  if (iCurPage < iNextPage) {",
+				 "    if (iCurPage < iPages - 1) {",
+				 "      this.PrepPageTransition( nPageWidth, iCurPage, iNextPage );",
+				 "      this.m_$Inventory.css( 'left', '0' );",
+				 "      this.m_$Inventory.animate( {left: -nPageWidth}, 250, null, function() { _this.FinishPageTransition( iCurPage, iNextPage ); } );",
+				 "    }",
+				 "  } else if (iCurPage > iNextPage) {",
+				 "    if (iCurPage > 0) {",
+				 "      this.PrepPageTransition( nPageWidth, iCurPage, iNextPage );",
+				 "      this.m_$Inventory.css( 'left', '-' + nPageWidth + 'px' );",
+				 "      this.m_$Inventory.animate( {left: 0}, 250, null, function() { _this.FinishPageTransition( iCurPage, iNextPage ); } );",
+				 "    }",
+				 "  }",
 				 "}",
 				 "function InventoryLastPage(){",
-				 "	g_ActiveInventory.GoToPage(g_ActiveInventory.pageTotal);",
+				 "	g_ActiveInventory.GoToPage(g_ActiveInventory.m_cPages);",
 				 "}",
 				 "function InventoryFirstPage(){",
 				 "	g_ActiveInventory.GoToPage(1);",
@@ -5640,30 +5646,35 @@ function add_inventory_gotopage(){
 				 "}"].join('\n');
 
 			document.documentElement.appendChild(es_gotopage);
+			
+			var es_pagebtn_observer = new MutationObserver(function(mutations) {
+				mutations.forEach(function(mutation) {
+					if ($(mutation.target).attr("id") == "pagebtn_next" && mutation.attributeName === 'class') {
+						if ($(mutation.target).hasClass("disabled")) {
+							$("#pagebtn_last").addClass("disabled");
+						} else {
+							$("#pagebtn_last").removeClass("disabled");
+						}
+					}
+					if ($(mutation.target).attr("id") == "pagebtn_previous" && mutation.attributeName === 'class') {
+						if ($(mutation.target).hasClass("disabled")) {
+							$("#pagebtn_first").addClass("disabled");
+						} else {
+							$("#pagebtn_first").removeClass("disabled");
+						}
+					}
+				});
+			});
+			es_pagebtn_observer.observe($('#pagebtn_next')[0], { attributes: true });
+			es_pagebtn_observer.observe($('#pagebtn_previous')[0], { attributes: true });
 
 			// Go to first page
-			var firstpage = document.createElement("a");
-			firstpage.textContent = "<<";
-			firstpage.id = "pagebtn_first";
-			firstpage.classList.add("pagecontrol_element");
-			firstpage.classList.add("pagebtn");
-			firstpage.href = "javascript:InventoryFirstPage();";
-			$("#pagebtn_previous").after(firstpage);
+			$("#pagebtn_previous").after("<a href='javascript:InventoryFirstPage();' id='pagebtn_first' class='pagebtn pagecontrol_element disabled'><<</a>");
 
 			// Go to last page
-			var lastpage = document.createElement("a");
-			lastpage.textContent = ">>";
-			lastpage.id = "pagebtn_last";
-			lastpage.classList.add("pagecontrol_element");
-			lastpage.classList.add("pagebtn");
-			lastpage.href = "javascript:InventoryLastPage();";
-			$("#pagebtn_next").before(lastpage);
+			$("#pagebtn_next").before("<a href='javascript:InventoryLastPage();' id='pagebtn_last' class='pagebtn pagecontrol_element'>>></a>");
 
-			$(".pagebtn").css({
-				"padding": "0",
-				"width": "32px",
-				"margin": "0 3px"
-			});
+			$(".pagebtn").css({"padding": "0", "width": "32px", "margin": "0 3px" });
 			var page_go = document.createElement("div");
 			page_go.id = "es_pagego";
 			$(page_go).css({"float":"left"});
@@ -5682,7 +5693,7 @@ function add_inventory_gotopage(){
 			$(page_go).append(pagenumber);
 
 			var goto_btn = document.createElement("a");
-			goto_btn.textContent = "Go";
+			goto_btn.textContent = localized_strings.go;
 			goto_btn.id = "gotopage_btn";
 			goto_btn.classList.add("pagebtn");
 			goto_btn.href = "javascript:InventoryGoToPage();";
@@ -5693,8 +5704,6 @@ function add_inventory_gotopage(){
 			$(page_go).append(goto_btn);
 
 			$("#inventory_pagecontrols").before(page_go);
-			// TODO: Maybe use &laquo; or &#8810; for first/last button text?
-			// TODO: Disable buttons when already on first/last page?
 		}
 	});
 }
@@ -8206,7 +8215,7 @@ var resetLazyLoader = function() { runInPageContext(function() {
 function add_badge_filter() {
 	var filter_done = false;
 
-	if ($(".profile_small_header_texture a")[0].href == $(".playerAvatar:first a")[0].href.replace(/\/$/, "")) {
+	if ($(".profile_small_header_texture a")[0].href == ($("a.playerAvatar").prop("href") || "").replace(/\/$/, "")) {
 		var html  = '<span>' + localized_strings.show + ' </span>';
 			html += '<div class="store_nav"><div class="tab flyout_tab" id="es_filter_tab" data-flyout="es_filter_flyout" data-flyout-align="right" data-flyout-valign="bottom"><span class="pulldown"><div id="es_filter_active" style="display: inline;">' + localized_strings.badges_all + '</div><span></span></span></div></div>';
 			html += '<div class="popup_block_new flyout_tab_flyout responsive_slidedown" id="es_filter_flyout" style="visibility: visible; top: 42px; left: 305px; display: none; opacity: 1;"><div class="popup_body popup_menu">'
@@ -8288,7 +8297,7 @@ function add_badge_filter() {
 }
 
 function add_badge_sort() {
-	var is_own_profile = $(".profile_small_header_texture a")[0].href == $(".playerAvatar:first a")[0].href.replace(/\/$/, ""),
+	var is_own_profile = $(".profile_small_header_texture a")[0].href == ($("a.playerAvatar").prop("href") || "").replace(/\/$/, ""),
 		sorts = ["c", "a", "r"],
 		sorted = $("a.badge_sort_option.active")[0].search.replace("?sort=", "") || (is_own_profile ? "p" : "c"),
 		linksHtml = "";
@@ -9563,6 +9572,7 @@ $(document).ready(function(){
 							inventory_market_prepare();
 							hide_empty_inventory_tabs();
 							keep_ssa_checked();
+							add_inventory_gotopage();
 							break;
 
 						case /^\/(?:id|profiles)\/(.+)\/games/.test(path):
@@ -9632,8 +9642,10 @@ $(document).ready(function(){
 
 						case /^\/sharedfiles\/browse/.test(path):
 							remember_greenlight_filter().done(
-								endless_scrolling_greenlight
+								endless_scrolling_greenlight,
+								preview_greenlight_votes
 							);
+							hide_greenlight_banner();
 
 						case /^\/sharedfiles\/.*/.test(path):
 							hide_greenlight_banner();
@@ -9641,12 +9653,7 @@ $(document).ready(function(){
 							media_slider_expander();
 							break;
 
-						case /^\/workshop\/.*/.test(path):
-							remember_greenlight_filter().done(
-								endless_scrolling_greenlight,
-								preview_greenlight_votes
-							);
-							hide_greenlight_banner();
+						case /^\/workshop\/.*/.test(path):							
 							hide_spam_comments();
 							break;
 
