@@ -1,5 +1,4 @@
-var storage = chrome.storage.sync;
-if (!storage) storage = chrome.storage.local;
+var storage = chrome.storage.local;
 
 var highlight_defaults = {
 	"owned": "#5c7836",
@@ -88,6 +87,7 @@ var settings_defaults = {
 	"showmarkettotal": true,
 	"showsteamrepapi": true,
 	"showmcus": true,
+	"showoc": true,
 	"showhltb": true,
 	"showpcgw": true,
 	"showclient": true,
@@ -100,7 +100,6 @@ var settings_defaults = {
 	"show_sysreqcheck": false,
 	"show_steamchart_info": true,
 	"show_steamspy_info": true,
-	"show_carousel_descriptions": true,
 	"show_early_access": true,
 	"show_alternative_linux_icon": false,
 	"show_itad_button": false,
@@ -151,7 +150,11 @@ var settings_defaults = {
 	"profile_permalink": true,
 	"steamcardexchange": true,
 	"purchase_dates": true,
-	"add_wallet_balance": true
+	"add_wallet_balance": true,
+	"add_to_cart_wishlist": true,
+	"show_badge_progress": true,
+	"show_wishlist_link": true,
+	"show_wishlist_count": true
 };
 
 // Saves options to localStorage
@@ -258,6 +261,10 @@ function load_options() {
 			storage.set({"stores": settings_defaults.stores});
 		}
 
+		$("[data-parent-of]").on("change", function(){
+			initParentOf($(this));
+		});
+
 		// Set the value or state for each input
 		$("[data-setting]").each(function(){
 			var setting = $(this).data("setting");
@@ -269,6 +276,10 @@ function load_options() {
 					$(this).val(settings[setting]);
 				}
 			}
+
+			if ($(this).data("parent-of")) {
+				initParentOf($(this));
+			}
 		});
 
 		if (!settings.profile_api_info){ $("#api_key_block").hide(); }
@@ -277,7 +288,7 @@ function load_options() {
 
 		toggle_stores();
 		populate_regional_selects();
-		
+
 		if (!changelog_loaded) {		
 			$.get('changelog.txt', function(data) {
 				$("#changelog_text").after("<textarea rows=28 cols=100 readonly>" + data + "</textarea>");
@@ -288,6 +299,13 @@ function load_options() {
 		load_translation();
 		load_profile_link_images();
 	});
+}
+
+function initParentOf(node) {
+	var groupSel = $(node).data("parent-of"),
+		state = !$(node).is(":checked");
+
+	$(groupSel).toggleClass("disabled", state).find("input, select").prop("disabled", state);
 }
 
 var localized_strings = [];
@@ -489,6 +507,7 @@ function load_default_countries() {
 		$("#saved").stop(true,true).fadeIn().delay(600).fadeOut();
 	});	
 }
+
 
 $(document).ready(function(){
 	load_options();

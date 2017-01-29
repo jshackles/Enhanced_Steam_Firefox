@@ -789,19 +789,20 @@ input[type=checkbox].es_dlc_selection:checked + label {
 }
 
 #es_customize_btn {
+	position: relative;
 	visibility: visible;
 }
 #es_customize_btn .home_viewsettings_popup {
-	right: 18px;
+	right: 2px;
 	display: none;
-	z-index: 12;
+	z-index: 10;
 }
 .home_page_body_ctn.has_takeover #es_customize_btn {
 	margin: -24px 0 0 0;
 }
 .home_page_body_ctn:not(.has_takeover) #es_customize_btn {
-	position: absolute;
-	right: 232px;
+	position: relative;
+	float: right;
 }
 .home_page_body_ctn:not(.has_takeover) .home_cluster_ctn {
 	margin-top: 40px
@@ -1636,29 +1637,35 @@ input[type=checkbox].es_dlc_selection:checked + label {
 }
 .es_percentage:before {
 	content: "";
-	width: 7px;
-	height: 4px;
+	width: 0;
+	height: 0;
 	margin-right: 2px;
 	margin-bottom: 2px;
 	position: relative;
 	display: inline-block;
-	background: no-repeat url("chrome-extension://__MSG_@@extension_id__/img/arrows.png") top left;
+	border-color: transparent;
+	border-style: solid;
 }
 .es_percentage_higher:before {
-	background-position: 0 -4px;
+	border-width: 0 5px 5px 5px;
+	border-bottom-color: #ff1717;
 }
 .es_percentage_equal:before {
-	background-position: 0 -8px;
-	margin-bottom: 1px;
+	width: 6px;
+	content: "=";
+}
+.es_percentage_lower:before {
+	border-width: 5px 5px 0 5px;
+	border-top-color: #60ad0a;
 }
 .es_percentage_higher {
-	color: red;
-}
-.es_percentage_lower {
-	color: green;
+	color: #ff1717;
 }
 .es_percentage_equal {
-	color: yellow;
+	color: #e5e500;
+}
+.es_percentage_lower {
+	color: #60ad0a;
 }
 .es_regional_dailydeal {
 	margin-top: auto;
@@ -1977,8 +1984,8 @@ input[type=checkbox].es_dlc_selection:checked + label {
 
 /**************************************
  * Search result filter
+ * add_hide_buttons_to_search()
  *************************************/
-
 .es_input_number {
 	background-color: rgba( 103, 193, 245, 0.2 );
 	color: #fff;
@@ -1988,7 +1995,6 @@ input[type=checkbox].es_dlc_selection:checked + label {
 	width: calc(100% - 10px);
 	padding: 5px;
 }
-
 .es_input_text {
 	background-color: #2a3f5a;
         color: #fff;
@@ -1999,7 +2005,6 @@ input[type=checkbox].es_dlc_selection:checked + label {
     padding: 5px;
     margin: 5px;
 }
-
 .es_input_text.blur {
 	color:#62696e;
 }
@@ -2086,15 +2091,19 @@ input[type=checkbox].es_dlc_selection:checked + label {
 #game_area_metascore.es_area_userscore .metacritic {
 	margin-top: -4px !important;
 }
+#game_area_metascore .score,
+#game_area_userscore .score {
+	padding: 0 !important;
+}
 
 /***************************************
  * Users profiles
  * add_profile_style()
  **************************************/
-.holidayprofile .persona_name.persona_name_spacer {
+.es_profile_style .holidayprofile .persona_name.persona_name_spacer {
 	pointer-events: none; /* fixes username and alias dropdown not being clickable */
 }
-.holidayprofile .profile_content {
+.es_profile_style .holidayprofile .profile_content {
 	margin-top: -66px !important;
 	padding-top: 24px !important;
 }
@@ -2108,7 +2117,6 @@ input[type=checkbox].es_dlc_selection:checked + label {
 	padding-top: 10px;
 	clear: both;
 }
-
 #game_area_userscore .score {
 	width: 50px;
 	height: 50px;
@@ -2119,19 +2127,15 @@ input[type=checkbox].es_dlc_selection:checked + label {
 	text-align: center;
 	float: left;
 }
-
 #game_area_userscore .score.high {
 	background-color: #66CC33;
 }
-
 #game_area_userscore .score.medium {
 	background-color: #FFCC33;
 }
-
 #game_area_userscore .score.low {
 	background-color: #FF0000;
 }
-
 #game_area_userscore .logo {
 	background-image: url(/public/images/v6/mc_logo_no_text.png);
 	background-repeat: no-repeat;
@@ -2141,12 +2145,10 @@ input[type=checkbox].es_dlc_selection:checked + label {
 	margin-top: 10px;
 	float: left;
 }
-
 #game_area_userscore .wordmark {
 	float: left;
 	width: 180px;
 }
-
 #game_area_userscore .metacritic {
 	font-family: "Motiva Sans", Sans-serif;
 	font-weight: bold; /* bold */
@@ -2156,4 +2158,180 @@ input[type=checkbox].es_dlc_selection:checked + label {
 	line-height: 26px;
 	margin-top: 12px;
 	float: left;
+}
+
+/***************************************
+ * OpenCritic User Scores
+ * add_opencritic_userscore()
+ **************************************/
+#game_area_opencritic {
+	margin-top: 6px;
+	padding-top: 10px;
+	clear: both;
+}
+#game_area_opencritic.solo {
+	margin-top: 0px !important;
+	padding-top: 0px !important;
+}
+#game_area_opencritic .score {
+	width: 50px;
+	height: 50px;
+	line-height: 50px;
+	font-family: Arial, Helvetica, sans-serif;
+	color: #FFFFFF;
+	font-size: 25px;
+	text-align: center;
+	float: left;
+}
+#game_area_opencritic .score.mighty {
+	background-color: rgb(252, 67, 10);
+}
+#game_area_opencritic .score.strong {
+	background-color: rgb(158, 0, 180);
+}
+#game_area_opencritic .score.fair {
+	background-color: rgb(74, 161, 206);
+}
+#game_area_opencritic .score.weak {
+	background-color: rgb(128, 176, 106);
+}
+#game_area_opencritic .oc_text {
+	margin-left: 100px;
+	margin-top: -21px;
+}
+#game_area_opencritic .oc_text:after {
+	content: url(/public/images/ico/iconExternalLink.gif);
+}
+
+/***************************************
+ * Wishlists
+ * wishlist_add_to_cart()
+ **************************************/
+.es_add_to_cart .es_loading_img {
+	width: 16px;
+	vertical-align: middle;
+	margin: -1px -10px 0 4px;
+	filter: brightness(350%);
+}
+
+/***************************************
+ * Store app pages
+ * add_app_badge_progres()
+ **************************************/
+.es_badges_progress_block .es_cards_numbers {
+	padding-top: 10px;
+	padding-bottom: 10px;
+	margin-left: 44px;
+	color: #67c1f5;
+	clear: both;
+}
+.es_badges_progress_block .es_cards_owned {
+	padding-top: 8px;
+}
+.es_progress_block {
+	overflow: hidden;
+}
+.es_progress_block .badge_info_description {
+	width: 275px;
+}
+.es_progress_block .badge_empty_circle {
+	margin: 0px 46px 14px 8px;
+	border-radius: 46px;
+}
+
+/***************************************
+ * Steam Web Chat
+ **************************************/
+.chat_dialog_content_inner {
+	position: relative !important; /* fixes chat scrollbar not sticking to the bottom after typing */
+}
+
+/***************************************
+ * Wishlist review scores
+ **************************************/
+.es_wishlist_score {
+	margin-top: 15px;
+	margin-left: 10px;
+	cursor: pointer;
+}
+
+/***************************************
+ * Market
+ * market_popular_refresh_toggle()
+ **************************************/
+.es_popular_refresh_toggle {
+	width: 20px;
+	height: 20px;
+	text-align: center;
+	line-height: 20px;
+	float: right;
+	margin: 8px 8px 0 0;
+	border: 1px solid rgba(73, 193, 245, 0.25) !important;
+}
+.es_popular_refresh_toggle:after {
+	content: "▶";
+	font-size: 14px;
+	display: inline-block;
+}
+.es_popular_refresh_toggle.es_refresh_off:after {
+	content: "❚❚";
+	font-size: 11px;
+}
+
+/***************************************
+ * Store front
+ * customize_home_page()
+ **************************************/
+ /* Sidebar */
+@media (min-width: 1208px) {
+	div#global_header .content,
+	body.es_homepage_sidebar_hidden:not(.no_home_gutter) .home_page_body_ctn .page_background_holder {
+		right: 0 !important;
+	}
+	body.es_homepage_sidebar_hidden:not(.no_home_gutter) .home_page_content,
+	.footer_content,
+	.hardware_ctn {
+		padding-left: 16px !important;
+	}
+}
+@media (min-width: 1208px) and (max-width: 1440px) {
+	body:not(.es_homepage_sidebar_hidden) div#global_header .content {
+		right: -110px !important;
+	}
+}
+@media (min-width: 1442px) {
+	body.es_homepage_sidebar_hidden:not(.no_home_gutter) .home_page_content,
+	.footer_content,
+	.hardware_ctn {
+		padding-right: 16px !important;
+	}
+}
+body.es_homepage_sidebar_hidden .home_page_gutter {
+	opacity: 0;
+}
+/* Carousel */
+div.home_cluster_ctn.home_ctn {
+	transition: padding 0.50s;
+}
+body.es_homepage_carousel_hidden div.home_cluster_ctn.home_ctn {
+	padding: 0;
+}
+
+/***************************************
+ * Wishlists
+ * wishlist_add_ratings()
+ **************************************/
+.es_wishlist_score {
+	position: relative;
+}
+.es_wishlist_score:after {
+	content: "";
+	display: block;
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 16px;
+	height: 16px;
+	box-shadow: rgba(255, 255, 255, 0.2) 0px 0px 0px 1px inset;
+	pointer-events: none;
 }
