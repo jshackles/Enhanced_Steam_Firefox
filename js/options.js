@@ -53,7 +53,6 @@ var settings_defaults = {
 		"amazonus": true,
 		"impulse": true,
 		"gamersgate": true,
-		"greenmangaming": true,
 		"direct2drive": true,
 		"origin": true,
 		"uplay": true,
@@ -61,7 +60,6 @@ var settings_defaults = {
 		"gamesplanet": true,
 		"indiegamestand": true,
 		"gog": true,
-		"dotemu": true,
 		"nuuvem": true,
 		"dlgamer": true,
 		"humblestore": true,
@@ -70,14 +68,14 @@ var settings_defaults = {
 		"fireflower": true,
 		"humblewidgets": true,
 		"newegg": true,
-		"gamesrepublic": true,
 		"coinplay": true,
-		"funstock": true,
 		"wingamestore": true,
+		"macgamestore": true,
 		"gamebillet": true,
 		"silagames": true,
-		"playfield": true,
-		"imperialgames": true
+		"itchio": true,
+		"gamejolt": true,
+		"paradox": true
 	},
 	"override_price": "auto",
 	"showregionalprice": "mouse",
@@ -343,7 +341,7 @@ function load_translation() {
 				case "tchinese": l_code = "zh-TW"; break;
 				case "thai": l_code = "th"; break;
 				case "turkish": l_code = "tr"; break;
-				case "ukrainian": l_code = "uk"; break;
+				case "ukrainian": l_code = "ua"; break;
 				default: l_code = "en"; break;
 			}
 

@@ -21,19 +21,19 @@ span.platform_img {
 
 span.platform_img.steamplay {
 	width: 72px;
-	background-image: url( 'http://store.akamai.steamstatic.com/public/images/v6/icon_steamplay.png' );
+	background-image: url( 'http://steamstore-a.akamaihd.net/public/images/v6/icon_steamplay.png' );
 }
 
 span.platform_img.win {
-	background-image: url( 'http://store.akamai.steamstatic.com/public/images/v6/icon_platform_win.png' );
+	background-image: url( 'http://steamstore-a.akamaihd.net/public/images/v6/icon_platform_win.png' );
 }
 
 span.platform_img.mac {
-	background-image: url( 'http://store.akamai.steamstatic.com/public/images/v6/icon_platform_mac.png' );
+	background-image: url( 'http://steamstore-a.akamaihd.net/public/images/v6/icon_platform_mac.png' );
 }
 
 span.platform_img.linux {
-	background-image: url( 'http://store.akamai.steamstatic.com/public/images/v6/icon_platform_linux.png' );
+	background-image: url( 'http://steamstore-a.akamaihd.net/public/images/v6/icon_platform_linux.png' );
 }
 
 img.platform_small, .platform_img {
@@ -117,14 +117,14 @@ img.platform_small, .platform_img {
 	padding-top: 5px;
 }
 .apphub_HeaderTop.es_greenlight {
-	background-image: url('http://cdn.steamcommunity.com/public/images/sharedfiles/ig/gl_item_blue.jpg');
+	background-image: url('http://steamcommunity-a.akamaihd.net/public/images/sharedfiles/ig/gl_item_blue.jpg');
 	background-position: left center;
 }
 .apphub_HeaderTop.es_greenlight.es_greenlit {
-	background-image: url('http://cdn.steamcommunity.com/public/images/sharedfiles/ig/gl_item_green.jpg');
+	background-image: url('http://steamcommunity-a.akamaihd.net/public/images/sharedfiles/ig/gl_item_green.jpg');
 }
 .apphub_HeaderTop.es_greenlight.es_released {
-	background-image: url('http://cdn.steamcommunity.com/public/images/sharedfiles/ig/gl_item_green_shiny.jpg');
+	background-image: url('http://steamcommunity-a.akamaihd.net/public/images/sharedfiles/ig/gl_item_green_shiny.jpg');
 }
 .wishlistRowItem {
 	overflow: initial !important;
@@ -233,7 +233,7 @@ input[type=checkbox].es_dlc_selection:checked + label {
 }
 
 #es_dlc_option_panel {
-	background: url(http://cdn.steamcommunity.com/public/images/profile/profile_header_bg_texture.jpg);	
+	background: url('http://steamcommunity-a.akamaihd.net/public/images/profile/profile_header_bg_texture.jpg');	
 	border-bottom: 1px solid black;
 }
 
@@ -695,19 +695,19 @@ input[type=checkbox].es_dlc_selection:checked + label {
 	background-position: 0px -60px;
 }
 .gh_vote_up:before {
-	content: url('//steamcommunity-a.akamaihd.net/public/images/sharedfiles/ig/nav_vote_yes.png');
+	content: url('http://steamcommunity-a.akamaihd.net/public/images/sharedfiles/ig/nav_vote_yes.png');
 }
 .gh_vote_down:before {
-	content: url('//steamcommunity-a.akamaihd.net/public/images/sharedfiles/ig/nav_vote_no.png');
+	content: url('http://steamcommunity-a.akamaihd.net/public/images/sharedfiles/ig/nav_vote_no.png');
 }
 .gh_vote_later:before {
-	content: url('//steamcommunity-a.akamaihd.net/public/images/sharedfiles/ig/nav_remind_later.png');
+	content: url('http://steamcommunity-a.akamaihd.net/public/images/sharedfiles/ig/nav_remind_later.png');
 }
 .gh_favorited {
-	background: url('//steamcommunity-a.akamaihd.net/public/images/sharedfiles/ico_fav_tiled.png');
+	background: url('http://steamcommunity-a.akamaihd.net/public/images/sharedfiles/ico_fav_tiled.png');
 }
 .gh_followed {
-	background: url('//steamcommunity-a.akamaihd.net/public/images/sharedfiles/ico_follow_tiled_lrg.png');
+	background: url('http://steamcommunity-a.akamaihd.net/public/images/sharedfiles/ico_follow_tiled_lrg.png');
 }
 .performance-graph {
 	margin-top: -10px;
@@ -1493,7 +1493,7 @@ input[type=checkbox].es_dlc_selection:checked + label {
 
 /***************************************
  * Drop down menus
- * add_wishlist_discount_sort()
+ * add_wishlist_sorts()
  **************************************/
 /* Taken from: http://store.akamai.steamstatic.com/public/css/v6/store.css */
 #wishlist_sort_options .store_nav .tab {
@@ -1530,14 +1530,14 @@ input[type=checkbox].es_dlc_selection:checked + label {
 	height: 12px;
 	padding: 0;
 	display: inline-block;
-	background-image: url( 'http://store.akamai.steamstatic.com/public/images/v6/btn_arrow_down_padded.png' );
+	background-image: url( 'http://steamstore-a.akamaihd.net/public/images/v6/btn_arrow_down_padded.png' );
 	background-position: center;
 	background-repeat: no-repeat;
 	cursor: pointer;
 	vertical-align: text-bottom;
 }
 #wishlist_sort_options .store_nav .tab:hover > span.pulldown > span {
-    background-image: url( 'http://store.akamai.steamstatic.com/public/images/v6/btn_arrow_down_padded_white.png' );
+    background-image: url( 'http://steamstore-a.akamaihd.net/public/images/v6/btn_arrow_down_padded_white.png' );
 }
 #wishlist_sort_options .popup_block_new .popup_body {
     border: none !important;
@@ -1972,10 +1972,10 @@ input[type=checkbox].es_dlc_selection:checked + label {
 .es_marketsort.active.desc span:last-child::after {
 	content: "▼";
 }
-#es_selling .market_listing_table_header {
+#tabContentsMyActiveMarketListingsTable .market_listing_table_header {
 	overflow: hidden;
 }
-#es_selling .market_listing_header_namespacer {
+#tabContentsMyActiveMarketListingsTable .market_listing_header_namespacer {
 	visibility: hidden;
 }
 .market_listing_listed_position {
@@ -2207,11 +2207,16 @@ input[type=checkbox].es_dlc_selection:checked + label {
  * Wishlists
  * wishlist_add_to_cart()
  **************************************/
-.es_add_to_cart .es_loading_img {
+.es_add_to_cart.es_loading_cart span:after {
+	content: "";
+	display: inline-block;
 	width: 16px;
+	height: 16px;
 	vertical-align: middle;
 	margin: -1px -10px 0 4px;
 	filter: brightness(350%);
+	background-image: url('http://steamcommunity-a.akamaihd.net/public/images/login/throbber.gif');
+	background-size: 16px 16px;
 }
 
 /***************************************
@@ -2247,15 +2252,6 @@ input[type=checkbox].es_dlc_selection:checked + label {
 }
 
 /***************************************
- * Wishlist review scores
- **************************************/
-.es_wishlist_score {
-	margin-top: 15px;
-	margin-left: 10px;
-	cursor: pointer;
-}
-
-/***************************************
  * Market
  * market_popular_refresh_toggle()
  **************************************/
@@ -2263,6 +2259,7 @@ input[type=checkbox].es_dlc_selection:checked + label {
 	width: 20px;
 	height: 20px;
 	text-align: center;
+	font-size: 12px;
 	line-height: 20px;
 	float: right;
 	margin: 8px 8px 0 0;
@@ -2270,51 +2267,10 @@ input[type=checkbox].es_dlc_selection:checked + label {
 }
 .es_popular_refresh_toggle:after {
 	content: "▶";
-	font-size: 14px;
 	display: inline-block;
 }
 .es_popular_refresh_toggle.es_refresh_off:after {
 	content: "❚❚";
-	font-size: 11px;
-}
-
-/***************************************
- * Store front
- * customize_home_page()
- **************************************/
- /* Sidebar */
-@media (min-width: 1208px) {
-	div#global_header .content,
-	body.es_homepage_sidebar_hidden:not(.no_home_gutter) .home_page_body_ctn .page_background_holder {
-		right: 0 !important;
-	}
-	body.es_homepage_sidebar_hidden:not(.no_home_gutter) .home_page_content,
-	.footer_content,
-	.hardware_ctn {
-		padding-left: 16px !important;
-	}
-}
-@media (min-width: 1208px) and (max-width: 1440px) {
-	body:not(.es_homepage_sidebar_hidden) div#global_header .content {
-		right: -110px !important;
-	}
-}
-@media (min-width: 1442px) {
-	body.es_homepage_sidebar_hidden:not(.no_home_gutter) .home_page_content,
-	.footer_content,
-	.hardware_ctn {
-		padding-right: 16px !important;
-	}
-}
-body.es_homepage_sidebar_hidden .home_page_gutter {
-	opacity: 0;
-}
-/* Carousel */
-div.home_cluster_ctn.home_ctn {
-	transition: padding 0.50s;
-}
-body.es_homepage_carousel_hidden div.home_cluster_ctn.home_ctn {
-	padding: 0;
 }
 
 /***************************************
@@ -2323,15 +2279,53 @@ body.es_homepage_carousel_hidden div.home_cluster_ctn.home_ctn {
  **************************************/
 .es_wishlist_score {
 	position: relative;
+	margin: 5px 0 0 10px;
+	cursor: pointer;
 }
-.es_wishlist_score:after {
+.wishlistRow:hover .es_wishlist_score {
+	color: #77a0b7;
+}
+.es_wishlist_score:before {
 	content: "";
 	display: block;
-	position: absolute;
-	top: 0;
-	left: 0;
+	position: relative;
 	width: 16px;
 	height: 16px;
+	margin: 0 0 2px 2px;
 	box-shadow: rgba(255, 255, 255, 0.2) 0px 0px 0px 1px inset;
 	pointer-events: none;
+}
+.es_wishlist_score.es_score_positive:before {
+	background-image: url('http://steamstore-a.akamaihd.net/public/images/v6/user_reviews_positive.png');
+}
+.es_wishlist_score.es_score_mixed:before {
+	background-image: url('http://steamstore-a.akamaihd.net/public/images/v6/user_reviews_mixed.png');
+}
+.es_wishlist_score.es_score_negative:before {
+	background-image: url('http://steamstore-a.akamaihd.net/public/images/v6/user_reviews_negative.png');
+}
+
+/***************************************
+ * SteamRep
+ * add_steamrep_api()
+ **************************************/
+#es_steamrep {
+	font-size: 11px;
+	font-family: Verdana;
+	margin-bottom: 10px;
+}
+#es_steamrep .banned a {
+	color: #FF0000;
+}
+#es_steamrep .valve a {
+	color: #A50F79;
+}
+#es_steamrep .caution a {
+	color: #FC970A;
+}
+#es_steamrep .okay a {
+	color: #008000;
+}
+#es_steamrep .donate a {
+	color: #0F67A1;
 }
