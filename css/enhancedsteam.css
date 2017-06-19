@@ -2137,7 +2137,7 @@ input[type=checkbox].es_dlc_selection:checked + label {
 	background-color: #FF0000;
 }
 #game_area_userscore .logo {
-	background-image: url(/public/images/v6/mc_logo_no_text.png);
+	background-image: url(http://steamstore-a.akamaihd.net/public/images/v6/mc_logo_no_text.png);
 	background-repeat: no-repeat;
 	height: 35px;
 	width: 35px;

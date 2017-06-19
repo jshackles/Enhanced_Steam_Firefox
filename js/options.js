@@ -1,5 +1,13 @@
 var storage = chrome.storage.local;
 
+$.ajaxSetup({beforeSend: function(xhr){
+  if (xhr.overrideMimeType)
+  {
+    xhr.overrideMimeType("application/json");
+  }
+}
+});
+
 var highlight_defaults = {
 	"owned": "#5c7836",
 	"wishlist": "#1c3788",
@@ -125,10 +133,6 @@ var settings_defaults = {
 	"showallachievements": false,
 	"showachinstore": true,
 	"showcomparelinks": false,
-	"showgreenlightbanner": false,
-	"dynamicgreenlight": false,
-	"remembergreenlightfilter": false,
-	"endlessscrollinggreenlight": true,
 	"hideactivelistings": false,
 	"hidespamcomments": false,
 	"spamcommentregex": "[\\u2500-\\u25FF]",
@@ -146,6 +150,10 @@ var settings_defaults = {
 	"profile_backpacktf": true,
 	"profile_astatsnl": true,
 	"profile_permalink": true,
+	"profile_custom": false,
+	"profile_custom_name": "Google",
+	"profile_custom_url": "google.com/search?q=[ID]",
+	"profile_custom_icon": "www.google.com/images/branding/product/ico/googleg_lodp.ico",
 	"steamcardexchange": true,
 	"purchase_dates": true,
 	"add_wallet_balance": true,
@@ -263,6 +271,26 @@ function load_options() {
 			initParentOf($(this));
 		});
 
+		// Toggle custom profile links section
+		$("#add_custom_link").on("click", function() {
+			$("#profile_custom").prop("checked", true);
+			$("#es_custom_settings").show();
+			$("#add_custom_link").hide();
+			save_options();
+		});
+		storage.get(function(settings) {
+			if (settings.profile_custom) {
+				$("#es_custom_settings").show();
+				$("#add_custom_link").hide();
+			}
+		});
+		$("#profile_custom").on("click", function(){
+			if (!$(this).prop("checked")) {
+				$("#es_custom_settings").hide();
+				$("#add_custom_link").show();
+			}
+		});
+
 		// Set the value or state for each input
 		$("[data-setting]").each(function(){
 			var setting = $(this).data("setting");
@@ -280,7 +308,6 @@ function load_options() {
 			}
 		});
 
-		if (!settings.profile_api_info){ $("#api_key_block").hide(); }
 		if (settings.showregionalprice == "off") { $("#region_selects").hide(); }
 		if (settings.showregionalprice != "mouse") { $("#regional_price_hideworld").hide(); }
 
@@ -471,16 +498,6 @@ function get_http(url, callback) {
 	http.send(null);
 }
 
-function steam_credits() {
-	var credit_array = ["76561198040672342","76561198000198761"];
-	get_http('http://api.enhancedsteam.com/steamapi/GetPlayerSummaries/?steamids=' + credit_array.join(","), function (txt) {
-		var data = JSON.parse(txt).response.players;
-		data.sort(function(a,b){return a["steamid"].localeCompare(b["steamid"])});
-		$("#jshackles_steam").text(data[1]["personaname"]);
-		$("#smashman_steam").text(data[0]["personaname"]);
-	});
-}
-
 function clear_settings() {
 	storage.get(function(settings) {
 		var confirm_reset = confirm(localized_strings.options.clear);
@@ -552,10 +569,6 @@ $(document).ready(function(){
 		$("#regional_price_hideworld").toggle($(this).val() == "mouse");
 	});
 
-	$("#profile_api_info").on("change", function(){
-		$("#api_key_block").toggle($(this).prop("checked"));
-	});
-
 	// Toggle tabs content
 	$("a.tab_row").on("click", function(){
 		var block_sel = $(this).data("block-sel");
@@ -569,11 +582,9 @@ $(document).ready(function(){
 
 	$("input[type=checkbox]").on("change", save_options);
 	$("input[type=text]").on("blur", save_options);
-	$("button:not(#reset):not(#reset_countries):not(#add_another_region)").on("click", save_options);
+	$("button:not(#reset):not(#reset_countries):not(#add_another_region):not(#add_custom_link)").on("click", save_options);
 	$(".colorbutton").on("change", save_options);
 	$("select").on("change", save_options);
 
 	$("#reset").on("click", clear_settings);
-
-	steam_credits();
 });

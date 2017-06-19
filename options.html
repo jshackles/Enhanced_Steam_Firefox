@@ -1,4 +1,4 @@
-<html>
+﻿<html>
 <script src="js/jQuery.min.js"></script>
 <script src="js/options.js"></script>
 <link href="css/options.css" rel="stylesheet" type="text/css">
@@ -421,6 +421,9 @@
 					<li>
 						<input type="checkbox" id="profile_astatsnl" data-setting="profile_astatsnl"><label for="profile_astatsnl"><i class="es_sites_icons es_astatsnl_icon"></i>AStats.nl</label>
 					</li>
+					<li>
+						<button id="add_custom_link" data-locale-text="custom" class="btn">Custom</button><div id="es_custom_settings" style="display: none;"><input type="checkbox" id="profile_custom" data-setting="profile_custom"> <label data-locale-text="options.name">Name</label>:<input type="text" id="profile_custom_name" data-setting="profile_custom_name" maxlength="30" class="textbox"> URL:<input type="text" id="profile_custom_url" data-setting="profile_custom_url" class="textbox"> <label data-locale-text="options.icon">Icon</label>:<input type="text" id="profile_custom_icon" data-setting="profile_custom_icon" class="textbox"></div>
+					</li>
 				</ul>
 				<li>
 					<label id="show_profile_link_images_text" data-locale-text="options.profile_link_images">Profile link images</label>&nbsp;
@@ -430,19 +433,6 @@
 						<option value=false id="profile_link_images_none" data-locale-text="options.profile_link_images_none">None</option>
 					</select>
 				</li>
-					<li class="header" id="community_greenlight" data-locale-text="options.greenlight">Greenlight</li>
-					<li>
-						<input type="checkbox" id="showgreenlightbanner" data-setting="showgreenlightbanner"><label for="showgreenlightbanner" id="greenlight_banner_text" data-locale-text="options.greenlight_banner">Replace Steam Greenlight banner</label>
-					</li>
-					<li>
-						<input type="checkbox" id="dynamicgreenlight" data-setting="dynamicgreenlight"><label for="dynamicgreenlight" id="dynamicgreenlight_text" data-locale-text="options.dynamicgreenlight">Use dynamic data while browsing Greenlight</label>
-					</li>
-					<li>
-						<input type="checkbox" id="remembergreenlightfilter" data-setting="remembergreenlightfilter"><label for="remembergreenlightfilter" id="remembergreenlightfilter_text" data-locale-text="options.remembergreenlightfilter">Remember Greenlight filter options</label>
-					</li>
-					<li>
-						<input type="checkbox" id="endlessscrollinggreenlight" data-setting="endlessscrollinggreenlight"><label for="endlessscrollinggreenlight" id="endlessscrollinggreenlight_text" data-locale-text="options.endlessscrollinggreenlight">Enable continuous scrolling of Greenlight search results</label>
-					</li>
 					<li class="header" id="community_general" data-locale-text="options.general">General</li>
 					<li>
 						<input type="checkbox" id="showtotal" data-setting="showtotal"><label for="showtotal" id="total_spent_text" data-locale-text="options.total_spent">Show total spent on account page</label>
@@ -492,9 +482,9 @@
 		<div id="maincontent_credits" class="content" style="display: none">
 			<ul class="credits">
 				<li class="header" id="programming_text" data-locale-text="programming">Programming</li>
-				<li>Jason '<a href="http://steamcommunity.com/profiles/76561198040672342" id="jshackles_steam">jshackles</a>' Shackles</li>
-				<li>Ben '<a href="http://steamcommunity.com/profiles/76561198000198761" id="smashman_steam">smash.mn</a>' Williams</li>
-				<li>Dan '<a href="http://steamcommunity.com/profiles/76561198012785113" id="JoiNNN_steam">JoiNNN</a>' C.</li>
+				<li>Jason Shackles (<a href="http://steamcommunity.com/profiles/76561198040672342" id="jshackles_steam">jshackles</a>)</li>
+				<li>Dan C. (<a href="http://steamcommunity.com/profiles/76561198012785113" id="JoiNNN_steam">JoiNNN</a>)</li>
+				<li>Ben Williams (<a href="http://steamcommunity.com/profiles/76561198000198761" id="smashman_steam">smash.mn</a>)</li>				
 				<li></li>
 				<li><div id="view_all"><a href='https://github.com/jshackles/Enhanced_Steam/graphs/contributors' data-locale-text="view_all">VIEW ALL</a></div></li>
 			</ul>

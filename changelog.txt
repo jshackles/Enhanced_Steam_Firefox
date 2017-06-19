@@ -1,4 +1,17 @@
-﻿v9.3
+﻿v9.4
+-----
++ Added the ability to create custom user-configurable profile links
+: Updated the visual style of app page elements to more closely match Valve's new style
+: Fixed a bug that caused some market items not to display features correctly in user's inventories
+: Fixed a bug that caused market sorting options to disappear when paginating
+: Updated wishlist emptying feature to work with larger wishlists and be more robust in general
+: Fixed a timing issue when leaving multiple groups at once
+: Fixed a bug that caused downloadable content details not to display properly on store pages
+- Removed Empty Cart feature as this feature is now part of Steam and is therefore redundant
+- Removed functions related to Steam Greenlight
+
+
+v9.3
 -----
 + Added the ability to sort wishlists by review scores, which will display the highest rated items first
 + Added some behind the scenes updates to OpenCritic reviews, should now display correctly on all pages
