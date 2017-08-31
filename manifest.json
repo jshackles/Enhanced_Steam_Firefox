@@ -1,6 +1,6 @@
 {
     "name": "Enhanced Steam",
-    "version": "9.4",
+    "version": "9.5",
     "description": "Enhances the Steam Experience",
     "icons": {
         "128": "img/enhancedsteam.png"
@@ -48,6 +48,7 @@
         "img/pcgw.png",
         "img/trading.png",
         "img/gl_banner.jpg",
+        "img/clippy.svg",
         "img/enhancedsteam.png",
         "css/enhancedsteam.css",
         "options.html",
