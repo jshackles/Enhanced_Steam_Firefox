@@ -12,28 +12,28 @@
 	margin: auto;
 }
 
-span.platform_img {
+span.es_platform > span.platform_img {
 	display: inline-block;
 	width: 22px;
 	height: 22px;
 	background-repeat: no-repeat;
 }
 
-span.platform_img.steamplay {
+span.es_platform > span.platform_img.steamplay {
 	width: 72px;
-	background-image: url( '//steamstore-a.akamaihd.net/public/images/v6/icon_steamplay.png' );
+	background-image: url( 'https://steamstore-a.akamaihd.net/public/images/v6/icon_steamplay.png' );
 }
 
-span.platform_img.win {
-	background-image: url( '//steamstore-a.akamaihd.net/public/images/v6/icon_platform_win.png' );
+span.es_platform > span.platform_img.win {
+	background-image: url( 'https://steamstore-a.akamaihd.net/public/images/v6/icon_platform_win.png' );
 }
 
-span.platform_img.mac {
-	background-image: url( '//steamstore-a.akamaihd.net/public/images/v6/icon_platform_mac.png' );
+span.es_platform > span.platform_img.mac {
+	background-image: url( 'https://steamstore-a.akamaihd.net/public/images/v6/icon_platform_mac.png' );
 }
 
-span.platform_img.linux {
-	background-image: url( '//steamstore-a.akamaihd.net/public/images/v6/icon_platform_linux.png' );
+span.es_platform > span.platform_img.linux {
+	background-image: url( 'https://steamstore-a.akamaihd.net/public/images/v6/icon_platform_linux.png' );
 }
 
 img.platform_small, .platform_img {
