@@ -92,7 +92,7 @@ var settings_defaults = {
 	"regional_countries": ["us", "gb", "eu1", "ru", "br", "au", "jp"],
 
 	"showtotal": true,
-	"showmarkettotal": true,
+	"showmarkettotal": false,
 	"showsteamrepapi": true,
 	"showmcus": true,
 	"showoc": true,
@@ -126,7 +126,6 @@ var settings_defaults = {
 	"html5video": true,
 	"contscroll": true,
 	"showdrm": true,
-	"show_acrtag_info": false,
 	"regional_hideworld": false,
 	"showinvnav": true,
 	"showesbg": true,
