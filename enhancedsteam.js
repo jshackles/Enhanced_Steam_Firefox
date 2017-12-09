@@ -1,4 +1,4 @@
-var version = "9.6";
+var version = "9.7";
 
 var console_info = ["%c Enhanced %cSteam v" + version + " by jshackles %c http://www.enhancedsteam.com ", "background: #000000;color: #7EBE45", "background: #000000;color: #ffffff", ""];
 console.log.apply(console, console_info);
@@ -277,6 +277,14 @@ var currency_format_info = {
 	"CLP": { places: 0, hidePlacesWhenZero: true, symbolFormat: "CLP$ ", thousand: ".", decimal: ",", right: false },
 	"PEN": { places: 2, hidePlacesWhenZero: false, symbolFormat: "S/.", thousand: ",", decimal: ".", right: false },
 	"COP": { places: 0, hidePlacesWhenZero: true, symbolFormat: "COL$ ", thousand: ".", decimal: ",", right: false },
+	"ARS": { places: 2, hidePlacesWhenZero: false, symbolFormat: "ARS$ ", thousand: ".", decimal: ",", right: false },
+	"CRC": { places: 2, hidePlacesWhenZero: false, symbolFormat: "₡", thousand: ".", decimal: ",", right: false },
+	"ILS": { places: 2, hidePlacesWhenZero: false, symbolFormat: "₪", thousand: ",", decimal: ".", right: false },
+	"KZT": { places: 2, hidePlacesWhenZero: true, symbolFormat: "₸ ", thousand: " ", decimal: ".", right: false },
+	"KWD": { places: 3, hidePlacesWhenZero: false, symbolFormat: " KD", thousand: ",", decimal: ".", right: true },
+	"PLN": { places: 2, hidePlacesWhenZero: false, symbolFormat: " zł", thousand: " ", decimal: ",", right: true },
+	"QAR": { places: 2, hidePlacesWhenZero: false, symbolFormat: " QR", thousand: ",", decimal: ".", right: true },
+	"UYU": { places: 0, hidePlacesWhenZero: true, symbolFormat: "$U", thousand: ",", decimal: ".", right: false },
 	"USD": { places: 2, hidePlacesWhenZero: false, symbolFormat: "$", thousand: ",", decimal: ".", right: false }
 };
 
@@ -373,13 +381,22 @@ function currency_symbol_to_type (currency_symbol) {
 		"CLP$": "CLP",
 		"S/.": "PEN",
 		"COL$": "COP",
-		"NZ$": "NZD"}[currency_symbol] || "USD";
+		"NZ$": "NZD",
+		"ARS$": "ARS",
+		"₡": "CRC",
+		"₪": "ILS",
+		"₸": "KZT",
+		"KD": "KWD",
+		"zł": "PLN",
+		"QR": "QAR",
+		"$U": "UYU"}[currency_symbol] || "USD";
 }
 
 function currency_type_to_number (currency_type) {
 	return {"RUB": 5,
 		"EUR": 3,
 		"GBP": 2,
+		"PLN": 6,
 		"BRL": 7,
 		"JPY": 8,
 		"NOK": 9,
@@ -405,13 +422,21 @@ function currency_type_to_number (currency_type) {
 		"HKD": 29,
 		"TWD": 30,
 		"SAR": 31,
-		"AED": 32}[currency_type] || 1;
+		"AED": 32,
+		"ARS": 34,
+		"ILS": 35,
+		"KZT": 37,
+		"KWD": 38,
+		"QAR": 39,
+		"CRC": 40,
+		"UYU": 41}[currency_type] || 1;
 }
 
 function currency_number_to_type (currency_number) {
 	return {5: "RUB",
 		3: "EUR",
 		2: "GBP",
+		6: "PLN",
 		7: "BRL",
 		8: "JPY",
 		9: "NOK",
@@ -437,11 +462,18 @@ function currency_number_to_type (currency_number) {
 		29: "HKD",
 		30: "TWD",
 		31: "SAR",
-		32: "AED"}[currency_number] || "USD";
+		32: "AED",
+		34: "ARS",
+		35: "ILS",
+		37: "KZT",
+		38: "KWD",
+		39: "QAR",
+		40: "CRC",
+		41: "UYU"}[currency_number] || "USD";
 }
 
 function currency_symbol_from_string (string_with_symbol) {
-	var re = /(?:R\$|S\$|\$|RM|kr|Rp|€|¥|£|฿|pуб|P|₫|₩|TL|₴|Mex\$|CDN\$|A\$|HK\$|NT\$|₹|SR|R |DH|CHF|CLP\$|S\/\.|COL\$|NZ\$)/;
+	var re = /(?:R\$|S\$|\$|RM|kr|Rp|€|¥|£|฿|pуб|P|₫|₩|TL|₴|Mex\$|CDN\$|A\$|HK\$|NT\$|₹|SR|R |DH|CHF|CLP\$|S\/\.|COL\$|NZ\$|ARS\$|₡|₪|₸|KD|zł|QR|\$U)/;
 	var match = string_with_symbol.match(re);
 	return match ? match[0] : '';
 }
@@ -1452,7 +1484,7 @@ function add_wishlist_sorts() {
 					break;
 				case "price":
 					sort_wishlist(".price, .discount_final_price", sort_by, true, function(val){
-						return Number(val.replace(/\-/g, "0").replace(/[^0-9\.]+/g, "")) || 31337;
+						return Number(val.replace(/\-/g, "0").replace(/,/g, ".").replace(/[^0-9\.]+/g, "")) || 31337;
 					});
 					break;
 				case "score":
@@ -2158,17 +2190,6 @@ function send_age_verification() {
 	});
 }
 
-// Display Steam Wallet funds in header
-function add_wallet_balance_to_header() {
-	storage.get(function(settings) {
-		if (settings.add_wallet_balance === undefined) { settings.add_wallet_balance = true; storage.set({'add_wallet_balance': settings.add_wallet_balance}); }
-		if (settings.add_wallet_balance) {
-			$("#global_action_menu").append("<div id='es_wallet' style='text-align:right; line-height: normal;'>");
-			$("#es_wallet").load(protocol + '//store.steampowered.com/about/ #header_wallet_ctn');
-		}
-	});
-}
-
 // Checks to see if the extension has been updated
 function version_check() {
 	storage.get(function(settings) {
@@ -2372,39 +2393,50 @@ function replace_account_name() {
 	});
 }
 
-function add_custom_wallet_amount() {
-	var addfunds = $(".addfunds_area_purchase_game:first").clone();
-	$(addfunds).addClass("es_custom_funds");
-	$(addfunds).find(".btnv6_green_white_innerfade").addClass("es_custom_button");
-	$(addfunds).find("h1").text(localized_strings.wallet.custom_amount);
-	$(addfunds).find("p").text(localized_strings.wallet.custom_amount_text.replace("__minamount__", $(addfunds).find(".price").text().trim()));
-	var currency_symbol = currency_symbol_from_string($(addfunds).find(".price").text().trim());
-	var minimum = $(addfunds).find(".price").text().trim().replace(/(?:R\$|\$|€|¥|£|pуб)/, "");
-	var formatted_minimum = minimum;
-	switch (currency_symbol) {
-		case "€":
-		case "pуб":
-			$(addfunds).find(".price").html("<input id='es_custom_funds_amount' class='es_text_input' style='margin-top: -3px;' size=4 value='" + minimum +"'> " + currency_symbol);
-			break;
-		default:
-			$(addfunds).find(".price").html(currency_symbol + " <input id='es_custom_funds_amount' class='es_text_input' style='margin-top: -3px;' size=4 value='" + minimum +"'>");
-			break;
+function add_custom_money_amount() {
+	function get_string_with_currency_symbol(string, symbol, space) {
+		if(symbol == "€" || symbol == "pуб") return string + (space ? " " : "") + symbol;
+		else return symbol + (space ? " " : "") + string;
 	}
-	$("#game_area_purchase .addfunds_area_purchase_game:first").after(addfunds);
-	$("#es_custom_funds_amount").change(function() {
-		// Make sure two numbers are entered after the separator
-		if (!($("#es_custom_funds_amount").val().match(/(\.|\,)\d\d$/))) { $("#es_custom_funds_amount").val($("#es_custom_funds_amount").val().replace(/\D/g, "")); }
 
-		// Make sure the user entered decimals. If not, add 00 to the end of the number to make the value correct.
-		if (currency_symbol == "€" || currency_symbol == "pуб" || currency_symbol == "R$") {
-			if ($("#es_custom_funds_amount").val().indexOf(",") == -1) $("#es_custom_funds_amount").val($("#es_custom_funds_amount").val() + ",00");
-		} else {
-			if ($("#es_custom_funds_amount").val().indexOf(".") == -1) $("#es_custom_funds_amount").val($("#es_custom_funds_amount").val() + ".00");
+	var giftcard = $(".giftcard_amounts").length > 0;
+
+	var newel = $((giftcard ? ".giftcard_selection" : ".addfunds_area_purchase_game") + ":first").clone();
+	var priceel = $(newel).find((giftcard ? ".giftcard_text" : ".price"));
+	var price = priceel.text().trim();
+	$(newel).addClass("es_custom_money");
+	if(!giftcard) {
+		$(newel).find(".btnv6_green_white_innerfade").addClass("es_custom_button");
+		$(newel).find("h1").text(localized_strings.wallet.custom_amount);
+		$(newel).find("p").text(localized_strings.wallet.custom_amount_text.replace("__minamount__", price));
+	} else {
+		$(newel).find(".giftcard_style").html(localized_strings.wallet.custom_giftcard_amount.replace("__minamount__", price).replace("__input__", "<span id='es_custom_money_amount_wrapper'></span>"));
+	}
+
+	var currency_symbol = currency_symbol_from_string(price);
+	var minimum = +(price.replace(/(?:R\$|\$|€|¥|£|pуб)/, "").replace(/(.--|,--)/,""));
+	var inputel = $(newel).find((giftcard ? "#es_custom_money_amount_wrapper" : ".price"));
+	inputel.html(get_string_with_currency_symbol("<input type='number' id='es_custom_money_amount' class='es_text_input money'  min='" + minimum + "' step='.01' value='" + minimum +"'>", currency_symbol, true));
+
+	$((giftcard ? ".giftcard_selection" : ".addfunds_area_purchase_game") + ":first").after(newel);
+	$("#es_custom_money_amount").on("input", function() {
+		var value = $("#es_custom_money_amount").val();
+		if(isNaN(value) || value == "") $("#es_custom_money_amount").val(minimum);
+	
+		if(giftcard) {
+			if(value > 10) priceel.addClass("small");
+			else priceel.removeClass("small");
+
+			priceel.text(get_string_with_currency_symbol(value, currency_symbol, false));
 		}
+		var jsvalue = (+$("#es_custom_money_amount").val()).toFixed(2).replace(/[,.]/g, '');
 
-		var calculated_value = $("#es_custom_funds_amount").val().replace(/-/g, "0").replace(/\D/g, "").replace(/[^A-Za-z0-9]/g, '');		
-		$("#es_custom_funds_amount").val($("#es_custom_funds_amount").val().replace(/[A-Za-z]/g, ''));
-		$(".es_custom_button").attr("href", "javascript:submitAddFunds( " + calculated_value + " );")
+		if(giftcard) $(".es_custom_money .btn_medium").attr("href", "javascript:submitSelectGiftCard( " + jsvalue + " );")
+		else $(".es_custom_money .es_custom_button").attr("href", "javascript:submitAddFunds( " + jsvalue + " );")
+
+	});
+	$(".giftcard_selection #es_custom_money_amount").on("click", function(e) {
+		e.preventDefault();
 	});
 }
 
@@ -5481,6 +5513,9 @@ function activate_multiple_keys() {
 			$("#es_activate_input_text").hide();
 			$.each(lines, function(e) {
 				var attempt = String(this);
+				if (attempt === "") { // skip blank rows in the input dialog (including trailing newline)
+					return;
+				}
 				keys.push(attempt);
 				$("#es_activate_results").append("<div style='margin-bottom: 8px;'><span id='attempt_" + attempt + "_icon'><img src='" + chrome.extension.getURL("img/questionmark.png") + "' style='padding-right: 10px; height: 16px;'></span>" + attempt + "</div><div id='attempt_" + attempt + "_result' style='margin-left: 26px; margin-bottom: 10px; margin-top: -5px;'></div>");
 			});
@@ -9098,8 +9133,8 @@ $(document).ready(function(){
 							return;
 							break;
 
-						case /^\/steamaccount\/addfunds/.test(path):
-							add_custom_wallet_amount();
+						case /^\/(steamaccount\/addfunds|digitalgiftcards\/selectgiftcard)/.test(path):
+							add_custom_money_amount();
 							break;
 
 						case /^\/search\/.*/.test(path):
@@ -9140,7 +9175,6 @@ $(document).ready(function(){
 
 					if (is_signed_in) {
 						add_birthday_celebration();
-						add_wallet_balance_to_header();
 					}
 
 					switch (true) {

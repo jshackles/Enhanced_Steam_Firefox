@@ -1,11 +1,14 @@
-<html>
-<script src="js/jQuery.min.js"></script>
-<script src="js/options.js"></script>
-<link href="css/options.css" rel="stylesheet" type="text/css">
-<link href="css/es_flags-firefox.css" rel="stylesheet" type="text/css">
-<link href="css/es_sites_links-firefox.css" rel="stylesheet" type="text/css">
-<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
 <head>
+	<script src="js/jQuery.min.js"></script>
+	<script src="js/options.js"></script>
+	<link href="css/options.css" rel="stylesheet" type="text/css">
+	<link href="css/es_flags.css" rel="stylesheet" type="text/css">
+	<link href="css/es_flags-firefox.css" rel="stylesheet" type="text/css">
+	<link href="css/es_sites_links.css" rel="stylesheet" type="text/css">
+	<link href="css/es_sites_links-firefox.css" rel="stylesheet" type="text/css">
+	<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
 	<title>Enhanced Steam Options</title>
 	<base target="_blank">
 </head>
@@ -301,6 +304,7 @@
 					<li></li>
 					<table>
 						<tr>
+							<td>
 						<li id="view_price_li">
 						<label id="viewprice_text"><span data-locale-text="view_in">View in</span>:</label>
 						<select id="override_price" data-setting="override_price">
@@ -336,8 +340,17 @@
 							<option value="CLP">CLP</option>
 							<option value="PEN">PEN</option>
 							<option value="COP">COP</option>
+							<option value="ARS">ARS</option>
+							<option value="CRC">CRC</option>
+							<option value="ILS">ILS</option>
+							<option value="KZT">KZT</option>
+							<option value="KWD">KWD</option>
+							<option value="PLN">PLN</option>
+							<option value="QAR">QAR</option>
+							<option value="UYU">UYU</option>
 						</select>
 						</li>
+							</td>
 						</tr>
 					</table>
 					<li class="header" id="store_regionalprice_header" data-locale-text="options.regional_price">Regional Price Comparison</li>
@@ -439,9 +452,6 @@
 					<li class="header" id="community_general" data-locale-text="options.general">General</li>
 					<li>
 						<input type="checkbox" id="showtotal" data-setting="showtotal"><label for="showtotal" id="total_spent_text" data-locale-text="options.total_spent">Show total spent on account page</label>
-					</li>
-					<li>
-						<input type="checkbox" id="add_wallet_balance" data-setting="add_wallet_balance"><label for="add_wallet_balance" id="add_wallet_balance_text" data-locale-text="options.add_wallet_balance">Show Steam Wallet funds in header</label>
 					</li>
 					<li>
 						<input type="checkbox" id="add_to_cart_wishlist" data-setting="add_to_cart_wishlist"><label for="add_to_cart_wishlist" id="add_to_cart_wishlist_text" data-locale-text="options.add_to_cart_wishlist">Show "Add to Cart" button on Wishlists</label>
