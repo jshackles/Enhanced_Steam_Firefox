@@ -3144,7 +3144,7 @@ function alternative_linux_icon() {
 	storage.get(function(settings) {
 		if (settings.show_alternative_linux_icon === undefined) { settings.show_alternative_linux_icon = false; storage.set({'show_alternative_linux_icon': settings.show_alternative_linux_icon}); }
 		if (settings.show_alternative_linux_icon) {
-			$("head").append("<style>span.platform_img.linux {background-image: url("+chrome.extension.getURL("img/alternative_linux_icon.png")+")}</style>")
+			$("head").append("<style>span.platform_img.linux {background-image: url("+chrome.extension.getURL("img/alternative_linux_icon.png")+") !important}</style>")
 		}
 	});
 }
