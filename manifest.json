@@ -1,6 +1,6 @@
 {
     "name": "Enhanced Steam",
-    "version": "9.7",
+    "version": "9.8",
     "description": "Enhances the Steam Experience",
     "icons": {
         "128": "img/enhancedsteam.png"
@@ -137,6 +137,8 @@
         "img/profile_styles/blue/preview.png",
         "img/alternative_linux_icon.png",
         "img/pinn.png",
+        "img/clippy.svg",
+        "img/steam_store.svg",
         "localization/en/strings.json",
         "localization/bg/strings.json",
         "localization/cs/strings.json",
@@ -160,7 +162,7 @@
         "localization/sv-SE/strings.json",
         "localization/th/strings.json",
         "localization/tr/strings.json",
-        "localization/uk/strings.json",
+        "localization/ua/strings.json",
         "localization/zh-CN/strings.json",
         "localization/zh-TW/strings.json"
     ],
