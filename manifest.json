@@ -1,6 +1,6 @@
 {
     "name": "Enhanced Steam",
-    "version": "9.8.1",
+    "version": "9.9",
     "description": "Enhances the Steam Experience",
     "icons": {
         "128": "img/enhancedsteam.png"
@@ -8,8 +8,7 @@
     "manifest_version": 2,
     "applications": {
         "gecko": {
-            "id": "jid1-YdiFiTEkQgInxA@jetpack",
-            "update_url": "https://firefox.enhancedsteam.com/updates.json"
+            "id": "jid1-YdiFiTEkQgInxA@jetpack"
         }
     },
     "options_ui": {
