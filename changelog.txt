@@ -1,4 +1,11 @@
-﻿v9.9
+﻿v10.0
+-----
+: Fixed an issue with custom steam wallet amounts not processing correctly
+: Fixed a bug with search filtering boxes not expanding properly
+: Fixed an issue that caused the Enhanced Steam menu not to function correctly
+- Removed all features that relied on the Enhanced Steam API server, RIP :(
+
+v9.9
 -----
 + Added an option to toggle the display of the Enhanced Steam loading and status bar
 : Fixed a bug that caused custom wallet amounts not to process correctly
